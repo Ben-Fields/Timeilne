@@ -3,8 +3,59 @@
 <head>
 	<meta charset="utf-8">
 	<title>Timeline Creator</title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
-
+	<div id="topbar">
+		<div id="topbar-content" class="panel-container">
+			<div id="panel-file" class="panel">
+				<div id="file" class="content">
+					File
+				</div>
+				<div class="resize resize-x"></div>
+			</div>
+			<div id="panel-edit" class="panel">
+				<div id="edit" class="content">
+					Edit
+				</div>
+			</div>
+			<div id="panel-info" class="panel">
+				<div class="resize resize-x"></div>
+				<div id="info" class="content">
+					Info
+				</div>
+			</div>
+		</div>
+		<div class="resize resize-y"></div>
+	</div>
+	<div id="main-outer" class="panel-container">
+		<div id="panel-groups" class="panel">
+			<div id="groups" class="content">
+				Groups
+			</div>
+			<div class="resize resize-x"></div>
+		</div>
+		<div id="main-inner" class="panel-container">
+			<div id="panel-timeline" class="panel">
+				<div id="timeline" class="content">
+					Timeline
+				</div>
+			</div>
+			<div id="panel-details" class="panel">
+				<div class="resize resize-y"></div>
+				<div id="details" class="content">
+					Details
+				</div>
+			</div>
+		</div>
+		<div id="panel-unused" class="panel">
+			<div class="resize resize-x"></div>
+			<div id="unused" class="content">
+				Reserved
+			</div>
+		</div>
+	</div>
+	<!-- My add-in script for hot-reloading. Please no touch. -->
+	<script src="http://localhost:35729/livereload.js?snipver=1"></script>
 </body>
 </html>
