@@ -75,16 +75,6 @@ body {
 	overflow: auto;
 }
 
-/***** Base Theme *****/
-/* Panels */
-.panel, #topbar {
-	background-color: $panel-bg;
-}
-/* Timeline */
-#timeline {
-	box-shadow: inset 0px 0px 30px rgba(0,0,0,0.1);
-}
-
 /***** Resize bars *****/
 #topbar, .panel {
 	display: flex;
@@ -117,12 +107,22 @@ body {
 	position: relative;
 }
 
-/***** Temporary *****/
-.panel > .content {
-	color: #DDDDDD;
-	font-size: 50px;
-	font-family: sans-serif;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+/***** Base Theme *****/
+/* Panels */
+.panel, #topbar {
+	background-color: $panel-bg;
 }
+/* Timeline */
+#timeline {
+	box-shadow: inset 0px 0px 30px rgba(0,0,0,0.1);
+}
+
+/***** Temporary *****/
+// .panel > .content {
+// 	color: #DDDDDD;
+// 	font-size: 50px;
+// 	font-family: sans-serif;
+// 	display: flex;
+// 	justify-content: center;
+// 	align-items: center;
+// }
