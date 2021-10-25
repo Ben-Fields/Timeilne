@@ -113,6 +113,9 @@ body {
 .resize-y {
 	cursor: ns-resize;
 }
+.panel {
+	position: relative;
+}
 
 /***** Temporary *****/
 .panel > .content {

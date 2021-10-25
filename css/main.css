@@ -129,6 +129,10 @@ body {
   cursor: ns-resize;
 }
 
+.panel {
+  position: relative;
+}
+
 /***** Temporary *****/
 .panel > .content {
   color: #DDDDDD;
