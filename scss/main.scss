@@ -101,6 +101,7 @@ body {
 	box-sizing: content-box;
 	transition: outline 0.3s, background-color 0.3s;
 	outline: solid transparent 3px;
+	z-index: 2;
 }
 .resize:hover {
 	background-color: $resize-bar-hover;
