@@ -64,14 +64,14 @@ body {
 	flex: 1 1 200px;
 }
 /* Scrolling / Overflow */
-#panel-file, #panel-info {
+#file, #info {
 	overflow: hidden;
 }
-#panel-edit, #panel-groups, #panel-unused, #panel-details {
+#edit, #groups, #unused, #details {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
-#panel-timeline {
+#timeline {
 	overflow: auto;
 }
 
@@ -115,7 +115,6 @@ body {
 
 /***** Temporary *****/
 .panel > .content {
-	// border: solid maroon 3px;
 	color: #DDDDDD;
 	font-size: 50px;
 	font-family: sans-serif;

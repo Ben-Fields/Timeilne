@@ -70,16 +70,16 @@ body {
 }
 
 /* Scrolling / Overflow */
-#panel-file, #panel-info {
+#file, #info {
   overflow: hidden;
 }
 
-#panel-edit, #panel-groups, #panel-unused, #panel-details {
+#edit, #groups, #unused, #details {
   overflow-x: hidden;
   overflow-y: auto;
 }
 
-#panel-timeline {
+#timeline {
   overflow: auto;
 }
 
