@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<title>Timeline Creator</title>
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/main_yy.css">
 </head>
 <body>
 	<div id="topbar">
@@ -16,9 +17,18 @@
 				<div class="resize resize-x"></div>
 			</div>
 			<div id="panel-edit" class="panel">
-				<!-- Edit -->
 				<div id="edit" class="content">
-					Edit
+
+					<button class="tablink" onclick="selectEditTab(event, 'AddElementTab')">Add Element</button>
+					<button class="tablink" onclick="selectEditTab(event, 'TimelineSettingTab')">Timeline Setting</button>
+
+					<div id="AddElementTab" class="tabcontent" style="display:block">
+						<p>Display Tool to Add Elements</p>
+					</div>
+
+					<div id="TimelineSettingTab" class="tabcontent">
+						<p>Display Timeline Setting</p>
+					</div>
 				</div>
 			</div>
 			<div id="panel-info" class="panel">
@@ -64,6 +74,7 @@
 	</div>
 	<!-- Scripts -->
 	<script src="js/main.js"></script>
+	<script src="js/main_yy.js"></script>
 	<!-- My add-in script for hot-reloading. Please no touch. -->
 	<script src="http://localhost:35729/livereload.js?snipver=1"></script>
 </body>
