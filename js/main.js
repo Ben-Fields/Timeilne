@@ -5,6 +5,7 @@ let resize_bars_y = document.getElementsByClassName("resize-y");
 var active_resize_bar = null; // resize bar element
 let bar_initial_pos = null;   // client position
 let initial_basis = null;     // flex-basis value
+let max_basis = null;
 
 let mouse_move_evt = null;
 let mouse_up_evt = null;
@@ -17,6 +18,8 @@ let resize_x_start = function(bar_side, e) {
 	bar_initial_pos = Math.trunc(bar_rect.x + bar_rect.width/2);
 	// Initial basis (target size)
 	initial_basis = parseInt(getComputedStyle(active_resize_bar.parentNode).flexBasis);
+	// Max size (half of screen dimension)
+	max_basis = Math.trunc(window.innerWidth/2);
 	// The remaining events are not localized
 	mouse_move_evt = resize_x_change.bind(null, bar_side)
 	mouse_up_evt = resize_end.bind(null, bar_side)
@@ -25,9 +28,13 @@ let resize_x_start = function(bar_side, e) {
 }
 
 let resize_x_change = function(bar_side, e) {
-	active_resize_bar.parentNode.style.flexBasis = Math.max(
-		initial_basis + (e.clientX - bar_initial_pos) * bar_side, 
-		active_resize_bar.offsetWidth
+	console.log(max_basis)
+	active_resize_bar.parentNode.style.flexBasis = Math.min(
+		Math.max(
+			initial_basis + (e.clientX - bar_initial_pos) * bar_side, 
+			active_resize_bar.offsetWidth
+		),
+		max_basis
 	) + "px";
 }
 
@@ -39,6 +46,8 @@ let resize_y_start = function(bar_side, e) {
 	bar_initial_pos = Math.trunc(bar_rect.y + bar_rect.height/2);
 	// Initial basis (target size)
 	initial_basis = parseInt(getComputedStyle(active_resize_bar.parentNode).flexBasis);
+	// Max size (half of screen dimension)
+	max_basis = Math.trunc(window.innerHeight/2);
 	// The remaining events are not localized
 	mouse_move_evt = resize_y_change.bind(null, bar_side)
 	mouse_up_evt = resize_end.bind(null, bar_side)
@@ -47,9 +56,12 @@ let resize_y_start = function(bar_side, e) {
 }
 
 let resize_y_change = function(bar_side, e) {
-	active_resize_bar.parentNode.style.flexBasis = Math.max(
-		initial_basis + (e.clientY - bar_initial_pos) * bar_side, 
-		active_resize_bar.offsetHeight
+	active_resize_bar.parentNode.style.flexBasis = Math.min(
+		Math.max(
+			initial_basis + (e.clientY - bar_initial_pos) * bar_side, 
+			active_resize_bar.offsetHeight
+		),
+		max_basis
 	) + "px";
 }
 
