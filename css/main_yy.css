@@ -2,23 +2,31 @@
 
 /* Style tab links */
 .tablink {
-  background-color: rgb(105, 105, 105);
-  color: white;
-  float: left;
+  background-color: white;
+  color: rgb(105, 105, 105);
   border: none;
+  border-top: 2px solid rgb(105, 105, 105);
+  float: left;
   outline: none;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 12px;
   height: 30px;
-  width: 200px;
+  width: 120px;
 }
 
 .tablink:hover{
-  background-color: rgb(175, 175, 175);
+  background-color: rgb(200, 200, 200);
 }
 
 .tablink.active{
-  background-color: rgb(175, 125, 125);
+  border:none;
+  border-top: 5px solid #AADDff;
+  border-right: 2px solid #AADDff;
+  border-left: 2px solid #AADDff;
+  font-weight: bold;
+  color: black;
+  /* background-color: rgb(175, 125, 125); */
+  background-color:white;
 }
 
 /* Style the tab content (and add height:100% for full page content) */
