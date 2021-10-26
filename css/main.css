@@ -83,6 +83,10 @@ body {
   overflow: auto;
 }
 
+#topbar {
+  overflow-y: hidden;
+}
+
 /***** Resize bars *****/
 #topbar, .panel {
   display: flex;
@@ -97,7 +101,7 @@ body {
 }
 
 .resize {
-  background-color: #BBDDff;
+  background-color: #BBDDFF;
   flex: 0 0 4px;
   box-sizing: content-box;
   transition: outline 0.3s, background-color 0.3s;
@@ -106,8 +110,8 @@ body {
 }
 
 .resize:hover {
-  background-color: #95CCff;
-  outline: solid #AADDff 2px;
+  background-color: #95CCFF;
+  outline: solid #AADDFF 2px;
 }
 
 .resize-x {

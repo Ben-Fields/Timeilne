@@ -1,9 +1,9 @@
 /***** Color variables *****/
 $bg: #000000;
 $panel-bg: #FCFBFA;
-$resize-bar: #BBDDff;
-$resize-bar-hover: #95CCff;
-$resize-bar-outline: #AADDff;
+$resize-bar: #BBDDFF;
+$resize-bar-hover: #95CCFF;
+$resize-bar-outline: #AADDFF;
 
 /***** A brief CSS reset *****/
 * {
@@ -73,6 +73,9 @@ body {
 }
 #timeline {
 	overflow: auto;
+}
+#topbar {
+	overflow-y: hidden;
 }
 
 /***** Resize bars *****/
