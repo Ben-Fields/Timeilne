@@ -127,6 +127,11 @@ body {
 }
 
 /***** Base Theme *****/
+/* Font */
+html {
+  font-family: "hack", "Helvetica", "Verdana", sans-serif;
+}
+
 /* Panels */
 .panel, #topbar {
   background-color: #FCFBFA;
@@ -137,6 +142,26 @@ body {
   box-shadow: inset 0px 0px 30px rgba(0, 0, 0, 0.1);
 }
 
+/* Panel titles */
+.panel-title {
+  border-radius: 0px 0px 15px 0px;
+  padding: 2px 10px 2px 6px;
+  display: inline-block;
+  border-right: solid #d3ecff 1px;
+  border-bottom: solid #d3ecff 2px;
+  box-shadow: 0 0 10px 0px #00000022;
+  background: linear-gradient(to bottom, #d3ecff 0%, #b9e1ff 26%, #AADAFF 100%);
+  text-shadow: -1px -1px 1px #77c4ff, 0 1px 1px #ddf0ff;
+}
+
 /***** Temporary *****/
+#unused {
+  color: #DDDDDD;
+  font-size: 50px;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 /*# sourceMappingURL=main.css.map */

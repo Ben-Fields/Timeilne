@@ -1,9 +1,12 @@
 /***** Color variables *****/
 $bg: #000000;
 $panel-bg: #FCFBFA;
+
 $resize-bar: #BBDDFF;
 $resize-bar-hover: #95CCFF;
 $resize-bar-outline: #AADDFF;
+
+$panel-title: #AADAFF;
 
 /***** A brief CSS reset *****/
 * {
@@ -111,6 +114,10 @@ body {
 }
 
 /***** Base Theme *****/
+/* Font */
+html {
+	font-family: 'hack', 'Helvetica', 'Verdana', sans-serif;
+}
 /* Panels */
 .panel, #topbar {
 	background-color: $panel-bg;
@@ -119,13 +126,27 @@ body {
 #timeline {
 	box-shadow: inset 0px 0px 30px rgba(0,0,0,0.1);
 }
+/* Panel titles */
+.panel-title {
+	border-radius: 0px 0px 15px 0px;
+	padding: 2px 10px 2px 6px;
+	display: inline-block;
+	border-right: solid lighten($panel-title, 8%) 1px;
+	border-bottom: solid lighten($panel-title, 8%) 2px;
+	box-shadow: 0 0 10px 0px #00000022;
+	background: linear-gradient(to bottom,
+		saturate(lighten($panel-title,8%),15%) 0%,
+		saturate(lighten($panel-title,3%),5%) 26%,
+		$panel-title 100%);
+	text-shadow: -1px -1px 1px darken($panel-title,10%),0 1px 1px lighten($panel-title,10%);
+}
 
 /***** Temporary *****/
-// .panel > .content {
-// 	color: #DDDDDD;
-// 	font-size: 50px;
-// 	font-family: sans-serif;
-// 	display: flex;
-// 	justify-content: center;
-// 	align-items: center;
-// }
+#unused {
+	color: #DDDDDD;
+	font-size: 50px;
+	font-family: sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
