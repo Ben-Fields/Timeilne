@@ -67,3 +67,7 @@
   display: flex;
   flex-direction: column;
 }
+
+.follow_icon {
+  position: absolute;
+}

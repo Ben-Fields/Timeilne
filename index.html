@@ -39,10 +39,10 @@
 					<div id="AddElementTab" class="tabcontent" style="display:block">
 						<div class="edit_ele_wrapper">
 							<div class="edit_element">
-								<i id="sketch" class="fa-solid fa-font-awesome fa-2x edit_icon"></i>
+								<i class="fa-solid fa-font-awesome fa-2x edit_icon" onmousedown="clickEditElement(event, 'float_icon_flag')"></i>
 							</div>
 							<div class="edit_element">
-								<i class="fa-solid fa-image fa-2x edit_icon"></i>
+								<i class="fa-solid fa-image fa-2x edit_icon" onmousedown="clickEditElement(event, 'float_icon_image')"></i>
 							</div>
 						</div>
 					</div>
@@ -117,6 +117,10 @@
 			</div>
 		</div>
 	</div>
+	<i id="float_icon_flag" class="fa-solid fa-font-awesome follow_icon" style="display: none;"></i>
+	<i id="float_icon_image" class="fa-solid fa-image follow_icon" style="display: none;"></i>
+
+
 	<!-- Scripts -->
 	<script src="thirdparty/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="js/main.js"></script>
