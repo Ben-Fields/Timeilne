@@ -3,15 +3,15 @@
 /* Style tab links */
 .tablink {
   background-color: white;
-  color: rgb(105, 105, 105);
+  color: rgb(155, 155, 155);
   border: none;
-  border-top: 2px solid rgb(105, 105, 105);
+  border-top: 2px solid rgb(155, 155, 155);
   float: left;
   outline: none;
   cursor: pointer;
   font-size: 12px;
   height: 30px;
-  width: 120px;
+  width: 140px;
 }
 
 .tablink:hover{
@@ -33,6 +33,37 @@
 .tabcontent {
   color: black;
   display: none;
-  padding: 100px 20px;
   align-items: left;
+}
+
+.edit_ele_wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding: 3px;
+}
+
+.edit_element {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid rgb(155, 155, 155);;
+  border-radius: 20px;
+  padding: 3px;
+
+  height: 70px;
+  width: 70px;
+  font-size: 24px;
+}
+
+.edit_element:hover{
+  background-color: rgb(200, 200, 200);
+}
+
+.edit_icon {
+  margin: auto;
+}
+
+#edit {
+  display: flex;
+  flex-direction: column;
 }

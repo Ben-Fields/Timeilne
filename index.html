@@ -25,14 +25,22 @@
 				<!-- Edit -->
 				<div id="edit" class="content">
 					<div class="tab_wrapper">
-						<button class="tablink active" onclick="selectEditTab(event, 'AddElementTab')">Add
-							Element</button>
-						<button class="tablink" onclick="selectEditTab(event, 'TimelineSettingTab')">Timeline
-							Setting</button>
+						<button class="tablink active" onclick="selectEditTab(event, 'AddElementTab')">
+							<i class="fa-solid fa-plus"></i>
+							Add Element</button>
+						<button class="tablink" onclick="selectEditTab(event, 'TimelineSettingTab')">
+							<i class="fa-solid fa-gear"></i>
+							Timeline Setting</button>
 					</div>
-
 					<div id="AddElementTab" class="tabcontent" style="display:block">
-						<p>Display Tool to Add Elements</p>
+						<div class="edit_ele_wrapper">
+							<div class="edit_element">
+								<i id="sketch" class="fa-solid fa-font-awesome fa-2x edit_icon"></i>
+							</div>
+							<div class="edit_element">
+								<i class="fa-solid fa-image fa-2x edit_icon"></i>
+							</div>
+						</div>
 					</div>
 					<div id="TimelineSettingTab" class="tabcontent">
 						<p>Display Timeline Setting</p>
@@ -81,6 +89,7 @@
 		</div>
 	</div>
 	<!-- Scripts -->
+	<script src="thirdparty/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="js/main.js"></script>
 	<script src="js/main_yy.js"></script>
 	<script src="thirdparty/fontawesome-6/attribution.js"></script>
