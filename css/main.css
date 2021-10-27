@@ -31,6 +31,7 @@ body {
   flex: 1;
   min-width: 0;
   min-height: 0;
+  margin-bottom: 0;
 }
 
 /* Top bar */
@@ -152,6 +153,7 @@ html {
   box-shadow: 0 0 10px 0px #00000022;
   background: linear-gradient(to bottom, #d3ecff 0%, #b9e1ff 26%, #AADAFF 100%);
   text-shadow: -1px -1px 1px #77c4ff, 0 1px 1px #ddf0ff;
+  margin-bottom: 8px;
 }
 
 /***** Temporary *****/
