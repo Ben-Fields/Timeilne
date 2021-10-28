@@ -17,6 +17,9 @@ let selectEditTab = function (evt, tabID) {
 var cur_floating_icon;
 
 let clickEditElement = function (evt, target_id) {
+  if(cur_floating_icon){
+    cur_floating_icon.style.display = "none";
+  }
   cur_floating_icon = document.getElementById(target_id);
   cur_floating_icon.style.display = "block";
   cur_floating_icon.style.left = (evt.clientX + 10) + "px";
