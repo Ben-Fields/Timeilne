@@ -4,37 +4,39 @@
 <head>
 	<meta charset="utf-8">
 	<title>Timeline Creator</title>
+	<!-- Fonts -->
 	<link rel="stylesheet" type="text/css" href="thirdparty/inter-font/inter.css">
 	<link rel="stylesheet" type="text/css" href="thirdparty/hack-font/hack-subset.css">
-
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
+	<!-- Libraries -->
+	<link rel="stylesheet" type="text/css" href="thirdparty/fontawesome-6/css/all.min.css">
+	<link rel="stylesheet" type="text/css" href="thirdparty/bootstrap-3/bootstrap.css">
+	<!-- Style -->
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link rel="stylesheet" type="text/css" href="css/main_yy.css">
-	<link rel="stylesheet" type="text/css" href="thirdparty/fontawesome-6/css/all.min.css">
 </head>
 
 <body>
 	<div id="topbar">
 		<div id="topbar-content" class="panel-container">
-			<div id="panel-file" class="panel">
+			<div id="panel-file" class="main-panel">
 				<!-- File -->
 				<div id="file" class="content">
 					<div class="panel-title">File</div>
 				</div>
 				<div class="resize resize-x"></div>
 			</div>
-			<div id="panel-edit" class="panel">
+			<div id="panel-edit" class="main-panel">
 				<!-- Edit -->
 				<div id="edit" class="content">
 					<div class="tab_wrapper">
 						<button class="tablink active" onclick="selectEditTab(event, 'AddElementTab')">
 							<i class="fa-solid fa-plus"></i>
-							Add Element</button>
+							Add Element
+						</button>
 						<button class="tablink" onclick="selectEditTab(event, 'TimelineSettingTab')">
 							<i class="fa-solid fa-gear"></i>
-							Timeline Setting</button>
+							Timeline Settings
+						</button>
 					</div>
 					<div id="AddElementTab" class="tabcontent" style="display:block">
 						<div class="edit_ele_wrapper">
@@ -47,11 +49,11 @@
 						</div>
 					</div>
 					<div id="TimelineSettingTab" class="tabcontent">
-						<p>Display Timeline Setting</p>
+						<p>Display Timeline Settings</p>
 					</div>
 				</div>
 			</div>
-			<div id="panel-info" class="panel">
+			<div id="panel-info" class="main-panel">
 				<div class="resize resize-x"></div>
 				<!-- Info -->
 				<div id="info" class="content">
@@ -62,7 +64,7 @@
 		<div class="resize resize-y"></div>
 	</div>
 	<div id="main-outer" class="panel-container">
-		<div id="panel-groups" class="panel">
+		<div id="panel-groups" class="main-panel">
 			<!-- Groups -->
 			<div id="groups" class="content">
 				<div class="panel-title">Groups</div>
@@ -95,13 +97,13 @@
 			<div class="resize resize-x"></div>
 		</div>
 		<div id="main-inner" class="panel-container">
-			<div id="panel-timeline" class="panel">
+			<div id="panel-timeline" class="main-panel">
 				<!-- Timeline -->
 				<div id="timeline" class="content">
 					
 				</div>
 			</div>
-			<div id="panel-details" class="panel">
+			<div id="panel-details" class="main-panel">
 				<div class="resize resize-y"></div>
 				<!-- Details -->
 				<div id="details" class="content">
@@ -109,7 +111,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="panel-unused" class="panel">
+		<div id="panel-unused" class="main-panel">
 			<div class="resize resize-x"></div>
 			<!-- Reserved -->
 			<div id="unused" class="content">
@@ -121,10 +123,13 @@
 	<i id="float_icon_image" class="fa-solid fa-image follow_icon" style="display: none;"></i>
 
 
-	<!-- Scripts -->
-	<script src="thirdparty/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<!-- Scripts - Libraries -->
+	<script src="thirdparty/jquery/jquery.min.js"></script>
+	<script src="thirdparty/bootstrap-3/bootstrap.js"></script>
+	<!-- Scripts - General -->
 	<script src="js/main.js"></script>
 	<script src="js/main_yy.js"></script>
+	<!-- Scripts - Attribution -->
 	<script src="thirdparty/fontawesome-6/attribution.js"></script>
 	<!-- My add-in script for hot-reloading. Please no touch. -->
 	<script src="http://localhost:35729/livereload.js?snipver=1"></script>
