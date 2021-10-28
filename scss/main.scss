@@ -139,6 +139,7 @@ html {
 		saturate(lighten($panel-title,3%),5%) 26%,
 		$panel-title 100%);
 	text-shadow: -1px -1px 1px darken($panel-title,10%),0 1px 1px lighten($panel-title,10%);
+	margin-bottom: 8px;
 }
 
 /***** Temporary *****/
