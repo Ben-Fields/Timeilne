@@ -23,7 +23,7 @@ let clickEditElement = function (evt, target_id) {
   cur_floating_icon.style.top = (evt.clientY + 10) + "px";
 }
 
-$(".panel").mousemove(function (e) {
+$(document).mousemove(function (e) {
   if(!cur_floating_icon){
     return
   }
