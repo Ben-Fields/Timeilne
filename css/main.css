@@ -27,7 +27,7 @@ body {
   min-height: 0;
 }
 
-.main-panel {
+.panel {
   flex: 1;
   min-width: 0;
   min-height: 0;
@@ -88,7 +88,7 @@ body {
 }
 
 /***** Resize bars *****/
-#topbar, .main-panel {
+#topbar, .panel {
   display: flex;
 }
 
@@ -122,18 +122,19 @@ body {
   cursor: ns-resize;
 }
 
-.main-panel {
+.panel {
   position: relative;
 }
 
 /***** Base Theme *****/
 /* Font */
 html {
-  font-family: "hack", "Helvetica", "Verdana", sans-serif;
+  font-family: "Inter", "Helvetica", "Verdana", sans-serif;
+  color: #111111;
 }
 
 /* Panels */
-.main-panel, #topbar {
+.panel, #topbar {
   background-color: #FCFBFA;
 }
 
@@ -145,7 +146,6 @@ html {
 /* Panel titles */
 .panel-title {
   border-radius: 0px 0px 15px 0px;
-  padding: 2px 10px 2px 6px;
   display: inline-block;
   border-right: solid #d3ecff 1px;
   border-bottom: solid #d3ecff 2px;
@@ -153,6 +153,47 @@ html {
   background: linear-gradient(to bottom, #d3ecff 0%, #b9e1ff 26%, #AADAFF 100%);
   text-shadow: -1px -1px 1px #77c4ff, 0 1px 1px #ddf0ff;
   margin-bottom: 8px;
+  font-size: 1.1em;
+  height: 1.8em;
+  padding: 0.08em 0.6em 0.1em 0.4em;
+  line-height: 1.6em;
+}
+
+/* Tabbed Panel Titles */
+.panel-title:not(:last-child) {
+  border-bottom-left-radius: 15px;
+  padding-left: 0.6em;
+  margin-left: -0.3em;
+}
+
+.panel-title-inactive {
+  border-right: solid #e6e6e7 1px;
+  border-bottom: solid #e6e6e7 2px;
+  background: linear-gradient(to bottom, #e2e6eb 0%, #d7dadc 26%, #D1D2D3 100%);
+  text-shadow: -1px -1px 1px #b7b9ba, 0 1px 1px #ebecec;
+  cursor: pointer;
+  height: 1.6em;
+  line-height: 1.4em;
+  padding-top: 0.04em;
+  transition: height 0.4s, padding-top 0.4s, background 0.4s !important;
+  background-size: 100% 200%;
+}
+
+.panel-title-inactive:hover {
+  height: 1.8em;
+  padding-top: 0.18em;
+  transition: height 0.2s, padding-top 0.2s, background 0.2s !important;
+  background-position: 0.1em;
+}
+
+.panel-title {
+  transition: height 0.4s, padding-top 0s, background 0.4s;
+}
+
+.tab-wrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
 }
 
 /***** Temporary *****/

@@ -9,7 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="thirdparty/hack-font/hack-subset.css">
 	<!-- Libraries -->
 	<link rel="stylesheet" type="text/css" href="thirdparty/fontawesome-6/css/all.min.css">
-	<link rel="stylesheet" type="text/css" href="thirdparty/bootstrap-3/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="thirdparty/bootstrap-3/bootstrap-namespaced.css">
 	<!-- Style -->
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link rel="stylesheet" type="text/css" href="css/main_yy.css">
@@ -18,18 +18,20 @@
 <body>
 	<div id="topbar">
 		<div id="topbar-content" class="panel-container">
-			<div id="panel-file" class="main-panel">
+			<div id="panel-file" class="panel">
 				<!-- File -->
 				<div id="file" class="content">
 					<div class="panel-title">File</div>
 				</div>
 				<div class="resize resize-x"></div>
 			</div>
-			<div id="panel-edit" class="main-panel">
+			<div id="panel-edit" class="panel">
 				<!-- Edit -->
 				<div id="edit" class="content">
-					<div class="tab_wrapper">
-						<div class="panel-title">Edit</div>
+					<div class="tab-wrapper">
+						<div class="panel-title panel-title-inactive" onclick="selectEditTab(event, 'AddElementTab')"><i class="fa-solid fa-plus"></i> Add Element</div>
+						<div class="panel-title" onclick="selectEditTab(event, 'TimelineSettingTab')"><i class="fa-solid fa-gear"></i> Timeline Settings</div>
+<!-- 						<div class="panel-title">Edit</div>
 						<button class="tablink" onclick="selectEditTab(event, 'TimelineSettingTab')">
 							<i class="fa-solid fa-gear"></i>
 							Timeline Settings
@@ -37,9 +39,9 @@
 						<button class="tablink active" onclick="selectEditTab(event, 'AddElementTab')">
 							<i class="fa-solid fa-plus"></i>
 							Add Element
-						</button>
+						</button> -->
 					</div>
-					<div id="AddElementTab" class="tabcontent" style="display:block">
+					<div id="AddElementTab" class="tabcontent">
 						<div class="edit_ele_wrapper">
 							<div class="edit_element">
 								<i class="fa-solid fa-font-awesome fa-2x edit_icon" onmousedown="clickEditElement(event, 'float_icon_flag')"></i>
@@ -49,12 +51,12 @@
 							</div>
 						</div>
 					</div>
-					<div id="TimelineSettingTab" class="tabcontent">
+					<div id="TimelineSettingTab" class="tabcontent" style="display:block">
 						<p>Display Timeline Settings</p>
 					</div>
 				</div>
 			</div>
-			<div id="panel-info" class="main-panel">
+			<div id="panel-info" class="panel">
 				<div class="resize resize-x"></div>
 				<!-- Info -->
 				<div id="info" class="content">
@@ -65,46 +67,48 @@
 		<div class="resize resize-y"></div>
 	</div>
 	<div id="main-outer" class="panel-container">
-		<div id="panel-groups" class="main-panel">
+		<div id="panel-groups" class="panel">
 			<!-- Groups -->
 			<div id="groups" class="content">
 				<div class="panel-title">Groups</div>
-				<ul class="nav nav-pills nav-stacked">
-				    <li class="active"><a data-toggle="pill" href="#home">All</a></li>
-				    <li><a data-toggle="pill" href="#menu1">War</a></li>
-				    <li><a data-toggle="pill" href="#menu2">Government</a></li>
-				    <li><a data-toggle="pill" href="#menu3">Act</a></li>
-				 </ul>
-				 <div class="button_holder text-center">
-				 	<button class="btn btn-primary"><i class="fa-solid fa-square-plus"></i></button>
-				 	<button class="btn btn-primary"><i class="fa-solid fa-pencil"></i></button>
-				 	<button class="btn btn-primary"><i class="fa-solid fa-trash"></i></button>
-				 </div>
-				 <div>
-				 	<h4>Group Properties</h4>
-					<form action="#">
-					    <div class="form-group">
-					      <label for="color">Color:</label>
-					      <input type="color" class="form-control" id="grp_color" name="grp_color" value="#8E1A06" disabled readonly>
-					    </div>
-					    <div class="form-group">
-					      <label for="font-size">Font Size (px):</label>
-					      <input type="number" class="form-control" id="font_size" value ="14" disabled readonly>
-					    </div>
-					    <!--<button type="submit" class="btn btn-primary">Submit</button>-->
-					</form>
+				<div class="pwease-gib-me-bootstwap-i-cawnt-wite-mawkup-wifout-it">
+					<ul class="nav nav-pills nav-stacked">
+					    <li class="active"><a data-toggle="pill" href="#home">All</a></li>
+					    <li><a data-toggle="pill" href="#menu1">War</a></li>
+					    <li><a data-toggle="pill" href="#menu2">Government</a></li>
+					    <li><a data-toggle="pill" href="#menu3">Act</a></li>
+					 </ul>
+					 <div class="button_holder text-center">
+					 	<button class="btn btn-primary"><i class="fa-solid fa-square-plus"></i></button>
+					 	<button class="btn btn-primary"><i class="fa-solid fa-pencil"></i></button>
+					 	<button class="btn btn-primary"><i class="fa-solid fa-trash"></i></button>
+					 </div>
+					 <div>
+					 	<h4>Group Properties</h4>
+						<form action="#">
+						    <div class="form-group">
+						      <label for="color">Color:</label>
+						      <input type="color" class="form-control" id="grp_color" name="grp_color" value="#8E1A06" disabled readonly>
+						    </div>
+						    <div class="form-group">
+						      <label for="font-size">Font Size (px):</label>
+						      <input type="number" class="form-control" id="font_size" value ="14" disabled readonly>
+						    </div>
+						    <!--<button type="submit" class="btn btn-primary">Submit</button>-->
+						</form>
+					</div>
 				</div>
 			</div>
 			<div class="resize resize-x"></div>
 		</div>
 		<div id="main-inner" class="panel-container">
-			<div id="panel-timeline" class="main-panel">
+			<div id="panel-timeline" class="panel">
 				<!-- Timeline -->
 				<div id="timeline" class="content">
 					
 				</div>
 			</div>
-			<div id="panel-details" class="main-panel">
+			<div id="panel-details" class="panel">
 				<div class="resize resize-y"></div>
 				<!-- Details -->
 				<div id="details" class="content">
@@ -112,7 +116,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="panel-unused" class="main-panel">
+		<div id="panel-unused" class="panel">
 			<div class="resize resize-x"></div>
 			<!-- Reserved -->
 			<div id="unused" class="content">

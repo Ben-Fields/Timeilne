@@ -7,6 +7,7 @@ $resize-bar-hover: #95CCFF;
 $resize-bar-outline: #AADDFF;
 
 $panel-title: #AADAFF;
+$panel-title-inactive: #D1D2D3;
 
 /***** A brief CSS reset *****/
 * {
@@ -33,7 +34,7 @@ body {
 	min-width: 0;
 	min-height: 0;
 }
-.main-panel {
+.panel {
 	flex: 1;
 	min-width: 0;
 	min-height: 0;
@@ -82,7 +83,7 @@ body {
 }
 
 /***** Resize bars *****/
-#topbar, .main-panel {
+#topbar, .panel {
 	display: flex;
 }
 .content {
@@ -109,17 +110,18 @@ body {
 .resize-y {
 	cursor: ns-resize;
 }
-.main-panel {
+.panel {
 	position: relative;
 }
 
 /***** Base Theme *****/
 /* Font */
 html {
-	font-family: 'hack', 'Helvetica', 'Verdana', sans-serif;
+	font-family: 'Inter', 'Helvetica', 'Verdana', sans-serif;
+	color: #111111;
 }
 /* Panels */
-.main-panel, #topbar {
+.panel, #topbar {
 	background-color: $panel-bg;
 }
 /* Timeline */
@@ -129,7 +131,6 @@ html {
 /* Panel titles */
 .panel-title {
 	border-radius: 0px 0px 15px 0px;
-	padding: 2px 10px 2px 6px;
 	display: inline-block;
 	border-right: solid lighten($panel-title, 8%) 1px;
 	border-bottom: solid lighten($panel-title, 8%) 2px;
@@ -140,6 +141,53 @@ html {
 		$panel-title 100%);
 	text-shadow: -1px -1px 1px darken($panel-title,10%),0 1px 1px lighten($panel-title,10%);
 	margin-bottom: 8px;
+	// Size
+	font-size: 1.1em;
+	height: 1.8em;
+	padding: 0.08em 0.6em 0.1em 0.4em;
+	line-height: 1.6em;
+}
+/* Tabbed Panel Titles */
+.panel-title:not(:last-child) {
+	border-bottom-left-radius: 15px;
+	padding-left: 0.6em;
+	margin-left: -0.3em;
+}
+.panel-title-inactive {
+	// Grey-out
+	border-right: solid lighten($panel-title-inactive, 8%) 1px;
+	border-bottom: solid lighten($panel-title-inactive, 8%) 2px;
+	background: linear-gradient(to bottom,
+		saturate(lighten($panel-title-inactive,8%),15%) 0%,
+		saturate(lighten($panel-title-inactive,3%),5%) 26%,
+		$panel-title-inactive 100%);
+	text-shadow: -1px -1px 1px darken($panel-title-inactive,10%),0 1px 1px lighten($panel-title-inactive,10%);
+	cursor: pointer;
+	// Shrink
+	height: 1.6em;
+	line-height: 1.4em;
+	padding-top: 0.04em;
+	// Slow recede
+	transition: height 0.4s, padding-top 0.4s, background 0.4s !important;
+	background-size: 100% 200%;
+}
+.panel-title-inactive:hover {
+	// Grow
+	height: 1.8em;
+	padding-top: 0.18em;
+	// Fast interaction
+	transition: height 0.2s, padding-top 0.2s, background 0.2s !important;
+	background-position: 0.1em;
+}
+.panel-title {
+	// Slow recede
+	transition: height 0.4s, padding-top 0s, background 0.4s;
+}
+.tab-wrapper {
+	// Reverse tabs so left overlaps right
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: flex-end;
 }
 
 /***** Temporary *****/
