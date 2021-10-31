@@ -1,4 +1,4 @@
-/***** Color variables *****/
+/*######  Color Variables  ######*/
 $bg: #000000;
 $panel-bg: #FCFBFA;
 
@@ -9,7 +9,8 @@ $resize-bar-outline: #AADDFF;
 $panel-title: #AADAFF;
 $panel-title-inactive: #D1D2D3;
 
-/***** A brief CSS reset *****/
+
+/*######  A Brief CSS Reset  ######*/
 * {
 	box-sizing: border-box;
 	-webkit-user-select: none;
@@ -22,7 +23,8 @@ body {
 	overflow: hidden;
 }
 
-/***** Basic layout styling *****/
+
+/*######  Basic Layout  ######*/
 /* Setup */
 body {
 	display: flex;
@@ -82,7 +84,8 @@ body {
 	overflow-y: hidden;
 }
 
-/***** Resize bars *****/
+
+/*######  Resize Bars  ######*/
 #topbar, .panel {
 	display: flex;
 }
@@ -114,11 +117,13 @@ body {
 	position: relative;
 }
 
-/***** Base Theme *****/
+
+/*######  Base Theme  ######*/
 /* Font */
 html {
 	font-family: 'Inter', 'Helvetica', 'Verdana', sans-serif;
 	color: #111111;
+	font-size: 1em;
 }
 /* Panels */
 .panel, #topbar {
@@ -146,9 +151,14 @@ html {
 	height: 1.8em;
 	padding: 0.08em 0.6em 0.1em 0.4em;
 	line-height: 1.6em;
+	z-index: 2;
+}
+.tab-wrapper, :not(.tab-wrapper) > .panel-title {
+	position: sticky;
+	top: 0;
 }
 /* Tabbed Panel Titles */
-.panel-title:not(:last-child) {
+.tab-wrapper > .panel-title:not(:last-child) {
 	border-bottom-left-radius: 15px;
 	padding-left: 0.6em;
 	margin-left: -0.3em;
@@ -188,14 +198,4 @@ html {
 	display: flex;
 	flex-direction: row-reverse;
 	justify-content: flex-end;
-}
-
-/***** Temporary *****/
-#unused {
-	color: #DDDDDD;
-	font-size: 50px;
-	font-family: sans-serif;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 }
