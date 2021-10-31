@@ -12,6 +12,8 @@
 	<link rel="stylesheet" type="text/css" href="thirdparty/bootstrap-3/bootstrap-namespaced.css">
 	<!-- Style -->
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/inputs.css">
+	<link rel="stylesheet" type="text/css" href="css/temp.css">
 	<link rel="stylesheet" type="text/css" href="css/main_yy.css">
 </head>
 
@@ -29,10 +31,12 @@
 				<!-- Edit -->
 				<div id="edit" class="content">
 					<div class="tab-wrapper">
-						<div class="panel-title panel-title-inactive" onclick="selectEditTab(event, 'AddElementTab')"><i
-								class="fa-solid fa-plus"></i> Add Element</div>
-						<div class="panel-title" onclick="selectEditTab(event, 'TimelineSettingTab')"><i
-								class="fa-solid fa-gear"></i> Timeline Settings</div>
+						<div class="panel-title panel-title-inactive" onclick="selectEditTab(event, 'AddElementTab')">
+							<i class="fa-solid fa-plus"></i> Add Element
+						</div>
+						<div class="panel-title" onclick="selectEditTab(event, 'TimelineSettingTab')">
+							<i class="fa-solid fa-gear"></i> Timeline Settings
+						</div>
 					</div>
 					<div id="AddElementTab" class="tabcontent">
 						<div class="edit_ele_wrapper">
@@ -107,7 +111,7 @@
 			<!-- Groups -->
 			<div id="groups" class="content">
 				<div class="panel-title">Groups</div>
-				<div class="pwease-gib-me-bootstwap-i-cawnt-wite-mawkup-wifout-it">
+				<div class="bs">
 					<ul class="nav nav-pills nav-stacked">
 						<li class="active"><a data-toggle="pill" href="#home">All</a></li>
 						<li><a data-toggle="pill" href="#menu1">War</a></li>
@@ -150,6 +154,39 @@
 				<!-- Details -->
 				<div id="details" class="content">
 					<div class="panel-title">Details</div>
+					<div id="details-unselected">Select an element to view/edit its details.</div>
+					<div id="details-data" class="input-container" style="display:none;">
+						<!-- Required always at top. Edited brought to top. Predefined global order. (required files in order then edited fields in order) -->
+						<label for="short-title">Title:</label>
+						<input type="text" name="short-title" required>
+						<label for="long-title">Long Title:</label>
+						<input type="text" name="long-title">
+						<label for="date">Date:</label>
+						<input type="date" name="date" required>
+						<!-- <label for="time">Time:</label> -->
+						<input type="time" name="time">
+						<label for="end-date">End Date:</label>
+						<input type="date" name="end-date">
+						<!-- <label for="end-time">End Time:</label> -->
+						<input type="time" name="end-time">
+						<label for="description">Description:</label>
+						<input type="text" name="description">
+						<label for="visual-priority">Visual Priority:</label>
+						<input type="number" name="visual-priority">
+						<label for="groups">Group(s):</label>
+						<input type="text" name="groups">
+						<label for="visible-group">Visible Group:</label>
+						<input type="text" name="visible-group">
+						<!-- Only shows up if there are multiple groups -->
+						<label for="click-action">Click Action:</label>
+						<input type="number" name="click-action">
+						<!-- Show group, show description, Go to hyperlink -->
+
+						<!-- Advanced -->
+						<label for="anchor-tag">Anchor Tag:</label>
+						<input type="text" name="anchor-tag">
+						<!-- Also called a fragment identifier or HTML ID, it allows you to link to this event with a URL. Ex. https://example.com/timeline#my-event. -->
+					</div>
 				</div>
 			</div>
 		</div>
@@ -163,7 +200,6 @@
 	</div>
 	<i id="float_icon_flag" class="fa-solid fa-font-awesome follow_icon" style="display: none;"></i>
 	<i id="float_icon_image" class="fa-solid fa-image follow_icon" style="display: none;"></i>
-
 
 	<!-- Scripts - Libraries -->
 	<script src="thirdparty/jquery/jquery.min.js"></script>
