@@ -155,6 +155,7 @@ html {
 }
 .panel-title-inactive {
 	// Grey-out
+	color: gray;
 	border-right: solid lighten($panel-title-inactive, 8%) 1px;
 	border-bottom: solid lighten($panel-title-inactive, 8%) 2px;
 	background: linear-gradient(to bottom,

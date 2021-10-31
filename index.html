@@ -29,30 +29,66 @@
 				<!-- Edit -->
 				<div id="edit" class="content">
 					<div class="tab-wrapper">
-						<div class="panel-title panel-title-inactive" onclick="selectEditTab(event, 'AddElementTab')"><i class="fa-solid fa-plus"></i> Add Element</div>
-						<div class="panel-title" onclick="selectEditTab(event, 'TimelineSettingTab')"><i class="fa-solid fa-gear"></i> Timeline Settings</div>
-<!-- 						<div class="panel-title">Edit</div>
-						<button class="tablink" onclick="selectEditTab(event, 'TimelineSettingTab')">
-							<i class="fa-solid fa-gear"></i>
-							Timeline Settings
-						</button>
-						<button class="tablink active" onclick="selectEditTab(event, 'AddElementTab')">
-							<i class="fa-solid fa-plus"></i>
-							Add Element
-						</button> -->
+						<div class="panel-title panel-title-inactive" onclick="selectEditTab(event, 'AddElementTab')"><i
+								class="fa-solid fa-plus"></i> Add Element</div>
+						<div class="panel-title" onclick="selectEditTab(event, 'TimelineSettingTab')"><i
+								class="fa-solid fa-gear"></i> Timeline Settings</div>
 					</div>
 					<div id="AddElementTab" class="tabcontent">
 						<div class="edit_ele_wrapper">
 							<div class="edit_element">
-								<i class="fa-solid fa-font-awesome fa-2x edit_icon" onmousedown="clickEditElement(event, 'float_icon_flag')"></i>
+								<i class="fa-solid fa-font-awesome fa-2x edit_icon"
+									onmousedown="clickEditElement(event, 'float_icon_flag')"></i>
 							</div>
 							<div class="edit_element">
-								<i class="fa-solid fa-image fa-2x edit_icon" onmousedown="clickEditElement(event, 'float_icon_image')"></i>
+								<i class="fa-solid fa-image fa-2x edit_icon"
+									onmousedown="clickEditElement(event, 'float_icon_image')"></i>
 							</div>
 						</div>
 					</div>
 					<div id="TimelineSettingTab" class="tabcontent" style="display:block">
-						<p>Display Timeline Settings</p>
+						<div class="timeline_inputs">
+							<div>
+								<input type="checkbox" id="displayMajorTick" name="displayMajorTick" checked
+									onchange="updateTimelineSettingCheckBok(this, 'majorTickSetting')">
+								<label for="displayMajorTick"> Major Tick:</label>
+								<label for="majorTickInterval" class="majorTickSetting">Interval</label>
+								<input type="number" class="input_small majorTickSetting" id="majorTickInterval"
+									value="10" onchange="roundValue(this)">
+								<label for="majorTickIntervalUnitSelect" class="majorTickSetting"></label>
+								<select id="majorTickIntervalUnitSelect" class="input_small majorTickSetting"
+									value="year">
+									<option value="year">Year</option>
+									<option value="month">Month</option>
+									<option value="day">Day</option>
+								</select>
+							</div>
+							<div>
+								<input type="checkbox" id="displayMinorTick" name="displayMinorTick" checked
+									onchange="updateTimelineSettingCheckBok(this, 'minorTickSetting')">
+								<label for="displayMinorTick"> Minor Tick:</label>
+								<label for="minorTickInterval" class="minorTickSetting">Interval</label>
+								<input type="number" class="input_small minorTickSetting" id="minorTickInterval"
+									value="5" onchange="roundValue(this)">
+								<label for="minorTickIntervalUnitSelect"></label>
+								<select id="minorTickIntervalUnitSelect" class="input_small minorTickSetting"
+									value="year">
+									<option value="year">Year</option>
+									<option value="month">Month</option>
+									<option value="day">Day</option>
+								</select>
+							</div>
+							<div>
+								<input type="checkbox" id="displayLine" checked
+									onchange="updateTimelineSettingCheckBok(this, 'lineSetting')">
+								<label for="displayLine"> Line:</label>
+								<label for="settingLineColor" class="lineSetting">Color:</label>
+								<input type="color" class="input_small lineSetting" id="settingLineColor">
+								<label for="settingLineThickness" class="lineSetting">Thickness:</label>
+								<input type="number" class="input_small lineSetting" id="settingLineThickness"
+									value="10">
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -73,28 +109,29 @@
 				<div class="panel-title">Groups</div>
 				<div class="pwease-gib-me-bootstwap-i-cawnt-wite-mawkup-wifout-it">
 					<ul class="nav nav-pills nav-stacked">
-					    <li class="active"><a data-toggle="pill" href="#home">All</a></li>
-					    <li><a data-toggle="pill" href="#menu1">War</a></li>
-					    <li><a data-toggle="pill" href="#menu2">Government</a></li>
-					    <li><a data-toggle="pill" href="#menu3">Act</a></li>
-					 </ul>
-					 <div class="button_holder text-center">
-					 	<button class="btn btn-primary"><i class="fa-solid fa-square-plus"></i></button>
-					 	<button class="btn btn-primary"><i class="fa-solid fa-pencil"></i></button>
-					 	<button class="btn btn-primary"><i class="fa-solid fa-trash"></i></button>
-					 </div>
-					 <div>
-					 	<h4>Group Properties</h4>
+						<li class="active"><a data-toggle="pill" href="#home">All</a></li>
+						<li><a data-toggle="pill" href="#menu1">War</a></li>
+						<li><a data-toggle="pill" href="#menu2">Government</a></li>
+						<li><a data-toggle="pill" href="#menu3">Act</a></li>
+					</ul>
+					<div class="button_holder text-center">
+						<button class="btn btn-primary"><i class="fa-solid fa-square-plus"></i></button>
+						<button class="btn btn-primary"><i class="fa-solid fa-pencil"></i></button>
+						<button class="btn btn-primary"><i class="fa-solid fa-trash"></i></button>
+					</div>
+					<div>
+						<h4>Group Properties</h4>
 						<form action="#">
-						    <div class="form-group">
-						      <label for="color">Color:</label>
-						      <input type="color" class="form-control" id="grp_color" name="grp_color" value="#8E1A06" disabled readonly>
-						    </div>
-						    <div class="form-group">
-						      <label for="font-size">Font Size (px):</label>
-						      <input type="number" class="form-control" id="font_size" value ="14" disabled readonly>
-						    </div>
-						    <!--<button type="submit" class="btn btn-primary">Submit</button>-->
+							<div class="form-group">
+								<label for="color">Color:</label>
+								<input type="color" class="form-control" id="grp_color" name="grp_color" value="#8E1A06"
+									disabled readonly>
+							</div>
+							<div class="form-group">
+								<label for="font-size">Font Size (px):</label>
+								<input type="number" class="form-control" id="font_size" value="14" disabled readonly>
+							</div>
+							<!--<button type="submit" class="btn btn-primary">Submit</button>-->
 						</form>
 					</div>
 				</div>
@@ -105,7 +142,7 @@
 			<div id="panel-timeline" class="panel">
 				<!-- Timeline -->
 				<div id="timeline" class="content">
-					
+
 				</div>
 			</div>
 			<div id="panel-details" class="panel">

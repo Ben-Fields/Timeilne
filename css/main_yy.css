@@ -1,7 +1,7 @@
 * {box-sizing: border-box}
 
 /* Style tab links */
-.tablink {
+/* .tablink {
   background-color: white;
   color: rgb(155, 155, 155);
   border: none;
@@ -25,9 +25,8 @@
   border-left: 2px solid #AADDff;
   font-weight: bold;
   color: black;
-  /* background-color: rgb(175, 125, 125); */
   background-color:white;
-}
+} */
 
 /* Style the tab content (and add height:100% for full page content) */
 .tabcontent {
@@ -70,4 +69,31 @@
 
 .follow_icon {
   position: absolute;
+}
+
+.timeline_inputs{
+  display:flex;
+  flex-direction: column;
+}
+
+.tick_input_inner{
+  padding-left: 1em;
+}
+
+.input_small{
+  -webkit-appearance: none;
+  width: 3em;
+  height: 1.6em;
+  border-style: none none solid none;
+  border-width: 2px;
+}
+
+.input_small::-webkit-outer-spin-button,
+.input_small::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+label:hover{
+  background-color:lightgray;
 }

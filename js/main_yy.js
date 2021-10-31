@@ -1,3 +1,16 @@
+let roundValue = function(evt){
+  evt.value = Math.max(1, Math.round(evt.value));
+}
+
+
+let updateTimelineSettingCheckBok = function(evt, className){
+  if(evt.checked){
+    $("."+className).show();
+  }else{
+    $("."+className).hide();
+  }
+}
+
 let selectEditTab = function (evt, tabID) {
 	tablinks = evt.target.parentNode.getElementsByClassName("panel-title");
 	for (i = 0; i < tablinks.length; i++) {

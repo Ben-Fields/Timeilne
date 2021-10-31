@@ -167,6 +167,7 @@ html {
 }
 
 .panel-title-inactive {
+  color: gray;
   border-right: solid #e6e6e7 1px;
   border-bottom: solid #e6e6e7 2px;
   background: linear-gradient(to bottom, #e2e6eb 0%, #d7dadc 26%, #D1D2D3 100%);
