@@ -94,6 +94,6 @@
     margin: 0;
 }
 
-label:hover{
+#edit label:hover{
   background-color:lightgray;
 }

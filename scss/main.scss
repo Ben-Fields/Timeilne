@@ -8,6 +8,7 @@ $resize-bar-outline: #AADDFF;
 
 $panel-title: #AADAFF;
 $panel-title-inactive: #D1D2D3;
+$panel-title-inactive-text: #484848;
 
 
 /*######  A Brief CSS Reset  ######*/
@@ -165,7 +166,7 @@ html {
 }
 .panel-title-inactive {
 	// Grey-out
-	color: gray;
+	color: $panel-title-inactive-text;
 	border-right: solid lighten($panel-title-inactive, 8%) 1px;
 	border-bottom: solid lighten($panel-title-inactive, 8%) 2px;
 	background: linear-gradient(to bottom,

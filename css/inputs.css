@@ -1,9 +1,9 @@
+/*######  Color Variables  ######*/
 /*######  Input Fields  ######*/
 /* Input positioning */
 .input-container {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+  columns: 2 450px;
+  column-gap: 0;
 }
 
 .input-container > * {
@@ -13,26 +13,31 @@
 
 .input-container > label {
   clear: left;
-  width: 10em;
+  width: 9em;
   text-align: right;
   height: 1.1em;
+  padding-top: 0.15em;
 }
 
-.input-container > input {
+.input-container > input,
+.input-container > select {
   margin-left: 6px;
   width: 300px;
   font-family: "hack";
   font-size: 1.1em;
+  width: calc(100% - 9em - 6px);
 }
 
 .input-container > input[type=date],
 .input-container > input[type=time] {
   width: 147px;
   text-align: center;
+  width: calc(50% - 4.5em - 6px);
 }
 
 /* Input styling */
-.input-container > input {
+.input-container > input,
+.input-container > select {
   border: none;
   border-bottom: solid #74A1F2 2px;
   background-color: #F1F1F1;
@@ -41,14 +46,30 @@
   padding: 2px 0px 2px 4px;
 }
 
-.input-container > input:hover {
+.input-container > input:hover,
+.input-container > select:hover {
   background-color: #e9e9e9;
 }
 
-.input-container > input:focus {
+.input-container > input:focus,
+.input-container > select:focus {
   outline: none;
   background-color: #DDE5F9;
   border-bottom: solid #5376F1 2px;
+}
+
+.input-container > .required::before {
+  content: "* ";
+  color: #2D2D2D;
+}
+
+.input-container > input:required:invalid {
+  border-bottom: solid #F8DE52;
+}
+
+/*######  "Details" Input Fields  ######*/
+.input-container > input[name=description] {
+  cursor: pointer;
 }
 
 /*######  Special Panels  ######*/

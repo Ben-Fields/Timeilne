@@ -154,14 +154,14 @@
 				<!-- Details -->
 				<div id="details" class="content">
 					<div class="panel-title">Details</div>
-					<div id="details-unselected">Select an element to view/edit its details.</div>
-					<div id="details-data" class="input-container" style="display:none;">
+					<div id="details-unselected" style="display:none;">Select an element to view/edit its details.</div>
+					<div id="details-data" class="input-container">
 						<!-- Required always at top. Edited brought to top. Predefined global order. (required files in order then edited fields in order) -->
-						<label for="short-title">Title:</label>
+						<label for="short-title" class="required">Title:</label>
 						<input type="text" name="short-title" required>
 						<label for="long-title">Long Title:</label>
 						<input type="text" name="long-title">
-						<label for="date">Date:</label>
+						<label for="date" class="required">Date:</label>
 						<input type="date" name="date" required>
 						<!-- <label for="time">Time:</label> -->
 						<input type="time" name="time">
@@ -172,15 +172,18 @@
 						<label for="description">Description:</label>
 						<input type="text" name="description">
 						<label for="visual-priority">Visual Priority:</label>
-						<input type="number" name="visual-priority">
+						<input type="number" name="visual-priority" value="1">
 						<label for="groups">Group(s):</label>
 						<input type="text" name="groups">
 						<label for="visible-group">Visible Group:</label>
 						<input type="text" name="visible-group">
 						<!-- Only shows up if there are multiple groups -->
 						<label for="click-action">Click Action:</label>
-						<input type="number" name="click-action">
-						<!-- Show group, show description, Go to hyperlink -->
+						<select id="click-action" name="click-action">
+							<option value="highlight-group">Highlight Group</option>
+							<option value="show-description">Show Description</option>
+							<option value="hyperlink">Go to Hyperlink</option>
+						</select>
 
 						<!-- Advanced -->
 						<label for="anchor-tag">Anchor Tag:</label>
