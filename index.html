@@ -10,10 +10,12 @@
 	<!-- Libraries -->
 	<link rel="stylesheet" type="text/css" href="thirdparty/fontawesome-6/css/all.min.css">
 	<link rel="stylesheet" type="text/css" href="thirdparty/bootstrap-3/bootstrap-namespaced.css">
+	<link rel="stylesheet" type="text/css" href="thirdparty/quill-js/quill.snow.css">
 	<!-- Style -->
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link rel="stylesheet" type="text/css" href="css/inputs.css">
 	<link rel="stylesheet" type="text/css" href="css/info.css">
+	<link rel="stylesheet" type="text/css" href="css/richtext.css">
 	<link rel="stylesheet" type="text/css" href="css/temp.css">
 	<link rel="stylesheet" type="text/css" href="css/main_yy.css">
 </head>
@@ -171,40 +173,38 @@
 				<!-- Details -->
 				<div id="details" class="content">
 					<div class="panel-title">Details</div>
-					<div id="details-unselected" style="display:none;">Select an element to view/edit its details.</div>
+					<button id="details-delete">Delete</button>
+					<div id="details-placeholder" style="display:none;">Select an element to view/edit its details.</div>
 					<div id="details-data" class="input-container">
 						<!-- Required always at top. Edited brought to top. Predefined global order. (required files in order then edited fields in order) -->
-						<label for="short-title" class="required">Title:</label>
-						<input type="text" name="short-title" required>
-						<label for="long-title">Long Title:</label>
-						<input type="text" name="long-title">
-						<label for="date" class="required">Date:</label>
-						<input type="date" name="date" required>
-						<!-- <label for="time">Time:</label> -->
-						<input type="time" name="time">
-						<label for="end-date">End Date:</label>
-						<input type="date" name="end-date">
-						<!-- <label for="end-time">End Time:</label> -->
-						<input type="time" name="end-time">
-						<label for="description">Description:</label>
-						<input type="text" name="description">
-						<label for="visual-priority">Visual Priority:</label>
-						<input type="number" name="visual-priority" value="1" min="1" max="9999">
-						<label for="groups">Group(s):</label>
-						<input type="text" name="groups">
-						<label for="visible-group">Visible Group:</label>
-						<input type="text" name="visible-group">
+						<label for="field-short-title" class="required">Title:</label>
+						<input id="field-short-title" type="text" name="short-title" required>
+						<label for="field-long-title">Long Title:</label>
+						<input id="field-long-title" type="text" name="long-title">
+						<label for="field-date" class="required">Date:</label>
+						<input id="field-date" type="date" name="date" required>
+						<input id="field-time" type="time" name="time">
+						<label for="field-end-date">End Date:</label>
+						<input id="field-end-date" type="date" name="end-date">
+						<input id="field-end-time" type="time" name="end-time">
+						<label for="field-description">Description:</label>
+						<div id="field-description" class="input"></div>
+						<label for="field-visual-priority">Visual Priority:</label>
+						<input id="field-visual-priority" type="number" name="visual-priority" value="1" min="1" max="9999">
+						<label for="field-groups">Group(s):</label>
+						<input id="field-groups" type="text" name="groups">
+						<label for="field-visible-group">Visible Group:</label>
+						<input id="field-visible-group" type="text" name="visible-group">
 						<!-- Only shows up if there are multiple groups -->
-						<label for="click-action">Click Action:</label>
-						<select id="click-action" name="click-action">
+						<label for="field-click-action">Click Action:</label>
+						<select id="field-click-action" name="click-action">
 							<option value="highlight-group">Highlight Group</option>
 							<option value="show-description">Show Description</option>
 							<option value="hyperlink">Go to Hyperlink</option>
 						</select>
-
-						<!-- Advanced -->
-						<label for="anchor-tag">Anchor Tag:</label>
-						<input type="text" name="anchor-tag">
+						<!-- # Advanced # -->
+						<label for="field-anchor-tag">Anchor Tag:</label>
+						<input id="field-anchor-tag" type="text" name="anchor-tag">
 						<!-- Also called a fragment identifier or HTML ID, it allows you to link to this event with a URL. Ex. https://example.com/timeline#my-event. -->
 					</div>
 				</div>
@@ -220,12 +220,22 @@
 	</div>
 	<i id="float_icon_flag" class="fa-solid fa-font-awesome follow_icon" style="display: none;"></i>
 	<i id="float_icon_image" class="fa-solid fa-image follow_icon" style="display: none;"></i>
+	<div id="richtext-cover" style="display:none;">
+		<div id="richtext-container">
+			<div id="richtext-editor"></div>
+			<div id="richtext-controls">
+				<button id="richtext-done">Done</button>
+			</div>
+		</div>
+	</div>
 
 	<!-- Scripts - Libraries -->
 	<script src="thirdparty/jquery/jquery.min.js"></script>
 	<script src="thirdparty/bootstrap-3/bootstrap.js"></script>
+	<script src="thirdparty/quill-js/quill.js"></script>
 	<!-- Scripts - General -->
 	<script src="js/main.js"></script>
+	<script src="js/richtext.js"></script>
 	<script src="js/main_yy.js"></script>
 	<!-- Scripts - Attribution -->
 	<script src="thirdparty/fontawesome-6/attribution.js"></script>

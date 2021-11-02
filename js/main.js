@@ -1,4 +1,4 @@
-/***** Resize functionality *****/
+/*######  Resize functionality  ######*/
 let resize_bars_x = document.getElementsByClassName("resize-x");
 let resize_bars_y = document.getElementsByClassName("resize-y");
 

@@ -7,11 +7,14 @@ $input-bg-focus: #DDE5F9;
 $input-underline-incomplete: #F8DE52;
 $required-asterisk: #2D2D2D;
 
+$delete-btn: #E46868;
+
 /*######  Input Fields  ######*/
 /* Input positioning */
 .input-container {
 	columns: 2 450px;
 	column-gap: 0;
+	padding-bottom: 15px;
 }
 .input-container > * {
 	float: left;
@@ -25,12 +28,13 @@ $required-asterisk: #2D2D2D;
 	padding-top: 0.15em;
 }
 .input-container > input,
-.input-container > select {
+.input-container > select,
+.input-container > .input {
 	margin-left: 6px;
-	width: 300px;
 	font-family: "hack";
 	font-size: 1.1em;
 	width: calc(100% - 9em - 6px);
+	height: 1.5em;
 }
 .input-container > input[type=date],
 .input-container > input[type=time] {
@@ -40,7 +44,8 @@ $required-asterisk: #2D2D2D;
 }
 /* Input styling */
 .input-container > input,
-.input-container > select {
+.input-container > select,
+.input-container > .input {
 	border: none;
 	border-bottom: solid $input-underline 2px;
 	background-color: $input-bg;
@@ -49,7 +54,8 @@ $required-asterisk: #2D2D2D;
 	padding: 2px 0px 2px 4px;
 }
 .input-container > input:hover,
-.input-container > select:hover {
+.input-container > select:hover,
+.input-container > .input:hover {
 	background-color: darken($input-bg, 3%);
 }
 .input-container > input:focus,
@@ -65,16 +71,43 @@ $required-asterisk: #2D2D2D;
 .input-container > input:required:invalid {
 	border-bottom: solid $input-underline-incomplete;
 }
-
-
-/*######  "Details" Input Fields  ######*/
-.input-container > input[name="description"] {
+.input-container > select {
 	cursor: pointer;
 }
 
 
+/*######  "Details" Input Fields  ######*/
+#field-description {
+	cursor: pointer;
+}
+#details-delete {
+	position: sticky;
+	top: 5px;
+	float: right;
+	background-color: $delete-btn;
+	margin-right: 10px;
+	margin-top: 5px;
+	font-size: 1.05em;
+	border: solid 1px desaturate(darken($delete-btn,10%), 10%);
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 2px 5px;
+	color: white;
+	text-shadow: -1px -1px 1px darken($delete-btn,20%), 0 1px 1px lighten($delete-btn,10%);
+	box-shadow: 0 0 8px 0 #00000044;
+	border-right-width: 3px;
+	border-bottom-width: 3px;
+	border-right-color: desaturate(darken($delete-btn,15%), 20%);
+	border-bottom-color: desaturate(darken($delete-btn,15%), 20%);
+	opacity: 0.6;
+}
+#details-delete:hover {
+	opacity: 1;
+}
+
+
 /*######  Special Panels  ######*/
-#details-unselected {
+#details-placeholder {
 	position: absolute;
 	top: 0;
 	left: 0;
