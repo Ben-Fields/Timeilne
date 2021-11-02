@@ -1,0 +1,27 @@
+/*######  Color Variables  ######*/
+$info-icon: #5376F1;
+
+
+/*######  Info Message  ######*/
+#info-message {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+#info-message > div {
+	display: inline-block;
+	text-align: center;
+}
+#info-message > div > i {
+	font-size: 1.7em;
+	color: $info-icon;
+	margin-right: 0.2em;
+	position: relative;
+	top: 0.08em;
+}
+#info-message > div > span {
+	font-size: 1.2em;
+}

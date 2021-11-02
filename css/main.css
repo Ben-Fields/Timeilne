@@ -3,6 +3,9 @@
 * {
   box-sizing: border-box;
   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 body {
@@ -11,6 +14,17 @@ body {
   background-color: #000000;
   margin: 0;
   overflow: hidden;
+}
+
+input {
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+}
+
+p {
+  margin: 0;
 }
 
 /*######  Basic Layout  ######*/
@@ -106,7 +120,7 @@ body {
   box-sizing: content-box;
   transition: outline 0.3s, background-color 0.3s;
   outline: solid transparent 3px;
-  z-index: 2;
+  z-index: 3;
 }
 
 .resize:hover {

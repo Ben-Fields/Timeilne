@@ -13,6 +13,7 @@
 	<!-- Style -->
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link rel="stylesheet" type="text/css" href="css/inputs.css">
+	<link rel="stylesheet" type="text/css" href="css/info.css">
 	<link rel="stylesheet" type="text/css" href="css/temp.css">
 	<link rel="stylesheet" type="text/css" href="css/main_yy.css">
 </head>
@@ -101,6 +102,22 @@
 				<!-- Info -->
 				<div id="info" class="content">
 					<div class="panel-title">Info</div>
+					<div id="info-message">
+						<div id="info-unfinished-elem">
+							<i class="fa-solid fa-info-circle"></i>
+							<span>There are unfinished elements.</span>
+							<div>
+								<!-- Buttons go here to switch between elements -->
+							</div>
+						</div>
+						<div id="info-range" style="display:none;">
+							<i class="fa-solid fa-info-circle"></i>
+							<span>There are elements out of range of the timeline.</span>
+						</div>
+					</div>
+					<div id="info-nav">
+						<!-- Navigation goes here to switch between info messages -->
+					</div>
 				</div>
 			</div>
 		</div>
@@ -172,7 +189,7 @@
 						<label for="description">Description:</label>
 						<input type="text" name="description">
 						<label for="visual-priority">Visual Priority:</label>
-						<input type="number" name="visual-priority" value="1">
+						<input type="number" name="visual-priority" value="1" min="1" max="9999">
 						<label for="groups">Group(s):</label>
 						<input type="text" name="groups">
 						<label for="visible-group">Visible Group:</label>

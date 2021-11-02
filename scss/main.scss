@@ -15,6 +15,9 @@ $panel-title-inactive-text: #484848;
 * {
 	box-sizing: border-box;
 	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 body {
 	width: 100vw;
@@ -22,6 +25,15 @@ body {
 	background-color: $bg;
 	margin: 0;
 	overflow: hidden;
+}
+input {
+	-webkit-user-select: auto;
+	-moz-user-select: auto;
+	-ms-user-select: auto;
+	user-select: auto;
+}
+p {
+	margin: 0;
 }
 
 
@@ -102,7 +114,7 @@ body {
 	box-sizing: content-box;
 	transition: outline 0.3s, background-color 0.3s;
 	outline: solid transparent 3px;
-	z-index: 2;
+	z-index: 3;
 }
 .resize:hover {
 	background-color: $resize-bar-hover;
@@ -145,7 +157,7 @@ html {
 		saturate(lighten($panel-title,8%),15%) 0%,
 		saturate(lighten($panel-title,3%),5%) 26%,
 		$panel-title 100%);
-	text-shadow: -1px -1px 1px darken($panel-title,10%),0 1px 1px lighten($panel-title,10%);
+	text-shadow: -1px -1px 1px darken($panel-title,10%), 0 1px 1px lighten($panel-title,10%);
 	margin-bottom: 8px;
 	// Size
 	font-size: 1.1em;
@@ -173,7 +185,7 @@ html {
 		saturate(lighten($panel-title-inactive,8%),15%) 0%,
 		saturate(lighten($panel-title-inactive,3%),5%) 26%,
 		$panel-title-inactive 100%);
-	text-shadow: -1px -1px 1px darken($panel-title-inactive,10%),0 1px 1px lighten($panel-title-inactive,10%);
+	text-shadow: -1px -1px 1px darken($panel-title-inactive,10%), 0 1px 1px lighten($panel-title-inactive,10%);
 	cursor: pointer;
 	// Shrink
 	height: 1.6em;
