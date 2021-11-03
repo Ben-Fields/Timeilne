@@ -130,7 +130,7 @@
 			<!-- Groups -->
 			<div id="groups" class="content">
 				<div class="panel-title">Groups</div>
-				<div class="bs">
+				<div class="bs" id="group-section">
 					<ul class="nav nav-pills nav-stacked">
 						<li class="active"><a data-toggle="pill" href="#home">All</a></li>
 						<li><a data-toggle="pill" href="#menu1">War</a></li>
@@ -140,7 +140,7 @@
 					<div class="button_holder text-center">
 						<button class="btn btn-primary"><i class="fa-solid fa-square-plus"></i></button>
 						<button class="btn btn-primary"><i class="fa-solid fa-pencil"></i></button>
-						<button class="btn btn-primary"><i class="fa-solid fa-trash"></i></button>
+						<button class="btn btn-primary" id="grp_del" onclick="delete_group()"><i class="fa-solid fa-trash"></i></button>
 					</div>
 					<div>
 						<h4>Group Properties</h4>
@@ -237,6 +237,7 @@
 	<script src="js/main.js"></script>
 	<script src="js/richtext.js"></script>
 	<script src="js/main_yy.js"></script>
+	<script src="js/main_yath.js"></script>
 	<!-- Scripts - Attribution -->
 	<script src="thirdparty/fontawesome-6/attribution.js"></script>
 	<!-- My add-in script for hot-reloading. Please no touch. -->
