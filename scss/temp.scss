@@ -1,4 +1,5 @@
 /*######  Temporary  ######*/
+// Unused (right) panel
 #unused {
 	color: #DDDDDD;
 	font-size: 50px;
@@ -6,4 +7,13 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+// Sample event node
+.tc-layer-elements > div {
+	width: 0;
+	height: 0;
+	border: solid indigo 5px;
+	margin-left: 300px;
+	border-radius: 5px
 }
