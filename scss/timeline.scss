@@ -1,0 +1,52 @@
+/*######  Color Variables  ######*/
+$line: #111111;
+
+
+/*######  Sizing Variables  ######*/
+$line-thickness: 2px;
+$arrow-height: 21px;
+
+
+/*######  Timeline Layout  ######*/
+.tc-timeline {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+.tc-layer-line,
+.tc-layer-elements {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+
+
+
+/*######  Timeline Default Style  ######*/
+.tc-line {
+	flex: 1;
+	height: $line-thickness;
+	background-color: $line;
+}
+.tc-left-arrow,
+.tc-right-arrow {
+	flex-shrink: 0;
+}
+.tc-left-arrow {
+	width: 0;
+	height: 0;
+	border-top: floor($arrow-height/2) solid transparent;
+	border-bottom: floor($arrow-height/2) solid transparent;
+	border-right: floor($arrow-height/1.4) solid $line;
+}
+.tc-right-arrow {
+	width: 0;
+	height: 0;
+	border-top: floor($arrow-height/2) solid transparent;
+	border-bottom: floor($arrow-height/2) solid transparent;
+	border-left: floor($arrow-height/1.4) solid $line;
+}

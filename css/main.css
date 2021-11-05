@@ -180,6 +180,9 @@ html {
   padding: 0.08em 0.6em 0.1em 0.4em;
   line-height: 1.6em;
   z-index: 2;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .tab-wrapper, :not(.tab-wrapper) > .panel-title {
@@ -223,6 +226,14 @@ html {
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-end;
+}
+
+/*######  Timeline Wrapper  ######*/
+#timeline {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /*# sourceMappingURL=main.css.map */
