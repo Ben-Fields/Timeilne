@@ -8,12 +8,8 @@
   align-items: center;
 }
 
-.tc-layer-elements > div {
-  width: 0;
-  height: 0;
-  border: solid indigo 5px;
-  margin-left: 300px;
-  border-radius: 5px;
+.tc-event {
+  margin-left: 250px;
 }
 
 /*# sourceMappingURL=temp.css.map */
