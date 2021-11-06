@@ -237,3 +237,8 @@ html {
 }
 
 /*# sourceMappingURL=main.css.map */
+
+#save_button
+{
+	display: none;
+}

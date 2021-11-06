@@ -17,3 +17,10 @@ function add_group()
 	li.appendChild(a);
 	parent_ul.appendChild(li);
 }
+
+function edit_group()
+{
+	document.getElementById("grp_color").disabled = false;
+	document.getElementById("font_size").disabled = false;
+	document.getElementById("save_button").style.display = "block";
+}

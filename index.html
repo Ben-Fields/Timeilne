@@ -32,7 +32,7 @@
 						<button class="btn btn-primary" onclick="document.getElementById('file-input').click();">Open <i class="fa-solid fa-folder-open"></i></button>
 						<input id="file-input" type="file" name="name" style="display: none;" />
 						<button class="btn btn-primary">Save <i class="fa-solid fa-floppy-disk"></i></button>
-						<a href="Saved Timeline.xlsx" download="Saved Timeline.xlsx"><button class="btn btn-primary">Format <i class="fa-solid fa-align-justify"></i></button></a>
+						<a href="Sample Format.xlsx" download="Sample Format.xlsx"><button class="btn btn-primary">Format <i class="fa-solid fa-align-justify"></i></button></a>
 					</div>
 				</div>
 				<div class="resize resize-x"></div>
@@ -154,7 +154,7 @@
 					</ul>
 					<div class="button_holder text-center">
 						<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-square-plus"></i></button>
-						<button class="btn btn-primary"><i class="fa-solid fa-pencil"></i></button>
+						<button class="btn btn-primary" onclick="edit_group()"><i class="fa-solid fa-pencil"></i></button>
 						<button class="btn btn-primary" id="grp_del" onclick="delete_group()"><i class="fa-solid fa-trash"></i></button>
 					</div>
 
@@ -188,13 +188,13 @@
 							<div class="form-group">
 								<label for="color">Color:</label>
 								<input type="color" class="form-control" id="grp_color" name="grp_color" value="#8E1A06"
-									disabled readonly>
+									disabled>
 							</div>
 							<div class="form-group">
 								<label for="font-size">Font Size (px):</label>
-								<input type="number" class="form-control" id="font_size" value="14" disabled readonly>
+								<input type="number" class="form-control" id="font_size" value="14" disabled>
 							</div>
-							<!--<button type="submit" class="btn btn-primary">Submit</button>-->
+							<button class="btn btn-primary" id="save_button">Save</button>
 						</form>
 					</div>
 				</div>
