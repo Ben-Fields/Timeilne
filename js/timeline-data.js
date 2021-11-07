@@ -3,8 +3,9 @@ const START_TIME_FIELD = 'Start Time'
 const END_DATE_FIELD = 'End Date'
 const END_TIME_FIELD = 'End Time'
 const EVENT_TITLE = 'Event Title'
-
 const KEY_FIELDS = [START_DATE_FIELD, START_TIME_FIELD, END_DATE_FIELD, END_TIME_FIELD, EVENT_TITLE]
+
+const event_manager = new EventManager();
 
 const INIT_DATE_VALUE = -1000000000000000;
 const INIT_DATE = new Date(INIT_DATE_VALUE);
@@ -28,8 +29,8 @@ var update_time_by_string = function (date, val) {
 var update_date_by_string = function (date, val) {
     new_date = new Date(Date.parse(val));
     date.setFullYear(new_date.getFullYear());
-    date.setDate(new_date.getDate());
     date.setMonth(new_date.getMonth());
+    date.setDate(new_date.getDate());
 }
 
 var print_date = function (date) {
