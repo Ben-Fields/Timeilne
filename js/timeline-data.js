@@ -1,16 +1,23 @@
 const START_DATE_FIELD = 'Start Date'
 const START_TIME_FIELD = 'Start Time'
+const END_DATE_FIELD = 'End Date'
+const END_TIME_FIELD = 'End Time'
 const EVENT_TITLE = 'Event Title'
 
-const DATETIME_LOCALES = 'en-US'
-const DATE_FORMAT_OPTION = { year: 'numeric', month: '2-digit', day: '2-digit' };
-const TIME_FOMRAT_OPTION = {hour: '2-digit', minute: '2-digit', hour12: false};
+const KEY_FIELDS = [START_DATE_FIELD, START_TIME_FIELD, END_DATE_FIELD, END_TIME_FIELD, EVENT_TITLE]
 
-var update_time_by_string = function(date, val){
+const INIT_DATE_VALUE = -1000000000000000;
+const INIT_DATE = new Date(INIT_DATE_VALUE);
+const DATETIME_LOCALES = 'en-US';
+const DATE_FORMAT_OPTION = { year: 'numeric', month: '2-digit', day: '2-digit' };
+const TIME_FOMRAT_OPTION = { hour: '2-digit', minute: '2-digit', hour12: false };
+
+
+var update_time_by_string = function (date, val) {
     // val acceptable format: '13:00', '13:33:10'
-    let arr = val.split(":").map(function(ele){
+    let arr = val.split(":").map(function (ele) {
         val = Number(ele);
-        if(isNaN(val)){
+        if (isNaN(val)) {
             throw 'wrong input format, acceptable format: 13:00, 13:33:10';
         }
         return val;
@@ -18,139 +25,172 @@ var update_time_by_string = function(date, val){
     date.setHours(...arr);
 }
 
-var update_date_by_string = function(date, val){
+var update_date_by_string = function (date, val) {
     new_date = new Date(Date.parse(val));
     date.setFullYear(new_date.getFullYear());
     date.setDate(new_date.getDate());
     date.setMonth(new_date.getMonth());
 }
 
-
-class TimelineEvent{
-    #eid;
-    constructor(eid){
-        this.#eid = eid;
+var print_date = function (date) {
+    if (date <= INIT_DATE) {
+        return "invalid date"
     }
-
-    getId(){
-        return this.#eid;
-    }
+    return date.toLocaleDateString(DATETIME_LOCALES, DATE_FORMAT_OPTION)
 }
 
-var is_event_valid = function(event){
-    // check only whether the field exist
-    if(!event[START_DATE_FIELD] || !event[EVENT_TITLE]){
+var is_event_valid = function (event) {
+    if (!event.title || event.start_datetime <= INIT_DATE) {
         console.error("event missing start date or title");
         return false;
     }
     return true;
 }
 
-var parse_date = function(event){
-    if(!event[START_TIME_FIELD]){
-        return Date.parse(event[START_DATE_FIELD])
+class TimelineEvent {
+    #eid;
+    #em;
+    title;
+    start_datetime;
+    end_datetime;
+
+    constructor(eid, em) {
+        this.#eid = eid;
+        this.#em = em;
+        this.title = "";
+        this.start_datetime = new Date(INIT_DATE_VALUE);
+        this.end_datetime = new Date(INIT_DATE_VALUE);
     }
-    return Date.parse(event[START_DATE_FIELD] + " " + event[START_TIME_FIELD])
+
+    getId() {
+        return this.#eid;
+    }
+
+    update_start_date(val, resort = true) {
+        update_date_by_string(this.start_datetime, val);
+        if (resort) {
+            this.#em.sort_events();
+        }
+    }
+
+    update_start_time(val, resort = true) {
+        update_time_by_string(this.start_datetime, val);
+        if (resort) {
+            this.#em.sort_events();
+        }
+    }
+
+    update_title(title, resort = true) {
+        this.title = title;
+        if (resort) {
+            this.#em.sort_events();
+        }
+    }
+
+    update_end_date(val) {
+        update_date_by_string(this.end_datetime, val);
+    }
+
+    update_end_time(val) {
+        update_time_by_string(this.end_datetime, val);
+    }
 }
 
-class EventManager{
-    
+class EventManager {
+
     event_map = new Map(); // any event created
-    valid_eids = new Set(); // set of valid events
     ordered_events = []; // ordered list
     id_incremental = 0;
 
-    #cache_start_index=-1;
-    #cache_end_index=-1;
-
     // create a new event object
-    create_event(){
-        let event = new TimelineEvent(this.id_incremental);
+    create_event() {
+        let event = new TimelineEvent(this.id_incremental, this);
         this.id_incremental += 1;
 
         this.event_map.set(event.getId(), event);
+        this.ordered_events.unshift(event);
+
         return event;
     }
 
-    is_event_valid(eid){
-        return this.valid_eids.has(eid);
-    }
-
-    get_event_by_id(eid){
+    get_event_by_id(eid) {
         return this.event_map.get(eid);
     }
 
-    // add event into a sorted list
-    add_to_valid_event(event, resort=true){
-        if(!is_event_valid(event)){
-            return false;
-        }
-        return this.add_to_valid_event_by_id( event.getId(), resort);
-    }
-
-    add_to_valid_event_by_id(eid, resort=true){
-        if(!this.event_map.has(eid)){
-            return false;
-        }
-        this.valid_eids.add(eid);
-        this.ordered_events.push( this.get_event_by_id(eid));
-
-        if(resort){
-            this.sort_events();
-        }
-        return true;
-    }
-
     // sort the stored ordered_events
-    sort_events(){
+    sort_events() {
         this.ordered_events.sort(function (a, b) {
-            let date_a = parse_date(a);
-            let date_b = parse_date(b);
-    
-            if (date_a > date_b) {
+            if (a.start_datetime > b.start_datetime) {
                 return 1;
-            } else if (date_a < date_b) {
+            } else if (a.start_datetime < b.start_datetime) {
                 return -1;
             } else {
-                if (a['Event Title'] > b['Event Title']) {
+                if (a.title > b.title) {
                     return 1;
-                } else{
+                } else {
                     return -1;
                 }
             }
         })
     }
 
-    delete_event_by_id(eid){
-        if(!this.event_map.has(eid)){
+    delete_event_by_id(eid) {
+        if (!this.event_map.has(eid)) {
             return false;
         }
-
-        if(this.valid_eids.has(eid)){
-            this.valid_eids.delete(eid);
-            this.ordered_events = this.ordered_events.filter(e => e.getId !== eid);
-        }
-
+        this.ordered_events = this.ordered_events.filter(e => e.getId !== eid);
         this.event_map.delete(eid);
         return true;
     }
 
-    load_timeline_events(event_list){ // load imported event list to EventManager
-        let count = 0;
+    load_timeline_events(event_list) { // load imported event list to EventManager
+        let total = 0;
+        let valid_count = 0;
+
         event_list.forEach(
             ele => {
                 let tar = this.create_event();
                 Object.assign(tar, ele);
-                if(this.add_to_valid_event(tar, false)){
-                    count += 1;
+
+                let start_date = tar[START_DATE_FIELD];
+                if (start_date) {
+                    tar.update_start_date(start_date, false);
                 }
+
+                let start_time = tar[START_TIME_FIELD];
+                if (start_time) {
+                    tar.update_start_time(start_time, false);
+                }
+
+                let end_date = tar[END_DATE_FIELD];
+                if (end_date) {
+                    tar.update_end_date(end_date);
+                }
+
+                let end_time = tar[END_TIME_FIELD];
+                if (end_time) {
+                    tar.update_end_time(end_time, false);
+                }
+
+                let title = tar[EVENT_TITLE];
+                if (title) {
+                    tar.update_title(title);
+                }
+
+                KEY_FIELDS.forEach(key_field => {
+                    delete tar[key_field];
+                })
+
+                if (is_event_valid(tar, false)) {
+                    valid_count += 1;
+                }
+                total += 1;
             }
         )
-        console.log("loaded record: " + count);
+
+        console.log("total: " + total + " rows, loaded record: " + valid_count);
         this.sort_events();
-        console.log("sorting");
-        
-        return count;
+        return valid_count;
     }
 }
 
