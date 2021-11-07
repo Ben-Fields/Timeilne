@@ -2,6 +2,30 @@ const START_DATE_FIELD = 'Start Date'
 const START_TIME_FIELD = 'Start Time'
 const EVENT_TITLE = 'Event Title'
 
+const DATETIME_LOCALES = 'en-US'
+const DATE_FORMAT_OPTION = { year: 'numeric', month: '2-digit', day: '2-digit' };
+const TIME_FOMRAT_OPTION = {hour: '2-digit', minute: '2-digit', hour12: false};
+
+var update_time_by_string = function(date, val){
+    // val acceptable format: '13:00', '13:33:10'
+    let arr = val.split(":").map(function(ele){
+        val = Number(ele);
+        if(isNaN(val)){
+            throw 'wrong input format, acceptable format: 13:00, 13:33:10';
+        }
+        return val;
+    })
+    date.setHours(...arr);
+}
+
+var update_date_by_string = function(date, val){
+    new_date = new Date(Date.parse(val));
+    date.setFullYear(new_date.getFullYear());
+    date.setDate(new_date.getDate());
+    date.setMonth(new_date.getMonth());
+}
+
+
 class TimelineEvent{
     #eid;
     constructor(eid){

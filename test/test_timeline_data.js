@@ -38,3 +38,27 @@ console.log("after key update")
 em.ordered_events.forEach(element => {
     console.log( element[START_DATE_FIELD] + "-" + element[EVENT_TITLE]);
 });
+
+
+
+////////////////////
+// test date time string in/out format
+test_date_input_formats = ['11/07/2021 1:00:00 PM',
+                           '11/07/2021 13:00', 
+                           '2021-11-07 13:00']
+
+test_date_input_formats.forEach(ele => {
+    cur = new Date(Date.parse(ele));
+    console.assert(cur.toLocaleDateString(DATETIME_LOCALES, DATE_FORMAT_OPTION) == '11/07/2021');
+    console.assert(cur.toLocaleTimeString(DATETIME_LOCALES, TIME_FOMRAT_OPTION) == '13:00');
+})
+
+// test update_date_by_string
+cur = new Date(Date.parse('2021-11-07 13:00'));
+update_date_by_string( cur, "2023-09-20");
+console.assert(cur.getFullYear()==2023 && cur.getHours()==13);
+
+// test update_time_by_string
+cur = new Date(Date.parse('11/07/2021 1:12:00 PM'))
+update_time_by_string(cur, "05:23");
+console.assert(cur.getFullYear()==2021 && cur.getHours()==5);
