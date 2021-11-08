@@ -5,8 +5,6 @@ const END_TIME_FIELD = 'End Time'
 const EVENT_TITLE = 'Event Title'
 const KEY_FIELDS = [START_DATE_FIELD, START_TIME_FIELD, END_DATE_FIELD, END_TIME_FIELD, EVENT_TITLE]
 
-const event_manager = new EventManager();
-
 const INIT_DATE_VALUE = -1000000000000000;
 const INIT_DATE = new Date(INIT_DATE_VALUE);
 const DATETIME_LOCALES = 'en-US';
@@ -195,3 +193,24 @@ class EventManager {
     }
 }
 
+const event_manager = new EventManager();
+
+
+document.getElementById('file-input').addEventListener('change', function () {
+    var fr = new FileReader();
+    fr.onload=function(e){
+        loaded_events = $.csv.toObjects(fr.result);
+        if(!loaded_events.length>0){
+            return;
+        }
+        
+        // check file type
+        if(loaded_events[0].hasOwnProperty(EVENT_TITLE)){
+            console.log("loading a data file.");
+            event_manager.load_timeline_events(loaded_events);
+        }else if(loaded_events[0].hasOwnProperty("Major Tick")){
+            console.log("loading a timeline setting (not implement)");
+        }
+    }
+    fr.readAsText(this.files[0]);
+})
