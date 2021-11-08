@@ -195,22 +195,39 @@ class EventManager {
 
 const event_manager = new EventManager();
 
-
 document.getElementById('file-input').addEventListener('change', function () {
     var fr = new FileReader();
     fr.onload=function(e){
-        loaded_events = $.csv.toObjects(fr.result);
-        if(!loaded_events.length>0){
+        loaded_csv = $.csv.toObjects(fr.result);
+        if(!loaded_csv.length>0){
             return;
         }
         
         // check file type
-        if(loaded_events[0].hasOwnProperty(EVENT_TITLE)){
+        if(loaded_csv[0].hasOwnProperty(EVENT_TITLE)){
             console.log("loading a data file.");
-            event_manager.load_timeline_events(loaded_events);
-        }else if(loaded_events[0].hasOwnProperty("Major Tick")){
-            console.log("loading a timeline setting (not implement)");
+            event_manager.load_timeline_events(loaded_csv);
+        }else if(loaded_csv[0].hasOwnProperty("displayMajorTick")){
+            console.log("loading a timeline setting");
+            // load timeline setting from csv
+            for (const [key, value] of Object.entries(loaded_csv[0])) {
+                let ele = document.getElementById(key);
+                if(ele){
+                    if(ele.type == 'checkbox'){
+                        ele.checked = (value=='1');
+                    }else if(ele.type == 'date'){
+                        let tmp_date = new Date(Date.parse(value));
+                        ele.value = tmp_date.getFullYear().toString().padStart(4,'0') + "-" +
+                                    tmp_date.getMonth().toString().padStart(2, '0') + "-" +
+                                    tmp_date.getDate().toString().padStart(2, '0');
+                    }else{
+                        ele.value = value;
+                    }
+                }
+            }
         }
     }
     fr.readAsText(this.files[0]);
 })
+
+
