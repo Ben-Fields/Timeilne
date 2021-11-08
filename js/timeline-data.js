@@ -195,6 +195,7 @@ class EventManager {
 
 const event_manager = new EventManager();
 
+console.log(event_manager.ordered_events);
 
 document.getElementById('file-input').addEventListener('change', function () {
     var fr = new FileReader();
@@ -203,7 +204,7 @@ document.getElementById('file-input').addEventListener('change', function () {
         if(!loaded_events.length>0){
             return;
         }
-        
+
         // check file type
         if(loaded_events[0].hasOwnProperty(EVENT_TITLE)){
             console.log("loading a data file.");
@@ -214,3 +215,4 @@ document.getElementById('file-input').addEventListener('change', function () {
     }
     fr.readAsText(this.files[0]);
 })
+
