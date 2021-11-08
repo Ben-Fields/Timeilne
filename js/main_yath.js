@@ -12,10 +12,10 @@ function delete_group()
 	}	
 }
 
-function add_group()
+function add_group(grp_name)
 {
-	var grp_name = document.getElementById("group-name").value;
-	console.log(grp_name);
+	/*var grp_name = document.getElementById("group-name").value;
+	console.log(grp_name);*/
 	const text_node = document.createTextNode(grp_name);
 	var parent_ul = document.querySelector("#group-section > ul");
 	const li = document.createElement("li");
