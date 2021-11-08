@@ -32,25 +32,83 @@ var update_date_by_string = function (date, val) {
 }
 
 var print_date = function (date) {
-    if (date <= INIT_DATE) {
+    if (date.getFullYear() == INIT_DATE.getFullYear()) {
         return "invalid date"
     }
     return date.toLocaleDateString(DATETIME_LOCALES, DATE_FORMAT_OPTION)
 }
 
 var is_event_valid = function (event) {
-    if (!event.title || event.start_datetime <= INIT_DATE) {
+    if (!event.title || !event.flag_start_date_init) {
         console.error("event missing start date or title");
         return false;
     }
     return true;
 }
 
+class GroupElement{
+    #gid;
+    #count;
+    name;
+    color;
+    fontsize;
+
+    constructor(gid, name){
+        this.#gid = gid;
+        this.name = name;
+    }
+}
+
+class GroupManager{
+    #id_incremental=0;
+    groups = new Map(); // key: id, value: groupElement
+
+    create_group(name){
+        // check name existed return existed
+        for (const gid of this.groups.values()){
+            if(name == this.groups[gid].name){
+                return this.groups[gid];
+            }
+        }
+
+        // create new one if not
+        let g = new GroupElement(this.#id_incremental, name);
+        this.groups.set(this.#id_incremental, g);
+        this.#id_incremental+=1;
+    }
+
+    get_group_name_by_id(id){
+        return 
+    }
+
+    get_group_by_id(id){
+        // return 
+    }
+
+    delete_group_by_id(id){
+        // check if element count > 0 -> not allow to delete
+
+        // count
+    }
+
+    rename_group_by_id(id, new_name){
+        // check if new name existed
+    }
+
+
+}
+
+
 class TimelineEvent {
     #eid;
     #em;
     title;
-    start_datetime;
+
+    flag_start_date_init = false;
+    flag_start_time_init = false;
+    flag_end_date_init = false;
+    flag_end_time_init = false;
+    start_datetime;    
     end_datetime;
 
     constructor(eid, em) {
@@ -67,6 +125,7 @@ class TimelineEvent {
 
     update_start_date(val, resort = true) {
         update_date_by_string(this.start_datetime, val);
+        this.flag_start_date_init = true;
         if (resort) {
             this.#em.sort_events();
         }
@@ -74,6 +133,7 @@ class TimelineEvent {
 
     update_start_time(val, resort = true) {
         update_time_by_string(this.start_datetime, val);
+        this.flag_start_time_init = true;
         if (resort) {
             this.#em.sort_events();
         }
@@ -88,16 +148,19 @@ class TimelineEvent {
 
     update_end_date(val) {
         update_date_by_string(this.end_datetime, val);
+        this.flag_end_date_init = true;
     }
 
     update_end_time(val) {
         update_time_by_string(this.end_datetime, val);
+        this.flag_end_time_init = true;
     }
 }
 
 class EventManager {
 
     event_map = new Map(); // any event created
+    invalid_events_in_csv = [];
     ordered_events = []; // ordered list
     id_incremental = 0;
 
@@ -119,6 +182,10 @@ class EventManager {
     // sort the stored ordered_events
     sort_events() {
         this.ordered_events.sort(function (a, b) {
+            if(!a.flag_start_date_init){
+                return -1;
+            }
+
             if (a.start_datetime > b.start_datetime) {
                 return 1;
             } else if (a.start_datetime < b.start_datetime) {
@@ -180,7 +247,8 @@ class EventManager {
                     delete tar[key_field];
                 })
 
-                if (is_event_valid(tar, false)) {
+                if (is_event_valid(tar)) {
+                    this.invalid_events_in_csv.push(tar);
                     valid_count += 1;
                 }
                 total += 1;
@@ -197,30 +265,30 @@ const event_manager = new EventManager();
 
 document.getElementById('file-input').addEventListener('change', function () {
     var fr = new FileReader();
-    fr.onload=function(e){
+    fr.onload = function (e) {
         loaded_csv = $.csv.toObjects(fr.result);
-        if(!loaded_csv.length>0){
+        if (!loaded_csv.length > 0) {
             return;
         }
 
         // check file type
-        if(loaded_csv[0].hasOwnProperty(EVENT_TITLE)){
+        if (loaded_csv[0].hasOwnProperty(EVENT_TITLE)) {
             console.log("loading a data file.");
             event_manager.load_timeline_events(loaded_csv);
-        }else if(loaded_csv[0].hasOwnProperty("displayMajorTick")){
+        } else if (loaded_csv[0].hasOwnProperty("displayMajorTick")) {
             console.log("loading a timeline setting");
             // load timeline setting from csv
             for (const [key, value] of Object.entries(loaded_csv[0])) {
                 let ele = document.getElementById(key);
-                if(ele){
-                    if(ele.type == 'checkbox'){
-                        ele.checked = (value=='1');
-                    }else if(ele.type == 'date'){
+                if (ele) {
+                    if (ele.type == 'checkbox') {
+                        ele.checked = (value == '1');
+                    } else if (ele.type == 'date') {
                         let tmp_date = new Date(Date.parse(value));
-                        ele.value = tmp_date.getFullYear().toString().padStart(4,'0') + "-" +
-                                    tmp_date.getMonth().toString().padStart(2, '0') + "-" +
-                                    tmp_date.getDate().toString().padStart(2, '0');
-                    }else{
+                        ele.value = tmp_date.getFullYear().toString().padStart(4, '0') + "-" +
+                            tmp_date.getMonth().toString().padStart(2, '0') + "-" +
+                            tmp_date.getDate().toString().padStart(2, '0');
+                    } else {
                         ele.value = value;
                     }
                 }

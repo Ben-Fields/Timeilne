@@ -26,7 +26,7 @@ console.assert(event2.title == "UPDATED title");
 // print sorted list
 console.log("print out element in list");
 test_em.ordered_events.forEach(ele => {
-    console.log( print_date(ele.start_datetime));
+    console.log( print_date(ele.start_datetime) + "-" + ele.title);
 });
 
 
