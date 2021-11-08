@@ -238,7 +238,7 @@ html {
 
 /*# sourceMappingURL=main.css.map */
 
-#save_button
+#save_button, #grp_name
 {
 	display: none;
 }

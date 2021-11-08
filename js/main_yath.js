@@ -1,7 +1,15 @@
 function delete_group()
 {
-	var element = document.querySelector("#group-section > ul > li.active"); 
-	element.style.display = "none";
+	var element = document.querySelector("#group-section > ul > li.active");
+	var name = element.querySelector("a").innerHTML;
+	if(name == "All")
+	{
+		alert("This cannot be deleted.")
+	}
+	else
+	{
+		element.style.display = "none";	
+	}	
 }
 
 function add_group()
@@ -20,7 +28,11 @@ function add_group()
 
 function edit_group()
 {
+	var text = document.querySelector("#group-section > ul > li.active > a").innerHTML;
+	console.log(text);
 	document.getElementById("grp_color").disabled = false;
 	document.getElementById("font_size").disabled = false;
 	document.getElementById("save_button").style.display = "block";
+	document.getElementById("grp_name").style.display = "block";
+	document.getElementById("grp_name_input").value = text;
 }

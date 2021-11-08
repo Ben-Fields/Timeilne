@@ -185,6 +185,10 @@
 					<div>
 						<h4>Group Properties</h4>
 						<form action="#">
+							<div class="form-group" id="grp_name">
+								<label for="color">Name:</label>
+								<input type="text" class="form-control" id="grp_name_input">
+							</div>
 							<div class="form-group">
 								<label for="color">Color:</label>
 								<input type="color" class="form-control" id="grp_color" name="grp_color" value="#8E1A06"
@@ -194,7 +198,7 @@
 								<label for="font-size">Font Size (px):</label>
 								<input type="number" class="form-control" id="font_size" value="14" disabled>
 							</div>
-							<button class="btn btn-primary" id="save_button">Save</button>
+							<button class="btn btn-primary" id="save_button" onclick="save_group_changes()">Save</button>
 						</form>
 					</div>
 				</div>
