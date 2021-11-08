@@ -248,14 +248,15 @@ class EventManager {
                 })
 
                 if (is_event_valid(tar)) {
-                    this.invalid_events_in_csv.push(tar);
                     valid_count += 1;
+                }else{
+                    this.invalid_events_in_csv.push(tar);
                 }
                 total += 1;
             }
         )
 
-        console.log("total: " + total + " rows, loaded record: " + valid_count);
+        console.log("total: " + total + " rows, valid records: " + valid_count);
         this.sort_events();
         return valid_count;
     }

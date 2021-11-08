@@ -41,18 +41,33 @@ function export_timeline()
 	console.log(event_manager);
 	delimiter = ",";
 	fileName = "File1";
-	arrayHeader = ["Event Id", "Event Title", "Long Title", "Start Date", "Start Time", "End Date", "End Time", "Description", "Visual Priority", "Groups", "Visible Groups", "Click Action","Anchor Tag", "Image"];
+	arrayHeader = ["Event Title", "Long Title", "Start Date", "Start Time", "End Date", "End Time", "Description", "Visual Priority", "Groups", "Visible Groups", "Click Action","Anchor Tag", "Image"];
 	arrayData = event_manager.ordered_events;
 	console.log(arrayData);
 	let header = arrayHeader.join(delimiter) + '\n';
     let csv = header;
     arrayData.forEach( obj => {
         let row = [];
-        var start_date = (obj["start_datetime"].getMonth() + 1).toString() + "/" + obj["start_datetime"].getDate() + "/" + obj["start_datetime"].getFullYear();
-        var start_time = obj["start_datetime"].getHours() + ":" + obj["start_datetime"].getMinutes() + ":" + obj["start_datetime"].getSeconds();
-        var end_date = (obj["end_datetime"].getMonth() + 1).toString() + "/" + obj["end_datetime"].getDate() + "/" + obj["end_datetime"].getFullYear();
-        var end_time = obj["end_datetime"].getHours() + ":" + obj["end_datetime"].getMinutes() + ":" + obj["end_datetime"].getSeconds();
-        row.push(obj["Event Id"]);
+		let start_date;
+		if(obj.flag_start_date_init){
+			start_date = (obj["start_datetime"].getMonth() + 1).toString() + "/" + obj["start_datetime"].getDate() + "/" + obj["start_datetime"].getFullYear();	
+		}
+
+		let start_time;
+		if(obj.flag_start_time_init){
+			start_time = obj["start_datetime"].getHours() + ":" + obj["start_datetime"].getMinutes() + ":" + obj["start_datetime"].getSeconds();
+		}
+
+		let end_date;
+		if(obj.flag_end_date_init){
+			end_date = (obj["end_datetime"].getMonth() + 1).toString() + "/" + obj["end_datetime"].getDate() + "/" + obj["end_datetime"].getFullYear();
+		}
+
+		let end_time;
+		if(obj.flag_end_time_init){
+			end_time = obj["end_datetime"].getHours() + ":" + obj["end_datetime"].getMinutes() + ":" + obj["end_datetime"].getSeconds();
+		}
+
         row.push(obj["title"]);
         row.push(obj["Long Title"]);
         row.push(start_date);
