@@ -357,6 +357,12 @@ class EventManager {
             }
         )
 
+        group_manager.groups.forEach(o=>{
+
+            add_group(o.get_name());
+            add_groups_to_dropdown(o.get_name());
+        });
+
         console.log("total: " + total + " rows, valid records: " + valid_count);
         this.sort_events();
         return valid_count;

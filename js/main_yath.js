@@ -26,6 +26,16 @@ function add_group(grp_name)
 	parent_ul.appendChild(li);
 }
 
+function add_groups_to_dropdown(name)
+{
+	var dropdown = document.getElementById("field-groups");
+	var e = document.createElement("option");
+	const text_node = document.createTextNode(name);
+	e.setAttribute("value", name);
+	e.appendChild(text_node);
+	dropdown.appendChild(e);
+}
+
 function edit_group()
 {
 	var text = document.querySelector("#group-section > ul > li.active > a").innerHTML;
@@ -39,6 +49,13 @@ function edit_group()
 function export_timeline()
 {
 	console.log(event_manager);
+	//console.log(group_manager.groups);
+
+	/*group_manager.groups.forEach(o=>{
+
+		add_group(o.get_name())
+	});*/
+
 	delimiter = ",";
 	fileName = "File1";
 	arrayHeader = ["Event Title", "Long Title", "Start Date", "Start Time", "End Date", "End Time", "Description", "Visual Priority", "Groups", "Visible Groups", "Click Action","Anchor Tag", "Image"];
