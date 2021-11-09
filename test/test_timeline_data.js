@@ -75,10 +75,14 @@ console.assert(!test_gm.get_group_by_name(group_name_1));
 let gp01_id = gp01.getId();
 console.assert(gp01 == test_gm.get_group_by_id(gp01_id));
 
-
 gp02 = test_gm.create_or_get_group_by_name("gp02");
 gp03 = test_gm.create_or_get_group_by_name("gp03");
 gp04 = test_gm.create_or_get_group_by_name("gp04");
+
+// get group name list 
+gp_names = test_gm.get_group_name_list();
+console.assert(gp_names.length == 4);
+console.assert(gp_names[1] == 'gp02');
 
 // interact with EventManager
 test_em = new EventManager();

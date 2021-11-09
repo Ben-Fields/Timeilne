@@ -3,7 +3,8 @@ const START_TIME_FIELD = 'Start Time'
 const END_DATE_FIELD = 'End Date'
 const END_TIME_FIELD = 'End Time'
 const EVENT_TITLE = 'Event Title'
-const KEY_FIELDS = [START_DATE_FIELD, START_TIME_FIELD, END_DATE_FIELD, END_TIME_FIELD, EVENT_TITLE]
+const GROUP_FIELD = 'Groups'
+const KEY_FIELDS = [START_DATE_FIELD, START_TIME_FIELD, END_DATE_FIELD, END_TIME_FIELD, EVENT_TITLE, GROUP_FIELD]
 
 const INIT_DATE_VALUE = -1000000000000000;
 const INIT_DATE = new Date(INIT_DATE_VALUE);
@@ -110,6 +111,10 @@ class GroupElement {
 class GroupManager {
     #id_incremental = 0;
     groups = new Map(); // key: id, value: groupElement
+
+    get_group_name_list() {
+        return Array.from(this.groups.values()).map(function (ele) { return ele.get_name() })
+    }
 
     get_group_by_name(name) {
         // check name existed return existed
@@ -237,6 +242,8 @@ class TimelineEvent {
     }
 }
 
+const group_manager = new GroupManager();
+
 class EventManager {
 
     event_map = new Map(); // any event created
@@ -325,6 +332,14 @@ class EventManager {
                     tar.update_title(title);
                 }
 
+                let groups = tar[GROUP_FIELD];
+                if (groups) {
+                    groups.split(';').map(function (ele) {
+                        let gp = group_manager.create_or_get_group_by_name(ele);
+                        gp.add_event(tar);
+                    })
+                }
+
                 KEY_FIELDS.forEach(key_field => {
                     delete tar[key_field];
                 })
@@ -344,7 +359,6 @@ class EventManager {
     }
 }
 
-const group_manager = new GroupManager();
 const event_manager = new EventManager();
 
 document.getElementById('file-input').addEventListener('change', function () {
