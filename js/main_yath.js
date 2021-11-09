@@ -114,3 +114,6 @@ function export_timeline()
     hiddenElement.click();
 }
 
+function leavePage() {
+  return "Are you sure you want to leave? Your changes are not saved yet.";
+}
