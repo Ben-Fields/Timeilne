@@ -46,56 +46,113 @@ var is_event_valid = function (event) {
     return true;
 }
 
-class GroupElement{
+class GroupElement {
     #gid;
-    #count;
-    name;
+    #gm;
+    #name;
     color;
     fontsize;
+    linked_events = new Set();
 
-    constructor(gid, name){
+    constructor(gm, gid, name) {
+        this.#gm = gm;
         this.#gid = gid;
-        this.name = name;
+        this.#name = name;
+    }
+
+    get_name() {
+        return this.#name;
+    }
+
+    rename(new_name) {
+        if (this.#name == new_name) {
+            return false;   // same name does not change
+        }
+        if (this.#gm.get_group_by_name(new_name)) {
+            console.error("group name:" + new_name + " existed.");
+            return false;
+        }
+        this.#name = new_name;
+    }
+
+    getId() {
+        return this.#gid;
+    }
+
+    get_linked_event_count() {
+        return this.linked_events.size;
+    }
+
+    is_event_in_group(event) {
+        return this.linked_events.has(event);
+    }
+
+    add_event(event) {
+        if (!this.linked_events.has(event)) {
+            this.linked_events.add(event);
+            event.add_into_group(this);
+        }
+    }
+
+    remove_event(event) {
+        if (this.linked_events.delete(event)) {
+            event.remove_from_group(this);
+        }
+    }
+
+    clear_group_data() {
+        for (const evt of this.linked_events.values()) {
+            this.remove_event(evt);
+        }
     }
 }
 
-class GroupManager{
-    #id_incremental=0;
+class GroupManager {
+    #id_incremental = 0;
     groups = new Map(); // key: id, value: groupElement
 
-    create_group(name){
+    get_group_by_name(name) {
         // check name existed return existed
-        for (const gid of this.groups.values()){
-            if(name == this.groups[gid].name){
-                return this.groups[gid];
+        for (const gruupElement of this.groups.values()) {
+            if (name == gruupElement.get_name()) {
+                return gruupElement;
             }
+        }
+    }
+
+    create_or_get_group_by_name(name) {
+        let g = this.get_group_by_name(name)
+        if (g) {// exist
+            return g;
         }
 
         // create new one if not
-        let g = new GroupElement(this.#id_incremental, name);
+        g = new GroupElement(this, this.#id_incremental, name);
         this.groups.set(this.#id_incremental, g);
-        this.#id_incremental+=1;
+        this.#id_incremental += 1;
+        return g;
     }
 
-    get_group_name_by_id(id){
-        return 
+    get_group_by_id(gid) {
+        return this.groups.get(gid);
     }
 
-    get_group_by_id(id){
-        // return 
-    }
-
-    delete_group_by_id(id){
+    delete_group_by_id(gid, force = false) {
+        // force: delete no mater any event link to it
         // check if element count > 0 -> not allow to delete
+        let gp = this.groups.get(gid);
+        if (!gp) {
+            return false; // group not exist
+        }
 
-        // count
+        if (gp.get_linked_event_count() > 0 && !force) {
+            console.warn("group still linked with events, add force=true to delete");
+            return false;
+        }
+
+        gp.clear_group_data();
+        this.groups.delete(gid)
     }
-
-    rename_group_by_id(id, new_name){
-        // check if new name existed
-    }
-
-
 }
 
 
@@ -108,8 +165,10 @@ class TimelineEvent {
     flag_start_time_init = false;
     flag_end_date_init = false;
     flag_end_time_init = false;
-    start_datetime;    
+    start_datetime;
     end_datetime;
+
+    groups = new Set();
 
     constructor(eid, em) {
         this.#eid = eid;
@@ -155,6 +214,27 @@ class TimelineEvent {
         update_time_by_string(this.end_datetime, val);
         this.flag_end_time_init = true;
     }
+
+    add_into_group(groupElement) {
+        if (!this.groups.has(groupElement)) {
+            this.groups.add(groupElement);
+            groupElement.add_event(this);
+        }
+    }
+
+    remove_from_group(groupElement) {
+        if (this.groups.delete(groupElement)) {
+            groupElement.remove_event(this);
+        }
+    }
+
+    clear_event_data() {
+        // remove link from group
+        for (const gp of this.groups.values()) {
+            this.remove_from_group(gp);
+        }
+        this.groups = undefined;
+    }
 }
 
 class EventManager {
@@ -182,7 +262,7 @@ class EventManager {
     // sort the stored ordered_events
     sort_events() {
         this.ordered_events.sort(function (a, b) {
-            if(!a.flag_start_date_init){
+            if (!a.flag_start_date_init) {
                 return -1;
             }
 
@@ -201,9 +281,11 @@ class EventManager {
     }
 
     delete_event_by_id(eid) {
-        if (!this.event_map.has(eid)) {
+        let cur_event = this.event_map.get(eid);
+        if (!cur_event) {
             return false;
         }
+        cur_event.clear_event_data();
         this.ordered_events = this.ordered_events.filter(e => e.getId !== eid);
         this.event_map.delete(eid);
         return true;
@@ -249,7 +331,7 @@ class EventManager {
 
                 if (is_event_valid(tar)) {
                     valid_count += 1;
-                }else{
+                } else {
                     this.invalid_events_in_csv.push(tar);
                 }
                 total += 1;
@@ -262,6 +344,7 @@ class EventManager {
     }
 }
 
+const group_manager = new GroupManager();
 const event_manager = new EventManager();
 
 document.getElementById('file-input').addEventListener('change', function () {
