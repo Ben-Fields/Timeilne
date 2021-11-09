@@ -28,11 +28,11 @@
 				<!-- File -->
 				<div id="file" class="content">
 					<div class="panel-title">File</div>
-					<div class="bs">
-						<button class="btn btn-primary" onclick="document.getElementById('file-input').click();">Open <i class="fa-solid fa-folder-open"></i></button>
+					<div class="bs" style="padding: 10px 20px;">
+						<button class="btn btn-primary" onclick="document.getElementById('file-input').click();"><i class="fa-solid fa-folder-open"></i> Open</button>
 						<input id="file-input" type="file" name="name" style="display: none;" />
-						<button class="btn btn-primary" onclick = "export_timeline();">Save <i class="fa-solid fa-floppy-disk"></i></button>
-						<a href="Sample Format.xlsx" download="Sample Format.xlsx"><button class="btn btn-primary">Format <i class="fa-solid fa-align-justify"></i></button></a>
+						<button class="btn btn-primary" onclick = "export_timeline();"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+						<a href="Sample Format.xlsx" download="Sample Format.xlsx"><button class="btn btn-primary"><i class="fa-solid fa-align-justify"></i> Format</button></a>
 					</div>
 				</div>
 				<div class="resize resize-x"></div>
@@ -155,10 +155,10 @@
 						<li><a data-toggle="pill" href="#menu2">Government</a></li>
 						<li><a data-toggle="pill" href="#menu3">Act</a></li>-->
 					</ul>
-					<div class="button_holder text-center">
-						<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-square-plus"></i></button>
-						<button class="btn btn-primary" onclick="edit_group()"><i class="fa-solid fa-pencil"></i></button>
-						<button class="btn btn-primary" id="grp_del" onclick="delete_group()"><i class="fa-solid fa-trash"></i></button>
+					<div class="button_holder text-center" style="padding-top: 10px;">
+						<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-square-plus"></i> Add</button>
+						<button class="btn btn-primary" onclick="edit_group()"><i class="fa-solid fa-pencil"></i> Edit</button>
+						<button class="btn btn-primary" id="grp_del" onclick="delete_group()"><i class="fa-solid fa-trash"></i> Delete</button>
 					</div>
 
 					<!-- Modal -->
@@ -184,9 +184,9 @@
 					    </div>
 					  </div>
 					</div>
-
-					<div>
-						<h4>Group Properties</h4>
+					<hr>
+					<div id="group_properties">
+						<h4 style="margin-bottom: 20px;">Group Properties</h4>
 						<form action="#">
 							<div class="form-group" id="grp_name">
 								<label for="color">Name:</label>

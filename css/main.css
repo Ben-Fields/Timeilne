@@ -242,3 +242,8 @@ html {
 {
 	display: none;
 }
+
+#group_properties
+{
+  margin: 10px;
+}
