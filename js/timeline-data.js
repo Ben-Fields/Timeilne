@@ -187,6 +187,10 @@ class TimelineEvent {
         return this.#eid;
     }
 
+    get_group_name_list() {
+        return Array.from(this.groups.values()).map(function (ele) { return ele.get_name() })
+    }
+
     update_start_date(val, resort = true) {
         update_date_by_string(this.start_datetime, val);
         this.flag_start_date_init = true;

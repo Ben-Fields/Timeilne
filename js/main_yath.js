@@ -68,6 +68,8 @@ function export_timeline()
 			end_time = obj["end_datetime"].getHours() + ":" + obj["end_datetime"].getMinutes() + ":" + obj["end_datetime"].getSeconds();
 		}
 
+		let groups = obj.get_group_name_list().join(';');
+
         row.push(obj["title"]);
         row.push(obj["Long Title"]);
         row.push(start_date);
@@ -76,7 +78,7 @@ function export_timeline()
         row.push(end_time);
         row.push(obj["Description"]);
         row.push(obj["Visual Priority"]);
-        row.push(obj["Groups"]);
+        row.push(groups);
         row.push(obj["Visible Groups"]);
         row.push(obj["Click Action"]);
         row.push(obj["Anchor Tag"]);
