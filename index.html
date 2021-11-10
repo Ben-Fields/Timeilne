@@ -65,32 +65,32 @@
 							<div>
 								<input type="checkbox" id="displayMajorTick" name="displayMajorTick" checked
 									onchange="updateTimelineSettingCheckBok(this, 'majorTickSetting')">
-								<label for="displayMajorTick"> Major Tick:</label>
-								<label for="majorTickInterval" class="majorTickSetting">Interval</label>
+								<label for="displayMajorTick"> Tick Density:</label>
+								<!-- <label for="majorTickInterval" class="majorTickSetting"></label> -->
 								<input type="number" class="input_small majorTickSetting" id="majorTickInterval"
 									value="10" onchange="roundValue(this)">
-								<label for="majorTickIntervalUnitSelect" class="majorTickSetting"></label>
-								<select id="majorTickIntervalUnitSelect" class="input_small majorTickSetting"
+								<!-- <label for="majorTickIntervalUnitSelect" class="majorTickSetting"></label> -->
+								<!-- <select id="majorTickIntervalUnitSelect" class="input_small majorTickSetting"
 									value="year">
 									<option value="year">Year</option>
 									<option value="month">Month</option>
 									<option value="day">Day</option>
-								</select>
+								</select> -->
 							</div>
 							<div>
 								<input type="checkbox" id="displayMinorTick" name="displayMinorTick" checked
 									onchange="updateTimelineSettingCheckBok(this, 'minorTickSetting')">
 								<label for="displayMinorTick"> Minor Tick:</label>
-								<label for="minorTickInterval" class="minorTickSetting">Interval</label>
+								<label for="minorTickInterval" class="minorTickSetting"> Subdivisions:</label>
 								<input type="number" class="input_small minorTickSetting" id="minorTickInterval"
 									value="5" onchange="roundValue(this)">
 								<label for="minorTickIntervalUnitSelect"></label>
-								<select id="minorTickIntervalUnitSelect" class="input_small minorTickSetting"
+								<!-- <select id="minorTickIntervalUnitSelect" class="input_small minorTickSetting"
 									value="year">
 									<option value="year">Year</option>
 									<option value="month">Month</option>
 									<option value="day">Day</option>
-								</select>
+								</select> -->
 							</div>
 							<div>
 								<input type="checkbox" id="displayLine" checked
@@ -103,11 +103,20 @@
 									value="10">
 							</div>
 							<div>
-								<label for="displayStartDate">Start Date:</label>
+								<label for="displayInitialDate">Initial Date:</label>
+								<input type="date" id="displayInitialDate" >
+							</div>
+							<div>
+								<label for="initialZoom" class="">Initial Zoom:</label>
+								<input type="number" class="input_small" id="initialZoom"
+									value="100" onchange="roundValue(this)">
+							</div>
+							<div>
+								<label for="displayStartDate">Minimum Date:</label>
 								<input type="date" id="displayStartDate" >
 							</div>
 							<div>
-								<label for="displayEndDate">End Date:</label>
+								<label for="displayEndDate">Maximum Date:</label>
 								<input type="date" id="displayStartDate" >
 							</div>
 						</div>
@@ -207,12 +216,12 @@
 				<div id="timeline" class="content">
 					<!-- Timeline Output -->
 					<div class="tc-timeline">
-						<div class="tc-layer-ticks">
-							<!-- Generated -->
-						</div>
-						<div class="tc-layer-line">
-							<div class="tc-left-arrow"></div>
-							<div class="tc-body">
+						<div class="tc-left-arrow"></div>
+						<div class="tc-body">
+							<div class="tc-layer-ticks">
+								<!-- Generated -->
+							</div>
+							<div class="tc-layer-line">
 								<div class="tc-upper">
 									<div class="tc-event">
 										<div class="tc-event-line"></div>
@@ -224,8 +233,12 @@
 								<div class="tc-line"></div>
 								<div class="tc-lower"></div>
 							</div>
-							<div class="tc-right-arrow"></div>
+							<div class="tc-layer-legend">
+								<div class="tc-scale-label"><!-- Generated --></div>
+							</div>
 						</div>
+						<div class="tc-right-arrow"></div>
+						<div class="tc-cursor-cover" style="display:none;"></div>
 					</div>
 				</div>
 			</div>
@@ -299,8 +312,10 @@
 	<script src="js/main.js"></script>
 	<script src="js/richtext.js"></script>
 	<script src="js/timeline-data.js"></script>
+	<script src="test/test_timeline_data.js"></script> <!-- Test? -->
 	<script src="js/main_yy.js"></script>
 	<script src="js/main_yath.js"></script>
+	<script src="js/timeline.js"></script>
 	<!-- Scripts - Attribution -->
 	<script src="thirdparty/fontawesome-6/attribution.js"></script>
 	<!-- My add-in script for hot-reloading. Please no touch. -->

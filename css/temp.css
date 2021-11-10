@@ -8,6 +8,10 @@
   align-items: center;
 }
 
+#panel-unused {
+  flex-basis: 5px;
+}
+
 .tc-event {
   margin-left: 250px;
 }

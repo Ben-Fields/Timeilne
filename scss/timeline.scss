@@ -7,37 +7,61 @@ $line: #111111;
 /*######  Sizing Variables  ######*/
 $line-thickness: 2px;
 $arrow-height: 21px;
+$arrow-width: floor(math.div($arrow-height, 1.4));
+$falloff: $arrow-width * 2;
 
 $event-line-thickness: 2px;
 $event: #161679;
 $dot-radius: 3px;
 $event-text-y: 2px;
 
+$tick-thickness: 2px;
+$tick-height: 16px;
+$tick-label-y: 2px;
+
+
 /*######  Timeline Layout  ######*/
 .tc-timeline {
 	position: relative;
 	width: 100%;
 	height: 100%;
+	display: flex;
+	align-items: center;
+}
+.tc-left-arrow,
+.tc-right-arrow {
+	flex-shrink: 0;
+}
+.tc-body {
+	flex: 1;
+	position: relative;
+	height: 100%;
 }
 .tc-layer-line,
-.tc-layer-ticks {
+.tc-layer-ticks,
+.tc-layer-legend {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
 	display: flex;
-	align-items: center;
+}
+.tc-layer-legend {
+	pointer-events: none;
 }
 
 
-/*######  Timeline Parts Layout  ######*/
-.tc-body {
-	flex: 1;
+/*######  Timeline Sections Layout  ######*/
+.tc-layer-line {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	justify-content: center;
 }
-.tc-left-arrow,
-.tc-right-arrow {
-	flex-shrink: 0;
+.tc-upper,
+.tc-lower {
+	flex: 1 0 0;
 }
 
 
@@ -45,32 +69,21 @@ $event-text-y: 2px;
 .tc-line {
 	height: $line-thickness;
 	background-color: $line;
+	flex-shrink: 0;
 }
 .tc-left-arrow {
 	width: 0;
 	height: 0;
 	border-top: floor(math.div($arrow-height, 2)) solid transparent;
 	border-bottom: floor(math.div($arrow-height, 2)) solid transparent;
-	border-right: floor(math.div($arrow-height, 1.4)) solid $line;
+	border-right: $arrow-width solid $line;
 }
 .tc-right-arrow {
 	width: 0;
 	height: 0;
 	border-top: floor(math.div($arrow-height, 2)) solid transparent;
 	border-bottom: floor(math.div($arrow-height, 2)) solid transparent;
-	border-left: floor(math.div($arrow-height, 1.4)) solid $line;
-}
-
-
-/*######  Timeline Sections Layout  ######*/
-.tc-body {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-}
-.tc-upper,
-.tc-lower {
-	flex: 1 0 0;
+	border-left: $arrow-width solid $line;
 }
 
 
@@ -95,14 +108,14 @@ $event-text-y: 2px;
 .tc-event-line {
 	width: $event-line-thickness;             // dynamic - theme
 	height: 20px;                             // dynamic - layout
-	margin-top: -$event-line-thickness;                         // dynamic - theme
+	margin-top: -$event-line-thickness;       // dynamic - theme
 	background-color: $event;                 // dynamic - group
 }
 .tc-event-label {
 	border-bottom: solid $event $event-line-thickness; // dynamic - group, theme
 	transform-origin: 0% 100%;
 	transform: rotate(-40deg) translate($event-line-thickness); // dynamic - theme
-	padding-bottom: $event-text-y;                      // dynamic - theme
+	padding-bottom: $event-text-y;            // dynamic - theme
 }
 // Dot
 .tc-event-line {
@@ -131,7 +144,7 @@ $event-text-y: 2px;
 }
 .tc-event-label:hover {
 	cursor: pointer;
-	border-bottom-color: #00000022;
+	border-bottom-color: #00000011;
 }
 // Corner brackets
 .tc-event-label::before,
@@ -163,4 +176,62 @@ $event-text-y: 2px;
 .tc-event-label:hover:after {
   transform: translate(0,0);
   opacity: 1;
+}
+
+
+/*######  Ticks  ######*/
+.tc-layer-ticks {
+	align-items: center;
+}
+.tc-tick {
+	font-size: 0.8em;
+	width: $tick-thickness;
+	height: $tick-height;
+	background-color: $line;
+	display: flex;
+	justify-content: center;
+	position: absolute;
+}
+.tc-tick-label {
+	position: relative;
+	top: 100%;
+	margin-top: $tick-label-y;
+}
+
+
+/*######  Overflow Fade Out  ######*/
+.tc-layer-ticks {
+	-webkit-mask-image: linear-gradient(to right, 
+		rgba(0, 0, 0, 0) 0, rgb(0, 0, 0, 1) $falloff, 
+		rgb(0, 0, 0, 1) calc(100% - $falloff), rgba(0, 0, 0, 0) 100%);
+	mask-image: linear-gradient(to right, 
+		rgba(0, 0, 0, 0) 0, rgb(0, 0, 0, 1) $falloff, 
+		rgb(0, 0, 0, 1) calc(100% - $falloff), rgba(0, 0, 0, 0) 100%);
+	overflow: hidden;
+}
+
+
+/*######  Timeline Interaction  ######*/
+.tc-timeline {
+	cursor: grab;
+}
+.tc-cursor-cover {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+	cursor: grabbing;
+}
+
+
+/*######  Legend  ######*/
+.tc-scale-label {
+	bottom: 50%;
+	background-color: white;
+	position: absolute;
+	margin-bottom: 10px;
+	margin-left: 5px;
+	font-size: 0.8em;
 }

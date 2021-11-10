@@ -28,7 +28,6 @@ let resize_x_start = function(bar_side, e) {
 }
 
 let resize_x_change = function(bar_side, e) {
-	console.log(max_basis)
 	active_resize_bar.parentNode.style.flexBasis = Math.min(
 		Math.max(
 			initial_basis + (e.clientX - bar_initial_pos) * bar_side, 
@@ -49,8 +48,8 @@ let resize_y_start = function(bar_side, e) {
 	// Max size (half of screen dimension)
 	max_basis = Math.trunc(window.innerHeight/2);
 	// The remaining events are not localized
-	mouse_move_evt = resize_y_change.bind(null, bar_side)
-	mouse_up_evt = resize_end.bind(null, bar_side)
+	mouse_move_evt = resize_y_change.bind(null, bar_side);
+	mouse_up_evt = resize_end.bind(null, bar_side);
 	window.addEventListener("mousemove", mouse_move_evt);
 	window.addEventListener("mouseup", mouse_up_evt);
 }

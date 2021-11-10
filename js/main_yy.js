@@ -27,7 +27,7 @@ let selectEditTab = function (evt, tabID) {
 	document.getElementById(tabID).style.display = "block";
 }
 
-var cur_floating_icon;
+var cur_floating_icon = null;
 
 let clickEditElement = function (evt, target_id) {
 	if(cur_floating_icon){
@@ -48,6 +48,8 @@ $(document).mousemove(function (e) {
 });
 
 $("#panel-timeline").mousedown(function (e) {
-	cur_floating_icon.style.display = "none";
-	cur_floating_icon = null;
+	if (cur_floating_icon != null) {
+		cur_floating_icon.style.display = "none";
+		cur_floating_icon = null;
+	}
 });
