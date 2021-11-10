@@ -603,14 +603,23 @@ let update_events = function() {
 			event.start_datetime.valueOf() > viewEndDate.valueOf()) {
 			continue;
 		}
+
+		var group_name = event["Visible Groups"];
+		g = group_manager.create_or_get_group_by_name(group_name);
+		group_color = g.getColor();
+
+		var css_value = "background-color: " + group_color + ";";
+		var css_border = "border-color:" + group_color + ";";
 		// Create event HTML element
 		let evt = document.createElement("div");
 		evt.className = "tc-event";
 		let eventLine = document.createElement("div");
 		eventLine.className = "tc-event-line";
+		eventLine.setAttribute("style",css_value);
 		evt.appendChild(eventLine);
 		let label = document.createElement("div");
 		label.className = "tc-event-label";
+		label.setAttribute("style",css_border);
 		evt.appendChild(label);
 		// Position
 		evt.style.left = (event.start_datetime.valueOf() - view_start_date.valueOf()) * year_px / MS_IN_Y + "px";
