@@ -177,7 +177,33 @@ function export_timeline()
     hiddenElement.click();
 }
 
+function exportFormat()
+{
+	delimiter = ",";
+	fileName = "Sample Timeline";
+	arrayHeader = ["Event Title", "Long Title", "Start Date", "Start Time", "End Date", "End Time", "Description", "Visual Priority", "Groups", "Visible Groups", "Click Action","Anchor Tag", "Image"];
+
+	let header = arrayHeader.join(delimiter) + '\n';
+	let csv = header;
+	let csvData = new Blob([csv], { type: 'text/csv' });  
+    let csvUrl = URL.createObjectURL(csvData);
+
+    let hiddenElement = document.createElement('a');
+    hiddenElement.href = csvUrl;
+    hiddenElement.target = '_blank';
+    hiddenElement.download = fileName + '.csv';
+    hiddenElement.click();
+
+}
+
+
 function leavePage() {
   return "Are you sure you want to leave? Your changes are not saved yet.";
 }
+
+window.addEventListener('beforeunload', (event) => {
+	event.preventDefault();
+  	event.returnValue = `Are you sure you want to leave?`;
+});
+
 
