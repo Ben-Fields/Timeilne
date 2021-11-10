@@ -24,7 +24,7 @@
 <body onbeforeunload="return leavePage()">
 	<div id="topbar">
 		<div id="topbar-content" class="panel-container">
-			<div id="panel-file" class="panel">
+			<div id="panel-file" class="panel" ondragleave="file_drag_leave(event);" ondrop="file_drop_import(event);" ondragover="file_dragover(event)">
 				<!-- File -->
 				<div id="file" class="content">
 					<div class="panel-title">File</div>

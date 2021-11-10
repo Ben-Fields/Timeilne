@@ -95,3 +95,7 @@
 #edit label:hover{
   background-color:lightgray;
 }
+
+.on_drag{
+  background-color:gray;
+}
