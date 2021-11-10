@@ -593,7 +593,7 @@ resizeObserver.observe(timeline_container);
 
 
 /*######  Draw Events  ######*/
-let update_events = function() {
+var update_events = function() {
 	// This is to get something on the screen; it will be rewritten.
 	// Remove old events
 	event_container.innerHTML = "";

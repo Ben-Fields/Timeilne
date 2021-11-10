@@ -257,6 +257,7 @@ class TimelineEvent {
         this.flag_start_date_init = true;
         if (resort) {
             this.#em.sort_events();
+            update_events();
         }
     }
 
@@ -265,6 +266,7 @@ class TimelineEvent {
         this.flag_start_time_init = true;
         if (resort) {
             this.#em.sort_events();
+            update_events();
         }
     }
 
@@ -272,6 +274,7 @@ class TimelineEvent {
         this.title = title;
         if (resort) {
             this.#em.sort_events();
+            update_events();
         }
     }
 
@@ -421,6 +424,7 @@ class EventManager {
 
         console.log("total: " + total + " rows, valid records: " + valid_count);
         this.sort_events();
+        update_events();
         return valid_count;
     }
 }
