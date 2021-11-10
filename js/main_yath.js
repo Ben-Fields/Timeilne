@@ -16,6 +16,13 @@ function add_group(grp_name)
 {
 	/*var grp_name = document.getElementById("group-name").value;
 	console.log(grp_name);*/
+	
+	var randomColor = Math.floor(Math.random()*16777215).toString(16);
+	colorCode = "#" + randomColor;
+	console.log(colorCode);
+	g = group_manager.create_or_get_group_by_name(grp_name);
+	g.setColor(colorCode);
+	g.setFontSize("14");
 	const text_node = document.createTextNode(grp_name);
 	var parent_ul = document.querySelector("#group-section > ul");
 	const li = document.createElement("li");
@@ -25,6 +32,7 @@ function add_group(grp_name)
 	li.appendChild(a);
 	parent_ul.appendChild(li);
 	add_groups_to_dropdown(grp_name);
+	console.log(group_manager.groups);
 }
 
 function add_groups_to_dropdown(name)

@@ -106,6 +106,16 @@ class GroupElement {
             this.remove_event(evt);
         }
     }
+	
+	setColor(color){
+		this.color = color;
+	}
+	
+	setFontSize(size)
+	{
+		this.fontsize = size;
+	}
+	
 }
 
 class GroupManager {
