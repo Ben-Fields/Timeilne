@@ -1,11 +1,11 @@
-var text = document.querySelector("#group-section > ul > li.active > a").innerHTML;
-if (text != "All")
-{
-	g = group_manager.get_group_by_name(text);
-	console.log(g.getColor());
-	document.getElementById("grp_color").value = g.getColor();
-	document.getElementById("font_size").value = g.getFontSize();
-}
+// var text = document.querySelector("#group-section > ul > li.active > a").innerHTML;
+// if (text != "All")
+// {
+// 	g = group_manager.get_group_by_name(text);
+// 	console.log(g.getColor());
+// 	document.getElementById("grp_color").value = g.getColor();
+// 	document.getElementById("font_size").value = g.getFontSize();
+// }
 
 function dynamicChanges(e)
 {
