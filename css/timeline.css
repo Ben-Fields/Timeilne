@@ -89,6 +89,7 @@
 .tc-event {
   display: flex;
   flex-direction: column-reverse;
+  position: absolute;
 }
 
 .tc-event-line {
@@ -194,6 +195,12 @@
 .tc-layer-ticks {
   -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0, black 30px, black calc(100% - 30px), rgba(0, 0, 0, 0) 100%);
   mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0, black 30px, black calc(100% - 30px), rgba(0, 0, 0, 0) 100%);
+  overflow: hidden;
+}
+
+.tc-upper,
+.tc-lower,
+.tc-timeline {
   overflow: hidden;
 }
 

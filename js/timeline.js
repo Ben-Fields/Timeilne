@@ -594,12 +594,30 @@ resizeObserver.observe(timeline_container);
 
 /*######  Draw Events  ######*/
 let update_events = function() {
-	for (let event of em.ordered_events) {
-
-		// Need to pull changes for latest API
-
-		// console.log("An event: ")
-		// console.log(event)
+	// This is to get something on the screen; it will be rewritten.
+	// Remove old events
+	event_container.innerHTML = "";
+	// Add events in the viewable range
+	for (let event of test_em.ordered_events) {
+		if (event.start_datetime.valueOf() < view_start_date.valueOf() ||
+			event.start_datetime.valueOf() > viewEndDate.valueOf()) {
+			continue;
+		}
+		// Create event HTML element
+		let evt = document.createElement("div");
+		evt.className = "tc-event";
+		let eventLine = document.createElement("div");
+		eventLine.className = "tc-event-line";
+		evt.appendChild(eventLine);
+		let label = document.createElement("div");
+		label.className = "tc-event-label";
+		evt.appendChild(label);
+		// Position
+		evt.style.left = (event.start_datetime.valueOf() - view_start_date.valueOf()) * year_px / MS_IN_Y + "px";
+		// Fill in the details
+		label.innerHTML = event.title;
+		// Attach to document
+		event_container.appendChild(evt);
 	}
 }
 
@@ -607,3 +625,26 @@ let update_events = function() {
 /*######  Initialize  ######*/
 set_bounds_years(-1000, 3000);
 set_center_date(new Date(), 100);
+
+
+/*######  Notes  ######*/
+/* Tick markup:
+ * ```
+ * <div class="tc-tick">
+ * 	<div class="tc-tick-label">
+ * 		Date Text
+ * 	</div>
+ * </div>
+ * ```
+ *
+ * Event markup:
+ * ```
+ * <div class="tc-event">
+ * 	<div class="tc-event-line"></div>
+ * 	<div class="tc-event-label">
+ * 		Event Title
+ * 	</div>
+ * </div>
+ * ```
+ */
+ 

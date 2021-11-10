@@ -104,6 +104,7 @@ $tick-label-y: 2px;
 .tc-event {
 	display: flex;
 	flex-direction: column-reverse;
+	position: absolute;
 }
 .tc-event-line {
 	width: $event-line-thickness;             // dynamic - theme
@@ -207,6 +208,11 @@ $tick-label-y: 2px;
 	mask-image: linear-gradient(to right, 
 		rgba(0, 0, 0, 0) 0, rgb(0, 0, 0, 1) $falloff, 
 		rgb(0, 0, 0, 1) calc(100% - $falloff), rgba(0, 0, 0, 0) 100%);
+	overflow: hidden;
+}
+.tc-upper,
+.tc-lower,
+.tc-timeline {
 	overflow: hidden;
 }
 
