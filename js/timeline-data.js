@@ -422,7 +422,7 @@ class EventManager {
             }
         )
 
-        console.log("total: " + total + " rows, valid records: " + valid_count);
+        alert("Loading finish! total: " + total + " rows, valid records: " + valid_count);
         this.sort_events();
         update_events();
         return valid_count;

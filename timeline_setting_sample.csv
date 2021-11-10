@@ -1,2 +1,2 @@
-displayMajorTick,majorTickInterval,majorTickIntervalUnitSelect,displayMinorTick,minorTickInterval,minorTickIntervalUnitSelect,displayLine,settingLineColor,settingLineThickness,displayStartDate,displayEndDate
-1,20,Year,1,10,Year,1,#FF0000,5,02/19/885,3/5/1963
+displayMajorTick,majorTickInterval,majorTickIntervalUnitSelect,displayMinorTick,minorTickInterval,minorTickIntervalUnitSelect,displayLine,settingLineColor,settingLineThickness,displayStartDate,displayEndDate,displayInitialDate,initialZoom
+1,20,Year,1,10,Year,1,#FF0000,5,02/19/885,3/5/1963,3/1/1840,150
