@@ -8,6 +8,8 @@ const VISIABLE_GROUP = 'Visible Groups'
 const KEY_FIELDS = [START_DATE_FIELD, START_TIME_FIELD, END_DATE_FIELD, END_TIME_FIELD, EVENT_TITLE, GROUP_FIELD, VISIABLE_GROUP]
 
 const DEFAULT_GROUP_NAME = 'All'
+const DEFAULT_GROUP_COLOR = 'black'
+const DEFAULT_GROUP_FONTSIZE = '14'
 
 const INIT_DATE_VALUE = -1000000000000000;
 const INIT_DATE = new Date(INIT_DATE_VALUE);
@@ -137,8 +139,8 @@ class GroupManager {
 
     constructor(){
         let default_group = this.create_or_get_group_by_name(DEFAULT_GROUP_NAME);
-        default_group.setColor("black");
-        default_group.setFontSize("14");
+        default_group.setColor(DEFAULT_GROUP_COLOR);
+        default_group.setFontSize(DEFAULT_GROUP_FONTSIZE);
     }
 
     get_default_group(){
@@ -408,6 +410,7 @@ class EventManager {
         cur_event.clear_event_data();
         this.ordered_events = this.ordered_events.filter(e => e.getId !== eid);
         this.event_map.delete(eid);
+        update_events()
         return true;
     }
 

@@ -1,28 +1,21 @@
-// var text = document.querySelector("#group-section > ul > li.active > a").innerHTML;
-// if (text != "All")
-// {
-// 	g = group_manager.get_group_by_name(text);
-// 	console.log(g.getColor());
-// 	document.getElementById("grp_color").value = g.getColor();
-// 	document.getElementById("font_size").value = g.getFontSize();
-// }
+var text = document.querySelector("#group-section > ul > li.active > a").innerHTML;
+if (text != "All")
+{
+	g = group_manager.get_group_by_name(text);
+	console.log(g.getColor());
+	document.getElementById("grp_color").value = g.getColor();
+	document.getElementById("font_size").value = g.getFontSize();
+}
 
 function dynamicChanges(e)
 {
 	console.log(e);
 	group_name = e.querySelector("a").innerHTML;
-	if (group_name != "All")
-	{
-		g = group_manager.get_group_by_name(group_name);
-		console.log(g.getColor());
-		document.getElementById("grp_color").value = g.getColor();
-		document.getElementById("font_size").value = g.getFontSize();
-	}
-	else
-	{
-		document.getElementById("grp_color").value = "black";
-		document.getElementById("font_size").value = "14";
-	}
+	g = group_manager.get_group_by_name(group_name);
+	console.log(g.getColor());
+	document.getElementById("grp_color").value = g.getColor();
+	document.getElementById("font_size").value = g.getFontSize();
+
 }
 
 function delete_group()
