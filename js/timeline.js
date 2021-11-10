@@ -19,6 +19,24 @@
  * Author: Benjamin Fields
  */
 
+/*######  Editor-only  ######*/
+var EDITOR = true;
+let field_short_title     = document.getElementById("field-short-title");
+let field_long_title      = document.getElementById("field-long-title");
+let field_date            = document.getElementById("field-date");
+let field_time            = document.getElementById("field-time");
+let field_end_date        = document.getElementById("field-end-date");
+let field_end_time        = document.getElementById("field-end-time");
+let field_description     = document.getElementById("field-description");
+let field_visual_priority = document.getElementById("field-visual-priority");
+let field_groups          = document.getElementById("field-groups");
+let field_visible_group   = document.getElementById("field-visible-group");
+let field_click_action    = document.getElementById("field-click-action");
+let field_anchor_tag      = document.getElementById("field-anchor-tag");
+let details_placeholder   = document.getElementById("details-placeholder");
+let details_data          = document.getElementById("details-data");
+// let richtext_content      = document.getElementsByClassName("ql-editor")[0];
+
 
 /*######  Utility  ######*/
 Date.prototype.add_unit = function(unit, num) {
@@ -593,12 +611,14 @@ resizeObserver.observe(timeline_container);
 
 
 /*######  Draw Events  ######*/
+
+var selected_event = null;
 let update_events = function() {
 	// This is to get something on the screen; it will be rewritten.
 	// Remove old events
 	event_container.innerHTML = "";
 	// Add events in the viewable range
-	for (let event of test_em.ordered_events) {
+	for (let event of event_manager.ordered_events) {
 		if (event.start_datetime.valueOf() < view_start_date.valueOf() ||
 			event.start_datetime.valueOf() > viewEndDate.valueOf()) {
 			continue;
@@ -616,11 +636,114 @@ let update_events = function() {
 		evt.style.left = (event.start_datetime.valueOf() - view_start_date.valueOf()) * year_px / MS_IN_Y + "px";
 		// Fill in the details
 		label.innerHTML = event.title;
+		// Save event ID
+		evt.eid = event.getId();
+		// On select, show details
+		if (EDITOR) {
+			evt.addEventListener("mousedown", function(e) {
+				select_event(evt.eid);
+				// Prevent dragging timeline when event clicked
+				e.stopPropagation();
+			});
+		}
 		// Attach to document
 		event_container.appendChild(evt);
 	}
 }
 
+let select_event = function(eid) {
+	// Show the details panel in full
+	details_placeholder.style.display = "none";
+	details_data.style.display = "block";
+	// Get event reference
+	let event = event_manager.get_event_by_id(eid);
+	// Initially populate details
+	field_short_title.value = event.title;
+	field_long_title.value = event["Long Title"];
+	field_date.valueAsDate = event.start_datetime;
+	field_time.valueAsDate = event.start_datetime;
+	field_end_date.valueAsDate = event.end_datetime;
+	field_end_time.valueAsDate = event.end_datetime;
+	field_description.value = event["Description"];
+	// richtext_content.innerHTML = event["Description"];
+	field_visual_priority.value = event["Visual Priority"];
+	field_groups.value = event.get_group_name_list();
+	field_visible_group.value = event["Visible Group"] || "";
+	field_click_action.value = event["Click Action"];
+	field_anchor_tag.value = event["Anchor Tag"];
+
+	// Update event on any value change
+	field_short_title.onchange = function(){
+		event.title = field_short_title.value;
+		update_events();
+	}
+	field_long_title.onchange = function(){
+		event["Long Title"] = field_long_title.value
+		update_events();
+	}
+	field_date.onchange = function(){
+		let newDate = new Date(field_date.valueAsDate.valueOf());
+		newDate.setHours(field_time.valueAsDate.getHours());
+		newDate.setMinutes(field_time.valueAsDate.getMinutes());
+		newDate.setSeconds(field_time.valueAsDate.getSeconds());
+		newDate.setMilliseconds(field_time.valueAsDate.getMilliseconds());
+		event.start_datetime = newDate;
+		update_events();
+	}
+	field_time.onchange = function(){
+		let newDate = new Date(field_date.valueAsDate.valueOf());
+		newDate.setHours(field_time.valueAsDate.getHours());
+		newDate.setMinutes(field_time.valueAsDate.getMinutes());
+		newDate.setSeconds(field_time.valueAsDate.getSeconds());
+		newDate.setMilliseconds(field_time.valueAsDate.getMilliseconds());
+		event.start_datetime = newDate;
+		update_events();
+	}
+	field_end_date.onchange = function(){
+		let newDate = new Date(field_end_date.valueAsDate.valueOf());
+		newDate.setHours(field_end_time.valueAsDate.getHours());
+		newDate.setMinutes(field_end_time.valueAsDate.getMinutes());
+		newDate.setSeconds(field_end_time.valueAsDate.getSeconds());
+		newDate.setMilliseconds(field_end_time.valueAsDate.getMilliseconds());
+		event.end_datetime = newDate;
+		update_events();
+	}
+	field_end_time.onchange = function(){
+		let newDate = new Date(field_end_date.valueAsDate.valueOf());
+		newDate.setHours(field_end_time.valueAsDate.getHours());
+		newDate.setMinutes(field_end_time.valueAsDate.getMinutes());
+		newDate.setSeconds(field_end_time.valueAsDate.getSeconds());
+		newDate.setMilliseconds(field_end_time.valueAsDate.getMilliseconds());
+		event.end_datetime = newDate;
+		update_events();
+	}
+	field_description.onchange = function(){
+		event["Description"] = field_description.value;
+		// event["Description"] = richtext_content.innerHTML;
+		update_events();
+	}
+	field_visual_priority.onchange = function(){
+		event["Visual Priority"] = field_visual_priority.value;
+		update_events();
+	}
+	field_groups.onchange = function(){
+		// Temporary: single group
+		event.add_into_group(group_manager.get_group_by_name(field_groups.value));
+		update_events();
+	}
+	field_visible_group.onchange = function(){
+		event["Visible Group"] = field_visible_group.value;
+		update_events();
+	}
+	field_click_action.onchange = function(){
+		event["Click Action"] = field_click_action.value;
+		update_events();
+	}
+	field_anchor_tag.onchange = function(){
+		event["Anchor Tag"] = field_anchor_tag.value;
+		update_events();
+	}
+}
 
 /*######  Initialize  ######*/
 set_bounds_years(-1000, 3000);

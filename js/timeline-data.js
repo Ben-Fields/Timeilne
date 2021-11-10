@@ -194,6 +194,19 @@ class TimelineEvent {
 
     groups = new Set();
 
+	// // short_title; = title
+	// long_title;
+	// // date; = start_datetime
+	// // time; = start_datetime
+	// // end_date; = end_datetime
+	// // end_time; = end_datetime
+	// description;
+	// visual_priority;
+	// groups;
+	// visible_group;
+	// click_action;
+	// anchor_tag;
+
     constructor(eid, em) {
         this.#eid = eid;
         this.#em = em;

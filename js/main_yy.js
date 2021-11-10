@@ -51,5 +51,15 @@ $("#panel-timeline").mousedown(function (e) {
 	if (cur_floating_icon != null) {
 		cur_floating_icon.style.display = "none";
 		cur_floating_icon = null;
+		// add event in every case
+		// on drop event element, time equals (in ms):
+		let event = event_manager.create_event();
+		event.title = "...";
+		event.start_datetime = new Date(
+			view_start_date.valueOf() + (
+				(e.clientX - tick_container.clientLeft - tick_container.offsetLeft) * MS_IN_Y / year_px
+			)
+		);
+		update_events();
 	}
 });
