@@ -24,6 +24,7 @@ function add_group(grp_name)
 	a.appendChild(text_node);
 	li.appendChild(a);
 	parent_ul.appendChild(li);
+	add_groups_to_dropdown(grp_name);
 }
 
 function add_groups_to_dropdown(name)
