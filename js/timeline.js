@@ -624,8 +624,7 @@ let update_events = function() {
 			continue;
 		}
 
-		var group_name = event["Visible Groups"];
-		g = group_manager.create_or_get_group_by_name(group_name);
+		g = event.get_visible_group();
 		group_color = g.getColor();
 
 		var css_value = "background-color: " + group_color + ";";

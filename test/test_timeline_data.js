@@ -6,7 +6,7 @@ console.assert(test_em.get_event_by_id(event1.getId()), "fail to get created eve
 
 // create event in run time
 event2 = test_em.create_event();
-event2.update_start_date('10/02/1943');
+event2.update_start_date_by_string('10/02/1943');
 event2.update_title('Test create event');
 eid2 = event2.getId();  // id might need to store with object in DOM
 

@@ -1,11 +1,11 @@
-var text = document.querySelector("#group-section > ul > li.active > a").innerHTML;
-if (text != "All")
-{
-	g = group_manager.create_or_get_group_by_name(text);
-	console.log(g.getColor());
-	document.getElementById("grp_color").value = g.getColor();
-	document.getElementById("font_size").value = g.getFontSize();
-}
+// var text = document.querySelector("#group-section > ul > li.active > a").innerHTML;
+// if (text != "All")
+// {
+// 	g = group_manager.get_group_by_name(text);
+// 	console.log(g.getColor());
+// 	document.getElementById("grp_color").value = g.getColor();
+// 	document.getElementById("font_size").value = g.getFontSize();
+// }
 
 function dynamicChanges(e)
 {
@@ -13,7 +13,7 @@ function dynamicChanges(e)
 	group_name = e.querySelector("a").innerHTML;
 	if (group_name != "All")
 	{
-		g = group_manager.create_or_get_group_by_name(group_name);
+		g = group_manager.get_group_by_name(group_name);
 		console.log(g.getColor());
 		document.getElementById("grp_color").value = g.getColor();
 		document.getElementById("font_size").value = g.getFontSize();
@@ -93,7 +93,7 @@ function edit_group()
 function save_group_changes()
 {
 	var t = document.querySelector("#group-section > ul > li.active > a").innerHTML;
-	g = group_manager.create_or_get_group_by_name(t);
+	g = group_manager.get_group_by_name(t);
 	console.log(g);
 
 	g.setFontSize(document.getElementById("font_size").value + "");
@@ -148,7 +148,11 @@ function export_timeline()
 			end_time = obj["end_datetime"].getHours() + ":" + obj["end_datetime"].getMinutes() + ":" + obj["end_datetime"].getSeconds();
 		}
 
-		let groups = obj.get_group_name_list().join(';');
+		let groups = obj.get_group_name_list().filter(e=> e!=DEFAULT_GROUP_NAME).join(';');
+		let visible_group = obj.get_visible_group().get_name();
+		if(visible_group == DEFAULT_GROUP_NAME){
+			visible_group = "";
+		}
 
         row.push(obj["title"]);
         row.push(obj["Long Title"]);
@@ -159,7 +163,7 @@ function export_timeline()
         row.push(obj["Description"]);
         row.push(obj["Visual Priority"]);
         row.push(groups);
-        row.push(obj["Visible Groups"]);
+        row.push(visible_group);
         row.push(obj["Click Action"]);
         row.push(obj["Anchor Tag"]);
         row.push(obj["Image"]);
@@ -213,7 +217,7 @@ function changeInfo()
 	setInterval(function()
 	{ 
 		var randomNumber = Math.floor(Math.random() * suggestions_list.length);
-		console.log(randomNumber);
+		// console.log(randomNumber);
 		document.getElementById("info_messages").innerHTML = suggestions_list[randomNumber];
 	}, 3000);
 }

@@ -54,12 +54,11 @@ $("#panel-timeline").mousedown(function (e) {
 		// add event in every case
 		// on drop event element, time equals (in ms):
 		let event = event_manager.create_event();
-		event.title = "...";
-		event.start_datetime = new Date(
-			view_start_date.valueOf() + (
-				(e.clientX - tick_container.clientLeft - tick_container.offsetLeft) * MS_IN_Y / year_px
-			)
-		);
-		update_events();
+		event.update_title("...", false);
+		/// ==== bug for Ben === get default date time 
+		let datetime = new Date( view_start_date.valueOf() + ((e.clientX - tick_container.clientLeft - tick_container.offsetLeft) * MS_IN_Y / year_px));
+		console.log(datetime);
+		///
+		event.update_start_datetime(datetime);
 	}
 });
