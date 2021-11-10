@@ -21,7 +21,7 @@
 	<link rel="stylesheet" type="text/css" href="css/main_yy.css">
 </head>
 
-<body>
+<body onload="changeInfo();">
 	<div id="topbar">
 		<div id="topbar-content" class="panel-container">
 			<div id="panel-file" class="panel" ondragleave="file_drag_leave(event);" ondrop="file_drop_import(event);" ondragover="file_dragover(event)">
@@ -131,17 +131,19 @@
 					<div id="info-message">
 						<div id="info-unfinished-elem">
 							<i class="fa-solid fa-info-circle"></i>
-							<span>There are unfinished elements.</span>
-							<div class="bs" style="margin-top: 30px;">
+							<span id="info_messages">Sample format can be downloaded using the Format button in the Files Tab.</span>
+							<!--<div class="bs" style="margin-top: 30px;">
 								<button class="btn btn-primary"><i class="fa-solid fa-angles-left"></i></button>
 								Go to
 								<button class="btn btn-primary"><i class="fa-solid fa-angles-right"></i></button>
-							</div>
+							</div>-->
 						</div>
-						<div id="info-range" style="display:none;">
+
+
+						<!--<div id="info-range" style="display:none;">
 							<i class="fa-solid fa-info-circle"></i>
 							<span>There are elements out of range of the timeline.</span>
-						</div>
+						</div>-->
 					</div>
 					<div id="info-nav">
 						<!-- Navigation goes here to switch between info messages -->
