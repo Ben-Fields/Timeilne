@@ -102,6 +102,8 @@ function save_group_changes()
 	console.log(document.getElementById("grp_color").value);
 	document.getElementById("save_button").style.display = "none";
 	document.getElementById("grp_name").style.display = "none";
+
+	update_ticks();
 	/*g.SetColor(document.getElementById("grp_color").value);
 	g.SetFontSize(document.getElementById("font_size").value);*/
 }
