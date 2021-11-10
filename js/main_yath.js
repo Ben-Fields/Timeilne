@@ -1,3 +1,30 @@
+var text = document.querySelector("#group-section > ul > li.active > a").innerHTML;
+if (text != "All")
+{
+	g = group_manager.create_or_get_group_by_name(text);
+	console.log(g.getColor());
+	document.getElementById("grp_color").value = g.getColor();
+	document.getElementById("font_size").value = g.getFontSize();
+}
+
+function dynamicChanges(e)
+{
+	console.log(e);
+	group_name = e.querySelector("a").innerHTML;
+	if (group_name != "All")
+	{
+		g = group_manager.create_or_get_group_by_name(group_name);
+		console.log(g.getColor());
+		document.getElementById("grp_color").value = g.getColor();
+		document.getElementById("font_size").value = g.getFontSize();
+	}
+	else
+	{
+		document.getElementById("grp_color").value = "black";
+		document.getElementById("font_size").value = "14";
+	}
+}
+
 function delete_group()
 {
 	var element = document.querySelector("#group-section > ul > li.active");
@@ -26,6 +53,7 @@ function add_group(grp_name)
 	const text_node = document.createTextNode(grp_name);
 	var parent_ul = document.querySelector("#group-section > ul");
 	const li = document.createElement("li");
+	li.setAttribute("onclick", "dynamicChanges(this);");
 	const a = document.createElement("a")
 	a.setAttribute("data-toggle", "pill");
 	a.appendChild(text_node);
@@ -54,6 +82,23 @@ function edit_group()
 	document.getElementById("grp_name").style.display = "block";
 	document.getElementById("grp_name_input").value = text;
 }
+
+function save_group_changes()
+{
+	var t = document.querySelector("#group-section > ul > li.active > a").innerHTML;
+	g = group_manager.create_or_get_group_by_name(t);
+	console.log(g);
+
+	g.setFontSize(document.getElementById("font_size").value + "");
+	g.setColor(document.getElementById("grp_color").value + "");
+	
+	console.log(document.getElementById("grp_color").value);
+	document.getElementById("save_button").style.display = "none";
+	document.getElementById("grp_name").style.display = "none";
+	/*g.SetColor(document.getElementById("grp_color").value);
+	g.SetFontSize(document.getElementById("font_size").value);*/
+}
+
 
 function export_timeline()
 {
@@ -126,3 +171,4 @@ function export_timeline()
 function leavePage() {
   return "Are you sure you want to leave? Your changes are not saved yet.";
 }
+

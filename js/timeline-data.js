@@ -116,6 +116,15 @@ class GroupElement {
 		this.fontsize = size;
 	}
 	
+	getColor()
+	{
+		return this.color;
+	}
+	
+	getFontSize()
+	{
+		return this.fontsize;
+	}
 }
 
 class GroupManager {
