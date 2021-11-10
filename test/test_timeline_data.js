@@ -1,4 +1,4 @@
-test_em = new EventManager();
+var test_em = new EventManager();
 
 // create event but not add to list
 event1 = test_em.create_event();
