@@ -106,25 +106,22 @@ class GroupElement {
             this.remove_event(evt);
         }
     }
-	
-	setColor(color){
-		this.color = color;
-	}
-	
-	setFontSize(size)
-	{
-		this.fontsize = size;
-	}
-	
-	getColor()
-	{
-		return this.color;
-	}
-	
-	getFontSize()
-	{
-		return this.fontsize;
-	}
+
+    setColor(color) {
+        this.color = color;
+    }
+
+    setFontSize(size) {
+        this.fontsize = size;
+    }
+
+    getColor() {
+        return this.color;
+    }
+
+    getFontSize() {
+        return this.fontsize;
+    }
 }
 
 class GroupManager {
@@ -144,9 +141,12 @@ class GroupManager {
         }
     }
 
-    create_or_get_group_by_name(name) {
+    create_or_get_group_by_name(name, warn = false) {
         let g = this.get_group_by_name(name)
         if (g) {// exist
+            if (warn) {
+                alert("group existed");
+            }
             return g;
         }
 
@@ -154,11 +154,22 @@ class GroupManager {
         g = new GroupElement(this, this.#id_incremental, name);
         this.groups.set(this.#id_incremental, g);
         this.#id_incremental += 1;
+        create_group_to_dropdown(g);
+
         return g;
     }
 
     get_group_by_id(gid) {
         return this.groups.get(gid);
+    }
+
+    delete_group_by_name(name, force = false) {
+        let g = this.get_group_by_name(name)
+        if (!g) {
+            alert("no group found");
+            return;
+        }
+        return this.delete_group_by_id(g.getId(), force);
     }
 
     delete_group_by_id(gid, force = false) {
@@ -170,14 +181,45 @@ class GroupManager {
         }
 
         if (gp.get_linked_event_count() > 0 && !force) {
-            console.warn("group still linked with events, add force=true to delete");
-            return false;
+            if (!confirm('group has linked with events, still want to delete?')) {
+                return false;
+            }
         }
 
         gp.clear_group_data();
-        this.groups.delete(gid)
+        this.groups.delete(gid);
+        return true;
     }
 }
+
+
+let create_group_to_dropdown = function (gEle) {
+    let grp_name = gEle.get_name();
+    var randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    colorCode = "#" + randomColor;
+    gEle.setColor(colorCode);
+    gEle.setFontSize("14");
+    const text_node = document.createTextNode(grp_name);
+    var parent_ul = document.querySelector("#group-section > ul");
+    const li = document.createElement("li");
+    li.setAttribute("onclick", "dynamicChanges(this);");
+    const a = document.createElement("a")
+    a.setAttribute("data-toggle", "pill");
+    a.appendChild(text_node);
+    li.appendChild(a);
+    parent_ul.appendChild(li);
+    add_groups_to_dropdown(grp_name);
+}
+
+let add_groups_to_dropdown = function (name) {
+    var dropdown = document.getElementById("field-groups");
+    var e = document.createElement("option");
+    const text_node = document.createTextNode(name);
+    e.setAttribute("value", name);
+    e.appendChild(text_node);
+    dropdown.appendChild(e);
+}
+
 
 
 class TimelineEvent {
@@ -325,6 +367,7 @@ class EventManager {
         let total = 0;
         let valid_count = 0;
 
+        console.log(event_list);
         event_list.forEach(
             ele => {
                 let tar = this.create_event();
@@ -376,11 +419,6 @@ class EventManager {
             }
         )
 
-        group_manager.groups.forEach(o=>{
-
-            add_group(o.get_name());
-        });
-
         console.log("total: " + total + " rows, valid records: " + valid_count);
         this.sort_events();
         return valid_count;
@@ -427,7 +465,7 @@ document.getElementById('file-input').addEventListener('change', function (evt) 
     fr.readAsText(this.files[0]);
 })
 
-var file_drop_import = function(evt){
+var file_drop_import = function (evt) {
     evt.preventDefault();
     var fileInput = document.getElementById("file-input");
     fileInput.files = evt.dataTransfer.files;
@@ -435,11 +473,11 @@ var file_drop_import = function(evt){
     file_drag_leave(evt);
 }
 
-var file_dragover = function(ev){
+var file_dragover = function (ev) {
     ev.preventDefault();
     $("#panel-file").addClass("on_drag");
 }
 
-var file_drag_leave = function(ev){
+var file_drag_leave = function (ev) {
     $("#panel-file").removeClass("on_drag");
 }

@@ -598,7 +598,7 @@ let update_events = function() {
 	// Remove old events
 	event_container.innerHTML = "";
 	// Add events in the viewable range
-	for (let event of test_em.ordered_events) {
+	for (let event of event_manager.ordered_events) {
 		if (event.start_datetime.valueOf() < view_start_date.valueOf() ||
 			event.start_datetime.valueOf() > viewEndDate.valueOf()) {
 			continue;
