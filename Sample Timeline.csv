@@ -1,1 +1,5 @@
-﻿Event Id,Event Title,Long Title,Start Date,Start Time,End Date,End Time,Description,Visual Priority,Groups,Visible Groups,Click Action,Anchor Tag,Image
+Event Title,Long Title,Start Date,Start Time,End Date,End Time,Description,Visual Priority,Groups,Visible Groups,Click Action,Anchor Tag,Image
+Event 1,An event in history,09/10/1886,9:53,,,,,Act,Act,,,
+Event 2,Event #2,6/4/1975,,,,,,Government;Act,Government,,,
+Ranged Event,First Ranged Event,04/05/1873,,06/04/1876,,,,War,War,,,
+Invalid Event,An event in history,,9:53,,,,,Act,Act,,,
