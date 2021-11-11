@@ -42,7 +42,7 @@
 
 .edit_element {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   border: 1px solid rgb(155, 155, 155);;
   border-radius: 20px;
   padding: 3px;
@@ -55,6 +55,13 @@
 .edit_element:hover{
   background-color: rgb(200, 200, 200);
 }
+
+div.edit_element>span{
+  text-align: center;
+  font-weight: bold;
+  font-size: .5em;
+}
+
 
 .edit_icon {
   margin: auto;
