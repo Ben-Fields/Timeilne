@@ -44,7 +44,7 @@ var print_date = function (date) {
     return date.toLocaleDateString(DATETIME_LOCALES, DATE_FORMAT_OPTION);
 }
 
-var print_time = function(datetime){
+var print_time = function (datetime) {
     return datetime.toLocaleTimeString(DATETIME_LOCALES, TIME_FOMRAT_OPTION);
 }
 
@@ -137,13 +137,13 @@ class GroupManager {
     #id_incremental = 0;
     groups = new Map(); // key: id, value: groupElement
 
-    constructor(){
+    constructor() {
         let default_group = this.create_or_get_group_by_name(DEFAULT_GROUP_NAME);
         default_group.setColor(DEFAULT_GROUP_COLOR);
         default_group.setFontSize(DEFAULT_GROUP_FONTSIZE);
     }
 
-    get_default_group(){
+    get_default_group() {
         return this.get_group_by_name(DEFAULT_GROUP_NAME);
     }
 
@@ -272,9 +272,9 @@ class TimelineEvent {
         return Array.from(this.groups.values()).map(function (ele) { return ele.get_name() })
     }
 
-    update_start_datetime(datetime){
-        this.update_start_date_by_string( print_date( datetime), false);
-        this.update_start_time_by_string( print_time( datetime));
+    update_start_datetime(datetime) {
+        this.update_start_date_by_string(print_date(datetime), false);
+        this.update_start_time_by_string(print_time(datetime));
     }
 
     update_start_date_by_string(val, resort = true) {
@@ -326,22 +326,22 @@ class TimelineEvent {
         }
     }
 
-    get_visible_group(){
+    get_visible_group() {
         return this.visible_group;
     }
 
-    set_visible_group_by_name(name, refresh=true){
+    set_visible_group_by_name(name, refresh = true) {
         let vg = group_manager.get_group_by_name(name);
-        if(vg){
-            this.set_visible_group( vg, refresh);
-        }else{
+        if (vg) {
+            this.set_visible_group(vg, refresh);
+        } else {
             console.warn("group: " + name + " not exist");
         }
     }
 
-    set_visible_group(groupElement, refresh=true){
+    set_visible_group(groupElement, refresh = true) {
         this.visible_group = groupElement;
-        if(refresh){
+        if (refresh) {
             update_events();
         }
     }
@@ -457,7 +457,7 @@ class EventManager {
                 }
 
                 let visible_group = tar[VISIABLE_GROUP];
-                if(visible_group){
+                if (visible_group) {
                     let vg = group_manager.create_or_get_group_by_name(visible_group);
                     vg.add_event(tar);
                     tar.set_visible_group(vg, false);
@@ -506,10 +506,10 @@ let load_csv_file = function (e) {
                 if (ele.type == 'checkbox') {
                     ele.checked = (value == '1');
                 } else if (ele.type == 'date') {
-                    let tmp_date = new Date(Date.parse(value));
-                    ele.value = tmp_date.getFullYear().toString().padStart(4, '0') + "-" +
-                        tmp_date.getMonth().toString().padStart(2, '0') + "-" +
-                        tmp_date.getDate().toString().padStart(2, '0');
+                    tmp_date = new Date(Date.parse(value));
+                    ele.value = [tmp_date.getFullYear().toString().padStart(4, '0'),
+                    (tmp_date.getMonth() + 1).toString().padStart(2, '0'),
+                    tmp_date.getDate().toString().padStart(2, '0')].join('-');
                 } else {
                     ele.value = value;
                 }
