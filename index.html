@@ -30,7 +30,7 @@
 					<div class="panel-title">File</div>
 					<div class="bs" style="padding: 10px 20px;">
 						<button class="btn btn-primary" onclick="document.getElementById('file-input').click();"><i class="fa-solid fa-folder-open"></i> Open</button>
-						<input id="file-input" type="file" name="name" style="display: none;" />
+						<input id="file-input" type="file" name="name" style="display: none;" multiple/>
 						<button class="btn btn-primary" onclick = "export_timeline();"><i class="fa-solid fa-floppy-disk"></i> Save</button>
 						<button class="btn btn-primary" type="button" onclick="exportFormat();"><i class="fa-solid fa-align-justify"></i> Format</button>
 					</div>
@@ -279,7 +279,8 @@
 						<select id="field-groups" type="text" name="groups">
 						</select>
 						<label for="field-visible-group">Visible Group:</label>
-						<input id="field-visible-group" type="text" name="visible-group">
+						<select id="field-visible-group" type="text" name="visible-group">
+						</select>
 						<!-- Only shows up if there are multiple groups -->
 						<label for="field-click-action">Click Action:</label>
 						<select id="field-click-action" name="click-action">

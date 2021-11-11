@@ -227,11 +227,12 @@ let create_group_to_dropdown = function (gEle) {
     a.appendChild(text_node);
     li.appendChild(a);
     parent_ul.appendChild(li);
-    add_groups_to_dropdown(grp_name);
+    add_groups_to_dropdown(grp_name, "field-groups");
+    add_groups_to_dropdown(grp_name, "field-visible-group");
 }
 
-let add_groups_to_dropdown = function (name) {
-    var dropdown = document.getElementById("field-groups");
+let add_groups_to_dropdown = function (name, id) {
+    var dropdown = document.getElementById(id);
     var e = document.createElement("option");
     const text_node = document.createTextNode(name);
     e.setAttribute("value", name);
@@ -487,9 +488,9 @@ class EventManager {
 
 const event_manager = new EventManager();
 
-let load_csv_file = function (e) {
-    loaded_csv = $.csv.toObjects(fr.result);
-    if (!loaded_csv.length > 0) {
+let parse_text_csv = function (read_text) {
+    loaded_csv = $.csv.toObjects(read_text);
+    if (!loaded_csv || !loaded_csv.length > 0) {
         return;
     }
 
@@ -520,18 +521,26 @@ let load_csv_file = function (e) {
     }
 }
 
-var fr = new FileReader();
-fr.onload = load_csv_file;
+let load_csv_files = function(files){
+    for (var i = 0, len = files.length; i < len; i++) {
+        var file = files[i];
+        var reader = new FileReader();
+        reader.onload = (function(f) {
+            return function(e) {
+                parse_text_csv( e.target.result);
+            };
+        })(file);
+        reader.readAsText(file);
+    }
+}
 
 document.getElementById('file-input').addEventListener('change', function (evt) {
-    fr.readAsText(this.files[0]);
+    load_csv_files(this.files);
 })
 
 var file_drop_import = function (evt) {
     evt.preventDefault();
-    var fileInput = document.getElementById("file-input");
-    fileInput.files = evt.dataTransfer.files;
-    fr.readAsText(fileInput.files[0])
+    load_csv_files(evt.dataTransfer.files);
     file_drag_leave(evt);
 }
 
