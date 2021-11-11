@@ -335,7 +335,7 @@ class TimelineEvent {
         if(vg){
             this.set_visible_group( vg, refresh);
         }else{
-            console.warn("group: " + neme + " not exist");
+            console.warn("group: " + name + " not exist");
         }
     }
 

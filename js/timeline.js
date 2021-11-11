@@ -676,7 +676,7 @@ let select_event = function(eid) {
 	// richtext_content.innerHTML = event["Description"];
 	field_visual_priority.value = event["Visual Priority"];
 	field_groups.value = event.get_group_name_list();
-	field_visible_group.value = event["Visible Group"] || "";
+	field_visible_group.value = event.get_visible_group().get_name();
 	field_click_action.value = event["Click Action"];
 	field_anchor_tag.value = event["Anchor Tag"];
 
@@ -740,7 +740,7 @@ let select_event = function(eid) {
 		update_events();
 	}
 	field_visible_group.onchange = function(){
-		event["Visible Group"] = field_visible_group.value;
+		event.set_visible_group_by_name(field_visible_group.value);
 		update_events();
 	}
 	field_click_action.onchange = function(){
