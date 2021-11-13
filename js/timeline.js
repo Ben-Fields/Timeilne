@@ -531,7 +531,7 @@ let draw_tick = function(curDate) {
 // Scroll to zoom
 timeline_container.addEventListener('wheel', function(e) {
 	// Zoom based on mouse position
-	let rect = e.target.getBoundingClientRect();
+	let rect = e.currentTarget.getBoundingClientRect();
 	zoomOriginX = e.clientX - rect.left;
 	// Calculate net scroll delta in between frames
 	let deltaZoom = 1;
@@ -548,6 +548,7 @@ timeline_container.addEventListener('wheel', function(e) {
 			if (totZoom >= 1 && year_px >= year_px_max) {
 				// Redundant check for max zoom, otherwise it will pan the timeline
 			} else {
+				console.log(zoomOriginX)
 				zoom_in(zoomOriginX, year_px * totZoom);
 			}
 			totZoom = 1;
@@ -619,31 +620,39 @@ let update_events = function() {
 	event_container.innerHTML = "";
 	// Add events in the viewable range
 	for (let event of event_manager.ordered_events) {
+		// Skip events outside the viewable range
 		if (event.start_datetime.valueOf() < view_start_date.valueOf() ||
 			event.start_datetime.valueOf() > viewEndDate.valueOf()) {
 			continue;
 		}
 
-		g = event.get_visible_group();
-		group_color = g.getColor();
+		// Get event info
+		let visible_group = event.get_visible_group();
+		let group_color = visible_group.getColor();
 
-		var css_value = "background-color: " + group_color + ";";
-		var css_border = "border-color:" + group_color + ";";
 		// Create event HTML element
 		let evt = document.createElement("div");
 		evt.className = "tc-event";
 		let eventLine = document.createElement("div");
 		eventLine.className = "tc-event-line";
-		eventLine.setAttribute("style",css_value);
 		evt.appendChild(eventLine);
 		let label = document.createElement("div");
 		label.className = "tc-event-label";
-		label.setAttribute("style",css_border);
 		evt.appendChild(label);
+		/// Fill in the details
 		// Position
 		evt.style.left = (event.start_datetime.valueOf() - view_start_date.valueOf()) * year_px / MS_IN_Y + "px";
-		// Fill in the details
-		label.innerHTML = event.title;
+		// Title
+		if (event.title) {
+			label.innerHTML = event.title;
+		} else {
+			label.innerHTML = "&lt;Click to edit&gt;";
+			label.style.color = "#AAAAAA";
+		}
+		// Group Style
+		eventLine.style.backgroundColor = group_color;
+		label.style.borderColor = group_color;
+
 		// Save event ID
 		evt.eid = event.getId();
 		// On select, show details
@@ -660,25 +669,42 @@ let update_events = function() {
 }
 
 let select_event = function(eid) {
+	selected_event = eid;
 	// Show the details panel in full
 	details_placeholder.style.display = "none";
 	details_data.style.display = "block";
 	// Get event reference
 	let event = event_manager.get_event_by_id(eid);
 	// Initially populate details
-	field_short_title.value = event.title;
-	field_long_title.value = event["Long Title"];
-	field_date.valueAsDate = event.start_datetime;
-	field_time.valueAsDate = event.start_datetime;
-	field_end_date.valueAsDate = event.end_datetime;
-	field_end_time.valueAsDate = event.end_datetime;
-	field_description.value = event["Description"];
+	field_short_title.value = event.title || "";
+	field_long_title.value = event["Long Title"] || "";
+	if (event.flag_start_date_init) {
+		field_date.valueAsDate = event.start_datetime || new Date((minDate.valueOf()+maxDate.valueOf())/2);
+	} else {
+		field_date.valueAsDate = null;
+	}
+	if (event.flag_start_time_init) {
+		field_time.valueAsDate = event.start_datetime || new Date((minDate.valueOf()+maxDate.valueOf())/2);
+	} else {
+		field_time.valueAsDate = null;
+	}
+	if (event.flag_end_date_init) {
+		field_end_date.valueAsDate = event.end_datetime || new Date((minDate.valueOf()+maxDate.valueOf())/2);
+	} else {
+		field_end_date.valueAsDate = null;
+	}
+	if (event.flag_end_time_init) {
+		field_end_time.valueAsDate = event.end_datetime || new Date((minDate.valueOf()+maxDate.valueOf())/2);
+	} else {
+		field_end_time.valueAsDate = null;
+	}
+	field_description.value = event["Description"] || "";
 	// richtext_content.innerHTML = event["Description"];
-	field_visual_priority.value = event["Visual Priority"] | "";
+	field_visual_priority.value = event["Visual Priority"] || "";
 	field_groups.value = event.get_group_name_list();
-	field_visible_group.value = event.get_visible_group().get_name();
-	field_click_action.value = event["Click Action"];
-	field_anchor_tag.value = event["Anchor Tag"];
+	// field_visible_group.value = event.get_visible_group().get_name();
+	field_click_action.value = event["Click Action"] || "";
+	field_anchor_tag.value = event["Anchor Tag"] || "";
 
 	// Update event on any value change
 	field_short_title.onchange = function(){
@@ -690,39 +716,73 @@ let select_event = function(eid) {
 		update_events();
 	}
 	field_date.onchange = function(){
-		let newDate = new Date(field_date.valueAsDate.valueOf());
-		newDate.setHours(field_time.valueAsDate.getHours());
-		newDate.setMinutes(field_time.valueAsDate.getMinutes());
-		newDate.setSeconds(field_time.valueAsDate.getSeconds());
-		newDate.setMilliseconds(field_time.valueAsDate.getMilliseconds());
-		event.start_datetime = newDate;
+		if (field_date.valueAsDate == null) {
+			event.flag_start_date_init = false;
+		} else {
+			event.flag_start_date_init = true;
+			let newDate = new Date(field_date.valueAsDate.valueOf());
+			if (field_time.valueAsDate != null) {
+				newDate.setHours(field_time.valueAsDate.getHours());
+				newDate.setMinutes(field_time.valueAsDate.getMinutes());
+				newDate.setSeconds(field_time.valueAsDate.getSeconds());
+				newDate.setMilliseconds(field_time.valueAsDate.getMilliseconds());
+			}
+			event.start_datetime = newDate;
+		}
 		update_events();
 	}
 	field_time.onchange = function(){
-		let newDate = new Date(field_date.valueAsDate.valueOf());
-		newDate.setHours(field_time.valueAsDate.getHours());
-		newDate.setMinutes(field_time.valueAsDate.getMinutes());
-		newDate.setSeconds(field_time.valueAsDate.getSeconds());
-		newDate.setMilliseconds(field_time.valueAsDate.getMilliseconds());
-		event.start_datetime = newDate;
+		if (field_time.valueAsDate == null) {
+			event.flag_start_time_init = false;
+		} else {
+			event.flag_start_time_init = true;
+			let newDate;
+			if (field_date.valueAsDate == null) {
+				newDate = new Date(); // Date not set, does not matter
+			} else {
+				newDate = new Date(field_date.valueAsDate.valueOf());
+			}
+			newDate.setHours(field_time.valueAsDate.getHours());
+			newDate.setMinutes(field_time.valueAsDate.getMinutes());
+			newDate.setSeconds(field_time.valueAsDate.getSeconds());
+			newDate.setMilliseconds(field_time.valueAsDate.getMilliseconds());
+			event.start_datetime = newDate;
+		}
 		update_events();
 	}
 	field_end_date.onchange = function(){
-		let newDate = new Date(field_end_date.valueAsDate.valueOf());
-		newDate.setHours(field_end_time.valueAsDate.getHours());
-		newDate.setMinutes(field_end_time.valueAsDate.getMinutes());
-		newDate.setSeconds(field_end_time.valueAsDate.getSeconds());
-		newDate.setMilliseconds(field_end_time.valueAsDate.getMilliseconds());
-		event.end_datetime = newDate;
+		if (field_end_date.valueAsDate == null) {
+			event.flag_end_date_init = false;
+		} else {
+			event.flag_end_date_init = true;
+			let newDate = new Date(field_end_date.valueAsDate.valueOf());
+			if (field_end_time.valueAsDate != null) {
+				newDate.setHours(field_end_time.valueAsDate.getHours());
+				newDate.setMinutes(field_end_time.valueAsDate.getMinutes());
+				newDate.setSeconds(field_end_time.valueAsDate.getSeconds());
+				newDate.setMilliseconds(field_end_time.valueAsDate.getMilliseconds());
+			}
+			event.end_datetime = newDate;
+		}
 		update_events();
 	}
 	field_end_time.onchange = function(){
-		let newDate = new Date(field_end_date.valueAsDate.valueOf());
-		newDate.setHours(field_end_time.valueAsDate.getHours());
-		newDate.setMinutes(field_end_time.valueAsDate.getMinutes());
-		newDate.setSeconds(field_end_time.valueAsDate.getSeconds());
-		newDate.setMilliseconds(field_end_time.valueAsDate.getMilliseconds());
-		event.end_datetime = newDate;
+		if (field_end_time.valueAsDate == null) {
+			event.flag_end_time_init = false;
+		} else {
+			event.flag_end_time_init = true;
+			let newDate;
+			if (field_end_date.valueAsDate == null) {
+				newDate = new Date(); // Date not set, does not matter
+			} else {
+				newDate = new Date(field_end_date.valueAsDate.valueOf());
+			}
+			newDate.setHours(field_end_time.valueAsDate.getHours());
+			newDate.setMinutes(field_end_time.valueAsDate.getMinutes());
+			newDate.setSeconds(field_end_time.valueAsDate.getSeconds());
+			newDate.setMilliseconds(field_end_time.valueAsDate.getMilliseconds());
+			event.end_datetime = newDate;
+		}
 		update_events();
 	}
 	field_description.onchange = function(){

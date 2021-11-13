@@ -118,7 +118,7 @@
   content: "";
   width: 6px;
   height: 6px;
-  background-color: #161679;
+  background-color: inherit;
   border-radius: 3px;
 }
 
@@ -133,7 +133,7 @@
 
 .tc-event-label:hover {
   cursor: pointer;
-  border-bottom-color: #00000011;
+  border-bottom-color: #00000011 !important;
 }
 
 .tc-event-label::before,

@@ -254,7 +254,7 @@ class TimelineEvent {
     start_datetime;
     end_datetime;
 
-    groups = new Set();
+    groups = [];
     visible_group;
 
     constructor(eid, em) {
@@ -270,7 +270,7 @@ class TimelineEvent {
     }
 
     get_group_name_list() {
-        return Array.from(this.groups.values()).map(function (ele) { return ele.get_name() })
+        return this.groups.map(function (ele) { return ele.get_name() })
     }
 
     update_start_datetime(datetime) {
@@ -315,16 +315,18 @@ class TimelineEvent {
     }
 
     add_into_group(groupElement) {
-        if (!this.groups.has(groupElement)) {
-            this.groups.add(groupElement);
+        if (!this.groups.includes(groupElement)) {
+            this.groups.push(groupElement);
             groupElement.add_event(this);
         }
     }
 
     remove_from_group(groupElement) {
-        if (this.groups.delete(groupElement)) {
-            groupElement.remove_event(this);
-        }
+    	let index = this.groups.indexOf(groupElement);
+		if (index !== -1) {
+			this.groups.splice(index, 1);
+			groupElement.remove_event(this);
+		}
     }
 
     get_visible_group() {
@@ -349,7 +351,7 @@ class TimelineEvent {
 
     clear_event_data() {
         // remove link from group
-        for (const gp of this.groups.values()) {
+        for (const gp of this.groups) {
             this.remove_from_group(gp);
         }
         this.groups = undefined;
@@ -372,7 +374,7 @@ class EventManager {
 
         this.event_map.set(event.getId(), event);
         this.ordered_events.unshift(event);
-        event.add_into_group(group_manager.get_default_group());
+        // event.add_into_group(group_manager.get_default_group());
         event.set_visible_group(group_manager.get_default_group(), false);
 
         return event;
@@ -409,7 +411,7 @@ class EventManager {
             return false;
         }
         cur_event.clear_event_data();
-        this.ordered_events = this.ordered_events.filter(e => e.getId !== eid);
+        this.ordered_events = this.ordered_events.filter(e => e.getId() !== eid);
         this.event_map.delete(eid);
         update_events()
         return true;

@@ -47,18 +47,17 @@ $(document).mousemove(function (e) {
 	cur_floating_icon.style.top = (e.clientY + 10) + "px";
 });
 
-$("#panel-timeline").mousedown(function (e) {
+// $("#panel-timeline").mousedown(function (e) {
+document.getElementsByClassName("tc-body")[0].addEventListener("mousedown", function(e) {
 	if (cur_floating_icon != null) {
 		cur_floating_icon.style.display = "none";
 		cur_floating_icon = null;
-		// add event in every case
-		// on drop event element, time equals (in ms):
+		// Add event in every case
 		let event = event_manager.create_event();
-		event.update_title("...", false);
-		/// ==== bug for Ben === get default date time 
-		let datetime = new Date( view_start_date.valueOf() + ((e.clientX - tick_container.clientLeft - tick_container.offsetLeft) * MS_IN_Y / year_px));
-		console.log(datetime);
-		///
+		// Calculate event time based on cursor position
+		let rect = e.currentTarget.getBoundingClientRect();
+		let deltaPx = e.clientX - rect.left;
+		let datetime = new Date(view_start_date.valueOf() + (deltaPx * MS_IN_Y / year_px));
 		event.update_start_datetime(datetime);
 	}
 });
