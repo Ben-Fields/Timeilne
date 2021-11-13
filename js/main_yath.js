@@ -87,15 +87,14 @@ function save_group_changes()
 {
 	var t = document.querySelector("#group-section > ul > li.active > a").innerHTML;
 	g = group_manager.get_group_by_name(t);
-	// console.log(g);
 
 	g.setFontSize(document.getElementById("font_size").value + "");
 	g.setColor(document.getElementById("grp_color").value + "");
 	
-	// console.log(document.getElementById("grp_color").value);
 	document.getElementById("save_button").style.display = "none";
 	document.getElementById("grp_name").style.display = "none";
-
+	document.getElementById("grp_color").disabled = true;
+	document.getElementById("font_size").disabled = true;
 	update_ticks();
 	/*g.SetColor(document.getElementById("grp_color").value);
 	g.SetFontSize(document.getElementById("font_size").value);*/
@@ -210,7 +209,6 @@ function changeInfo()
 	setInterval(function()
 	{ 
 		var randomNumber = Math.floor(Math.random() * suggestions_list.length);
-		// console.log(randomNumber);
 		document.getElementById("info_messages").innerHTML = suggestions_list[randomNumber];
 	}, 3000);
 }
