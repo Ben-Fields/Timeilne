@@ -31,10 +31,15 @@
 }
 
 .input-container > input[type=date],
-.input-container > input[type=time] {
+.input-container > input[type=time],
+.input-container > .half {
   width: 147px;
-  text-align: center;
   width: calc(50% - 4.5em - 6px);
+}
+
+.input-container > input[type=date],
+.input-container > input[type=time] {
+  text-align: center;
 }
 
 /* Input styling */
@@ -71,8 +76,13 @@
   border-bottom: solid #F8DE52;
 }
 
-.input-container > select {
+.input-container > select,
+.input-container > input[type=color] {
   cursor: pointer;
+}
+
+.input-container > input[type=color] {
+  padding: 0;
 }
 
 /*######  "Details" Input Fields  ######*/

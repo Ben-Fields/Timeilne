@@ -1,6 +1,7 @@
 /*######  Resize functionality  ######*/
 let resize_bars_x = document.getElementsByClassName("resize-x");
 let resize_bars_y = document.getElementsByClassName("resize-y");
+let cursor_elem = document.getElementById("cursor-cover");
 
 var active_resize_bar = null; // resize bar element
 let bar_initial_pos = null;   // client position
@@ -25,6 +26,11 @@ let resize_x_start = function(bar_side, e) {
 	mouse_up_evt = resize_end.bind(null, bar_side)
 	window.addEventListener("mousemove", mouse_move_evt);
 	window.addEventListener("mouseup", mouse_up_evt);
+	// Style - Cursor cover
+	cursor_elem.style.cursor = "ew-resize";
+	cursor_elem.style.display = "block";
+	// Style - Highlight
+	active_resize_bar.classList.add("resize-drag");
 }
 
 let resize_x_change = function(bar_side, e) {
@@ -52,6 +58,11 @@ let resize_y_start = function(bar_side, e) {
 	mouse_up_evt = resize_end.bind(null, bar_side);
 	window.addEventListener("mousemove", mouse_move_evt);
 	window.addEventListener("mouseup", mouse_up_evt);
+	// Style - Cursor cover
+	cursor_elem.style.cursor = "ns-resize";
+	cursor_elem.style.display = "block";
+	// Style - Highlight
+	active_resize_bar.classList.add("resize-drag");
 }
 
 let resize_y_change = function(bar_side, e) {
@@ -65,7 +76,11 @@ let resize_y_change = function(bar_side, e) {
 }
 
 let resize_end = function(bar_side, e) {
-	// Remvoe the global events, reset state
+	// Style - Cursor cover
+	cursor_elem.style.display = "none";
+	// Style - Highlight
+	active_resize_bar.classList.remove("resize-drag");
+	// Remove the global events, reset state
 	window.removeEventListener("mousemove", mouse_move_evt);
 	active_resize_bar = null;
 	window.removeEventListener("mouseup", mouse_up_evt);

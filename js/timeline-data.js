@@ -227,8 +227,10 @@ let create_group_to_dropdown = function (gEle) {
     a.appendChild(text_node);
     li.appendChild(a);
     parent_ul.appendChild(li);
-    add_groups_to_dropdown(grp_name, "field-groups");
-    add_groups_to_dropdown(grp_name, "field-visible-group");
+    if (grp_name != "All") {
+    	add_groups_to_dropdown(grp_name, "field-groups");
+		add_groups_to_dropdown(grp_name, "field-visible-group");
+    }
 }
 
 let add_groups_to_dropdown = function (name, id) {

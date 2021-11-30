@@ -1,22 +1,29 @@
 @use "sass:math";
+@use "sass:list";
 
 /*######  Color Variables  ######*/
 $line: #111111;
-
+$event: #161679;
+$scale-label: #FFFFFF88;
+$font-color: #222222;
 
 /*######  Sizing Variables  ######*/
+// Line
 $line-thickness: 2px;
 $arrow-height: 21px;
-$arrow-width: floor(math.div($arrow-height, 1.4));
+$arrow-width: math.floor(math.div($arrow-height, 1.4));
 $falloff: $arrow-width * 2;
-
+// Events
 $event-line-thickness: 2px;
-$event: #161679;
 $dot-radius: 3px;
-$event-text-y: 2px;
-
+$event-rotation: 40deg;
+$label-y: 3px;
+$label-max-width: 120px;
+$label-line-height: 1.1em;
+$label-lines-to-show: 3;
+// Ticks
 $tick-thickness: 2px;
-$tick-height: 16px;
+$tick-height: 14px;
 $tick-label-y: 2px;
 
 
@@ -37,9 +44,10 @@ $tick-label-y: 2px;
 	position: relative;
 	height: 100%;
 }
-.tc-layer-line,
+.tc-layer-events,
 .tc-layer-ticks,
-.tc-layer-legend {
+.tc-layer-legend,
+.tc-layer-line {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -47,12 +55,14 @@ $tick-label-y: 2px;
 	height: 100%;
 	display: flex;
 }
-.tc-layer-legend {
+.tc-layer-legend,
+.tc-layer-line {
 	pointer-events: none;
 }
 
 
 /*######  Timeline Sections Layout  ######*/
+.tc-layer-events,
 .tc-layer-line {
 	display: flex;
 	flex-direction: column;
@@ -67,22 +77,21 @@ $tick-label-y: 2px;
 
 /*######  Timeline Parts Style  ######*/
 .tc-line {
-	height: $line-thickness;
-	background-color: $line;
 	flex-shrink: 0;
+	border-bottom: solid $line $line-thickness;
 }
 .tc-left-arrow {
 	width: 0;
 	height: 0;
-	border-top: floor(math.div($arrow-height, 2)) solid transparent;
-	border-bottom: floor(math.div($arrow-height, 2)) solid transparent;
+	border-top: math.floor(math.div($arrow-height, 2)) solid transparent;
+	border-bottom: math.floor(math.div($arrow-height, 2)) solid transparent;
 	border-right: $arrow-width solid $line;
 }
 .tc-right-arrow {
 	width: 0;
 	height: 0;
-	border-top: floor(math.div($arrow-height, 2)) solid transparent;
-	border-bottom: floor(math.div($arrow-height, 2)) solid transparent;
+	border-top: math.floor(math.div($arrow-height, 2)) solid transparent;
+	border-bottom: math.floor(math.div($arrow-height, 2)) solid transparent;
 	border-left: $arrow-width solid $line;
 }
 
@@ -105,18 +114,28 @@ $tick-label-y: 2px;
 	display: flex;
 	flex-direction: column-reverse;
 	position: absolute;
+	width: 0;
+	// Color of all sub-elements
+	border-color: $event;
+	background-color: $event;
 }
 .tc-event-line {
-	width: $event-line-thickness;             // dynamic - theme
+	width: 0;
+	border-left: solid $event-line-thickness;
+	border-color: inherit;
 	height: 20px;                             // dynamic - layout
-	margin-top: -$event-line-thickness;       // dynamic - theme
-	background-color: $event;                 // dynamic - group
+	// Dot color
+	background-color: inherit;                // dynamic - group
 }
 .tc-event-label {
-	border-bottom: solid $event $event-line-thickness; // dynamic - group, theme
-	transform-origin: 0% 100%;
-	transform: rotate(-40deg) translate($event-line-thickness); // dynamic - theme
-	padding-bottom: $event-text-y;            // dynamic - theme
+	border-bottom: solid $event-line-thickness; // dynamic - group, theme
+	border-color: inherit;
+	padding-bottom: $label-y;            // dynamic - theme
+	max-width: $label-max-width;
+	transform-origin: math.div($event-line-thickness, 2) calc(100% - math.div($event-line-thickness, 2));
+	transform: translate(0px, math.div($event-line-thickness, 2)) rotate(-$event-rotation);
+	// Prevent text from wrapping due to timeline edge
+	width: max-content;
 }
 // Dot
 .tc-event-line {
@@ -125,7 +144,7 @@ $tick-label-y: 2px;
 .tc-event-line::after {
 	position: absolute;
 	bottom: -($dot-radius + math.div($event-line-thickness, 2));
-	left: -($dot-radius - math.div($event-line-thickness, 2));
+	left: -($dot-radius + math.div($event-line-thickness, 2));
 	display: block;
 	content: "";
 	width: 6px;
@@ -136,6 +155,45 @@ $tick-label-y: 2px;
 // Font
 .tc-event {
 	font-size: 0.8em;
+}
+// Label ellipsis
+.tc-event-label > div {
+	// Overflow
+	overflow: hidden;
+	text-overflow: ellipsis;
+	// Fallback line limit
+	display: block;
+	line-height: $label-line-height;
+	max-height: $label-lines-to-show * $label-line-height;
+	// Modern line limit
+	display: -webkit-box;	
+	-webkit-line-clamp: $label-lines-to-show;
+	-webkit-box-orient: vertical;
+}
+// Flip direction when below
+.tc-lower .tc-event {
+	flex-direction: column;
+	align-items: flex-end;
+}
+.tc-lower .tc-event-label {
+	transform-origin: calc(100% - math.div($event-line-thickness, 2)) calc(100% - math.div($event-line-thickness, 2));
+	transform: rotate(-$event-rotation);
+	border-bottom-right-radius: math.div($event-line-thickness, 2);
+}
+.tc-lower .tc-event-line::after {
+	top: -($dot-radius + math.div($event-line-thickness, 2));
+}
+.tc-lower .tc-event::before {
+	// Extent event line with label vertical position
+	// (dynamic height)
+    content: "";
+    position: absolute;
+    display: block;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    border-right: solid $event-line-thickness;
+    border-color: inherit;
 }
 
 
@@ -186,12 +244,28 @@ $tick-label-y: 2px;
 }
 .tc-tick {
 	font-size: 0.8em;
-	width: $tick-thickness;
+	width: 0;
 	height: $tick-height;
-	background-color: $line;
 	display: flex;
 	justify-content: center;
 	position: absolute;
+}
+// Only borders render correctly at thin widths (not background)
+// ...on some browsers.
+// Also a pseudo element so it can offset the width with a margin to remain centered
+.tc-tick::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 0;
+    height: 100%;
+    // One border allows for finer thickness control (no doubling)
+    // Corner rounding seems to be ok if no content
+    border-left: solid $line $tick-thickness;
+    margin-left: math.div($tick-thickness, 2);
+    border-radius: list.slash($tick-thickness, $tick-thickness*3);
 }
 .tc-tick-label {
 	position: relative;
@@ -201,18 +275,17 @@ $tick-label-y: 2px;
 
 
 /*######  Overflow Fade Out  ######*/
-.tc-layer-ticks {
+// .tc-body
+.tc-layer-ticks,
+.tc-layer-events {
 	-webkit-mask-image: linear-gradient(to right, 
 		rgba(0, 0, 0, 0) 0, rgb(0, 0, 0, 1) $falloff, 
 		rgb(0, 0, 0, 1) calc(100% - $falloff), rgba(0, 0, 0, 0) 100%);
 	mask-image: linear-gradient(to right, 
 		rgba(0, 0, 0, 0) 0, rgb(0, 0, 0, 1) $falloff, 
 		rgb(0, 0, 0, 1) calc(100% - $falloff), rgba(0, 0, 0, 0) 100%);
-	overflow: hidden;
 }
-.tc-upper,
-.tc-lower,
-.tc-timeline {
+.tc-body {
 	overflow: hidden;
 }
 
@@ -228,15 +301,23 @@ $tick-label-y: 2px;
 	width: 100%;
 	height: 100%;
 	cursor: grabbing;
+	z-index: 99999;
 }
 
 
 /*######  Legend  ######*/
 .tc-scale-label {
 	bottom: 50%;
-	background-color: white;
+	background-color: $scale-label;
 	position: absolute;
 	margin-bottom: 10px;
 	margin-left: 5px;
 	font-size: 0.8em;
+	border-radius: 1px;
+}
+
+
+/*######  Fonts  ######*/
+.tc-timeline {
+	color: $font-color;
 }

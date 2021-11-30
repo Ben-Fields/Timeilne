@@ -99,9 +99,9 @@ div.edit_element>span{
     margin: 0;
 }
 
-#edit label:hover{
+/*#edit label:hover{
   background-color:lightgray;
-}
+}*/
 
 .on_drag{
   background-color:gray;
