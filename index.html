@@ -1,24 +1,33 @@
 <!DOCTYPE html>
+<!-- [
+	<!ENTITY times "&#xD7;">
+	<!ENTITY lt "&#x3C;">
+	<!ENTITY gt "&#x3E;">
+]> -->
+
 <html>
 
 <head>
-	<meta charset="utf-8">
+	<meta charset="utf-8"/>
 	<title>Timeline Creator</title>
 	<!-- Fonts -->
-	<link rel="stylesheet" type="text/css" href="thirdparty/inter-font/inter.css">
-	<link rel="stylesheet" type="text/css" href="thirdparty/hack-font/hack-subset.css">
+	<link rel="stylesheet" type="text/css" href="thirdparty/inter-font/inter.css"/>
+	<link rel="stylesheet" type="text/css" href="thirdparty/hack-font/hack-subset.css"/>
 	<!-- Libraries -->
-	<link rel="stylesheet" type="text/css" href="thirdparty/fontawesome-6/css/all.min.css">
-	<link rel="stylesheet" type="text/css" href="thirdparty/bootstrap-3/bootstrap-namespaced.css">
-	<link rel="stylesheet" type="text/css" href="thirdparty/quill-js/quill.snow.css">
+	<link rel="stylesheet" type="text/css" href="thirdparty/fontawesome-6/css/all.min.css"/>
+	<link rel="stylesheet" type="text/css" href="thirdparty/bootstrap-3/bootstrap-namespaced.css"/>
+	<link rel="stylesheet" type="text/css" href="thirdparty/quill-js/quill.snow.css"/>
+	<link rel="stylesheet" type="text/css" href="thirdparty/pickr/monolith.min.css"/>
 	<!-- Style -->
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<link rel="stylesheet" type="text/css" href="css/inputs.css">
-	<link rel="stylesheet" type="text/css" href="css/info.css">
-	<link rel="stylesheet" type="text/css" href="css/richtext.css">
-	<link rel="stylesheet" type="text/css" href="css/timeline.css">
-	<link rel="stylesheet" type="text/css" href="css/temp.css">
-	<link rel="stylesheet" type="text/css" href="css/main_yy.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css"/>
+	<link rel="stylesheet" type="text/css" href="css/inputs.css"/>
+	<link rel="stylesheet" type="text/css" href="css/info.css"/>
+	<link rel="stylesheet" type="text/css" href="css/richtext.css"/>
+	<link rel="stylesheet" type="text/css" href="css/timeline.css"/>
+	<link rel="stylesheet" type="text/css" href="css/temp.css"/>
+	<link rel="stylesheet" type="text/css" href="css/main_yy.css"/>
+	<!-- Theme -->
+	<link id="theme" rel="stylesheet" type="text/css" href="css/editor-theme-paper.css"/>
 </head>
 
 <body onload="changeInfo();">
@@ -30,10 +39,11 @@
 					<div class="panel-title">File</div>
 					<div class="bs" style="padding: 10px 20px;">
 						<button class="btn btn-primary" onclick="document.getElementById('file-input').click();"><i class="fa-solid fa-folder-open"></i> Open</button>
-						<input id="file-input" type="file" name="name" style="display: none;" multiple/>
+						<input id="file-input" type="file" name="name" style="display: none;" multiple="true"/>
 						<button class="btn btn-primary" onclick = "export_timeline();"><i class="fa-solid fa-floppy-disk"></i> Save</button>
 						<button class="btn btn-primary" type="button" onclick="exportFormat();"><i class="fa-solid fa-align-justify"></i> Format</button>
 					</div>
+					<div class="color-picker"></div>
 				</div>
 				<div class="resize resize-x"></div>
 			</div>
@@ -63,64 +73,41 @@
 						</div>
 					</div>
 					<div id="TimelineSettingTab" class="tabcontent" style="display:block">
-						<div class="timeline_inputs">
-							<div>
-								<input type="checkbox" id="displayMajorTick" name="displayMajorTick" checked
-									onchange="updateTimelineSettingCheckBok(this, 'majorTickSetting')">
-								<label for="displayMajorTick"> Tick Density:</label>
-								<!-- <label for="majorTickInterval" class="majorTickSetting"></label> -->
-								<input type="number" class="input_small majorTickSetting" id="majorTickInterval"
-									value="10" onchange="roundValue(this)">
-								<!-- <label for="majorTickIntervalUnitSelect" class="majorTickSetting"></label> -->
-								<!-- <select id="majorTickIntervalUnitSelect" class="input_small majorTickSetting"
-									value="year">
-									<option value="year">Year</option>
-									<option value="month">Month</option>
-									<option value="day">Day</option>
-								</select> -->
-							</div>
-							<div>
-								<input type="checkbox" id="displayMinorTick" name="displayMinorTick" checked
-									onchange="updateTimelineSettingCheckBok(this, 'minorTickSetting')">
-								<label for="displayMinorTick"> Minor Tick:</label>
-								<label for="minorTickInterval" class="minorTickSetting"> Subdivisions:</label>
-								<input type="number" class="input_small minorTickSetting" id="minorTickInterval"
-									value="5" onchange="roundValue(this)">
-								<label for="minorTickIntervalUnitSelect"></label>
-								<!-- <select id="minorTickIntervalUnitSelect" class="input_small minorTickSetting"
-									value="year">
-									<option value="year">Year</option>
-									<option value="month">Month</option>
-									<option value="day">Day</option>
-								</select> -->
-							</div>
-							<div>
-								<input type="checkbox" id="displayLine" checked
-									onchange="updateTimelineSettingCheckBok(this, 'lineSetting')">
-								<label for="displayLine"> Line:</label>
-								<label for="settingLineColor" class="lineSetting">Color:</label>
-								<input type="color" class="input_small lineSetting" id="settingLineColor">
-								<label for="settingLineThickness" class="lineSetting">Thickness:</label>
-								<input type="number" class="input_small lineSetting" id="settingLineThickness"
-									value="10">
-							</div>
-							<div>
-								<label for="displayInitialDate">Initial Date:</label>
-								<input type="date" id="displayInitialDate" >
-							</div>
-							<div>
-								<label for="initialZoom" class="">Initial Zoom:</label>
-								<input type="number" class="input_small" id="initialZoom"
-									value="100" onchange="roundValue(this)">
-							</div>
-							<div>
-								<label for="displayStartDate">Minimum Date:</label>
-								<input type="date" id="displayStartDate" >
-							</div>
-							<div>
-								<label for="displayEndDate">Maximum Date:</label>
-								<input type="date" id="displayEndDate" >
-							</div>
+						<div class="input-container">
+							<label for="field-min-date">Minimum Date:</label>
+							<input id="field-min-date" type="date" name="min-date"/>
+							<input id="field-min-time" type="time" name="min-time"/>
+							<label for="field-max-date">Maximum Date:</label>
+							<input id="field-max-date" type="date" name="max-date"/>
+							<input id="field-max-time" type="time" name="max-time"/>
+							<label for="field-init-date">Initial Date:</label>
+							<input id="field-init-date" type="date" name="initial-date"/>
+							<input id="field-init-time" type="time" name="initial-time"/>
+							<label for="field-min-zoom" class="">Minimum Zoom:</label>
+							<input id="field-min-zoom" type="number" name="minimum-zoom" 
+								value="1" min="0" max="10000000000000" step="any" 
+								onchange="validateZoom(this)"/>
+							<label for="field-max-zoom" class="">Maximum Zoom:</label>
+							<input id="field-max-zoom" type="number" name="maximum-zoom" 
+								value="10000000000000" min="0" max="10000000000000" step="any" 
+								onchange="validateZoom(this)"/>
+							<label for="field-init-zoom" class="">Initial Zoom:</label>
+							<input id="field-init-zoom" type="number" name="initial-zoom" 
+								value="100" min="0" max="10000000000000" step="any" 
+								onchange="validateZoom(this)"/>
+							<label for="field-tick-density">Tick Density:</label>
+							<input id="field-tick-density" type="number" name="tick-density" 
+								value="10" min="0" max="100" step="any" 
+								onchange="roundValue(this)"/>
+							<label for="field-minor-ticks">Tick Subdivisions:</label>
+							<input id="field-minor-ticks" type="number" name="minor-ticks" 
+								value="0" min="0" max="100" step="1" 
+								onchange="roundValue(this)"/>
+							<label for="field-line-color">Line Style:</label>
+							<input class="half" id="field-line-color" type="color" name="line-color"/>
+							<input class="half" id="field-line-width" type="number" name="line-width" 
+								value="3"  min="1" max="10" step="0.1" 
+								onchange="roundValue(this, 10)"/>
 						</div>
 					</div>
 				</div>
@@ -140,8 +127,6 @@
 								<button class="btn btn-primary"><i class="fa-solid fa-angles-right"></i></button>
 							</div>-->
 						</div>
-
-
 						<!--<div id="info-range" style="display:none;">
 							<i class="fa-solid fa-info-circle"></i>
 							<span>There are elements out of range of the timeline.</span>
@@ -162,11 +147,9 @@
 				<div class="panel-title">Groups</div>
 				<div class="bs" id="group-section">
 					<ul class="nav nav-pills nav-stacked">
-						<!-- <li class="active" onclick="dynamicChanges(this);"><a data-toggle="pill" href="#home">All</a></li>
-						<hr> -->
-						<!--<li><a data-toggle="pill" href="#menu1">War</a></li>
-						<li><a data-toggle="pill" href="#menu2">Government</a></li>
-						<li><a data-toggle="pill" href="#menu3">Act</a></li>-->
+						<!-- <li class="active" onclick="dynamicChanges(this);"><a data-toggle="pill">All</a></li>
+						<hr/> -->
+						<!-- Generated -->
 					</ul>
 					<div class="button_holder text-center" style="padding-top: 10px;">
 						<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-square-plus"></i> Add</button>
@@ -187,7 +170,7 @@
 					      <div class="modal-body">
 					        <div class="md-form mb-4">
 					          <label data-error="wrong" data-success="right" for="form2">Group Name</label>
-					          <input type="email" class="form-control validate" id= "group-name">
+					          <input type="email" class="form-control validate" id= "group-name"/>
 					        </div>
 					      </div>
 					      <div class="modal-footer">
@@ -197,22 +180,22 @@
 					    </div>
 					  </div>
 					</div>
-					<hr>
+					<hr/>
 					<div id="group_properties">
 						<h4 style="margin-bottom: 20px;">Group Properties</h4>
 						<form action="#">
 							<div class="form-group" id="grp_name">
 								<label for="color">Name:</label>
-								<input type="text" class="form-control" id="grp_name_input">
+								<input type="text" class="form-control" id="grp_name_input"/>
 							</div>
 							<div class="form-group">
 								<label for="color">Color:</label>
 								<input type="color" class="form-control" id="grp_color" name="grp_color" value="#000000"
-									disabled>
+									disabled="true"/>
 							</div>
 							<div class="form-group">
 								<label for="font-size">Font Size (px):</label>
-								<input type="number" class="form-control" id="font_size" value="14" disabled>
+								<input type="number" class="form-control" id="font_size" value="14" disabled="true"/>
 							</div>
 							<button type="button" class="btn btn-primary" id="save_button" onclick="save_group_changes();">Save</button>
 						</form>
@@ -227,12 +210,29 @@
 				<div id="timeline" class="content">
 					<!-- Timeline Output -->
 					<div class="tc-timeline">
-						<div class="tc-left-arrow"></div>
+						<svg height="18px" 
+						width="18px" 
+						version="1.1" 
+						xmlns="http://www.w3.org/2000/svg" 
+						xmlns:xlink="http://www.w3.org/1999/xlink" 
+						xml:space="preserve"
+						fill="#111">
+							<symbol id="tc-arrow-svg" viewBox="0 0 100 100">
+								<path d="M8.546,53.675C7.077,53.043 6.126,51.598 6.126,50C6.126,48.402 7.077,46.957 8.546,46.325C11.73,44.956 15.554,43.312 19.576,41.582C39.857,32.861 59.992,23.804 79.972,14.413C85.167,11.972 90.062,9.671 93.713,7.955C94.871,7.411 96.238,7.58 97.227,8.39C98.217,9.199 98.654,10.506 98.351,11.748C98.35,11.749 98.35,11.75 98.35,11.751C92.207,36.88 92.207,63.12 98.35,88.249C98.35,88.25 98.35,88.251 98.351,88.252C98.654,89.494 98.217,90.801 97.227,91.61C96.238,92.42 94.871,92.589 93.713,92.045C90.062,90.329 85.167,88.028 79.972,85.587C59.992,76.196 39.857,67.139 19.576,58.418C15.554,56.688 11.73,55.044 8.546,53.675Z"/>
+							</symbol>
+							<use href="#tc-arrow-svg"/>
+						</svg>
 						<div class="tc-body">
 							<div class="tc-layer-ticks">
 								<!-- Generated -->
 							</div>
 							<div class="tc-layer-line">
+								<!-- Duplicate layer to prevent line fading out -->
+								<div class="tc-upper"></div>
+								<div class="tc-line"></div>
+								<div class="tc-lower"></div>
+							</div>
+							<div class="tc-layer-events">
 								<div class="tc-upper">
 									<!-- Generated -->
 								</div>
@@ -245,7 +245,10 @@
 								<div class="tc-scale-label"><!-- Generated --></div>
 							</div>
 						</div>
-						<div class="tc-right-arrow"></div>
+						<svg height="18px" width="18px" fill="#111" 
+						style="transform:scale(-1,1);">
+							<use href="#tc-arrow-svg"/>
+						</svg>
 						<div class="tc-cursor-cover" style="display:none;"></div>
 					</div>
 				</div>
@@ -255,25 +258,24 @@
 				<!-- Details -->
 				<div id="details" class="content">
 					<div class="panel-title">Details</div>
-					<button id="details-delete">Delete</button>
+					<button id="details-delete" style="display:none;">Delete</button>
 					<div id="details-placeholder">Select an element to view/edit its details.</div>
 					<div id="details-data" class="input-container" style="display:none;">
-						<!-- Required always at top. Edited brought to top. Predefined global order. (required files in order then edited fields in order) -->
 						<label for="field-short-title" class="required">Title:</label>
-						<input id="field-short-title" type="text" name="short-title" required>
+						<input id="field-short-title" type="text" name="short-title" required="true"/>
 						<label for="field-long-title">Long Title:</label>
-						<input id="field-long-title" type="text" name="long-title">
+						<input id="field-long-title" type="text" name="long-title"/>
 						<label for="field-date" class="required">Date:</label>
-						<input id="field-date" type="date" name="date" required>
-						<input id="field-time" type="time" name="time">
+						<input id="field-date" type="date" name="date" required="true"/>
+						<input id="field-time" type="time" name="time"/>
 						<label for="field-end-date">End Date:</label>
-						<input id="field-end-date" type="date" name="end-date">
-						<input id="field-end-time" type="time" name="end-time">
+						<input id="field-end-date" type="date" name="end-date"/>
+						<input id="field-end-time" type="time" name="end-time"/>
 						<label for="field-description">Description:</label>
 						<!-- <div id="field-description" class="input"></div> -->
-						<input id="field-description" type="text" name="description">
+						<input id="field-description" type="text" name="description"/>
 						<label for="field-visual-priority">Visual Priority:</label>
-						<input id="field-visual-priority" type="number" name="visual-priority" value="1" min="1" max="9999">
+						<input id="field-visual-priority" type="number" name="visual-priority" value="1" min="1" max="9999"/>
 						<label for="field-groups">Group(s):</label>
 						<select id="field-groups" type="text" name="groups">
 						</select>
@@ -289,7 +291,7 @@
 						</select>
 						<!-- # Advanced # -->
 						<label for="field-anchor-tag">Anchor Tag:</label>
-						<input id="field-anchor-tag" type="text" name="anchor-tag">
+						<input id="field-anchor-tag" type="text" name="anchor-tag"/>
 						<!-- Also called a fragment identifier or HTML ID, it allows you to link to this event with a URL. Ex. https://example.com/timeline#my-event. -->
 					</div>
 				</div>
@@ -313,21 +315,27 @@
 			</div>
 		</div>
 	</div>
+	<div id="cursor-cover" style="display:none;"></div>
 
 	<!-- Scripts - Libraries -->
 	<script src="thirdparty/jquery/jquery.min.js"></script>
 	<script src="thirdparty/jquery/jquery.csv.js"></script>
 	<script src="thirdparty/bootstrap-3/bootstrap.js"></script>
 	<script src="thirdparty/quill-js/quill.js"></script>
+	<script src="thirdparty/pickr/pickr.min.js"></script>
 	<!-- Scripts - General -->
-	<script src="js/main.js"></script>
-	<script src="js/richtext.js"></script>
+	<script src="js/editor.js"></script>
+	<script src="js/editor-panels.js"></script>
+	<script src="js/editor-file.js"></script>
+	<script src="js/editor-edit.js"></script>
+	<script src="js/editor-details.js"></script>
+	<script src="js/editor-richtext.js"></script>
+	<script src="js/editor-inputs.js"></script>
+	<script src="js/editor-groups.js"></script>
 	<script src="js/timeline-data.js"></script>
-	<script src="js/main_yy.js"></script>
-	<script src="js/main_yath.js"></script>
 	<script src="js/timeline.js"></script>
-	<script src="js/details.js"></script>
-	<!-- <script src="test/test_timeline_data.js"></script> --> <!-- For unit test -->
+	<!-- Scripts - Unit Test -->
+	<!-- <script src="test/test_timeline_data.js"></script> -->
 	<!-- Scripts - Attribution -->
 	<script src="thirdparty/fontawesome-6/attribution.js"></script>
 	<!-- My add-in script for hot-reloading. Please no touch. -->

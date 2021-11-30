@@ -100,14 +100,10 @@ body {
 	overflow: auto;
 }
 #topbar {
-	overflow-y: hidden;
+	// Allows the top section to collapse
+	// (flex sets default to auto, which fits content)
+	min-height: 0;
 }
-// TODO: Fix - The above rule allows the topbar to resize/collapse all the way to 0, but it clips the resize bar
-// Without it, the content determines the minimum height for some reason. (Even if explicitly set the min height to 0).
-// #topbar-content {
-// 	overflow-y: hidden;
-// 	min-height: 0;
-// }
 
 
 /*######  Resize Bars  ######*/
@@ -128,9 +124,11 @@ body {
 	outline: solid transparent 3px;
 	z-index: 3;
 }
-.resize:hover {
-	background-color: $resize-bar-hover;
-	outline: solid $resize-bar-outline 2px;
+.resize:hover,
+.resize-drag {
+	background-color: $resize-bar-hover !important;
+	outline: solid $resize-bar-outline 2px !important;
+	border-color: transparent !important;
 }
 .resize-x {
 	cursor: ew-resize;
@@ -140,6 +138,14 @@ body {
 }
 .panel {
 	position: relative;
+}
+#cursor-cover {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 999999;
 }
 
 
@@ -155,8 +161,15 @@ html {
 	background-color: $panel-bg;
 }
 /* Timeline */
-#timeline {
-	box-shadow: inset 0px 0px 30px rgba(0,0,0,0.1);
+#timeline::before {
+	// Optional theme background
+	content: "";
+	display: block;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 /* Panel titles */
 .panel-title {
@@ -232,7 +245,7 @@ html {
 
 /*######  Timeline Wrapper  ######*/
 #timeline {
-	padding: 15px;
+	padding: 0 15px;
 	display: flex;
 	align-items: center;
 	justify-content: center;

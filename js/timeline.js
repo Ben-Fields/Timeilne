@@ -19,27 +19,10 @@
  * Author: Benjamin Fields
  */
 
-/*######  Editor-only  ######*/
-var EDITOR = true;
-let field_short_title     = document.getElementById("field-short-title");
-let field_long_title      = document.getElementById("field-long-title");
-let field_date            = document.getElementById("field-date");
-let field_time            = document.getElementById("field-time");
-let field_end_date        = document.getElementById("field-end-date");
-let field_end_time        = document.getElementById("field-end-time");
-let field_description     = document.getElementById("field-description");
-let field_visual_priority = document.getElementById("field-visual-priority");
-let field_groups          = document.getElementById("field-groups");
-let field_visible_group   = document.getElementById("field-visible-group");
-let field_click_action    = document.getElementById("field-click-action");
-let field_anchor_tag      = document.getElementById("field-anchor-tag");
-let details_placeholder   = document.getElementById("details-placeholder");
-let details_data          = document.getElementById("details-data");
-// let richtext_content      = document.getElementsByClassName("ql-editor")[0];
-
 
 /*######  Utility  ######*/
-Date.prototype.add_unit = function(unit, num) {
+// Add specific time units to Date
+let add_unit = function(date, unit, num) {
 	const func = {
 		['year']: 'FullYear',
 		['month']: 'Month',
@@ -51,7 +34,53 @@ Date.prototype.add_unit = function(unit, num) {
 	}[unit];
 	const getFunc = 'get' + func;
 	const setFunc = 'set' + func;
-	this[setFunc](this[getFunc]() + num);
+	date[setFunc](date[getFunc]() + num);
+}
+// Cosmetic fix to remove whitespace to right of text
+let shrink_to_text = function(el) {
+	// Save words
+	let words = el.innerHTML.split(/( |-)/);
+	// Clear content
+	el.innerHTML = "";
+	// New string init
+	let newTxt = words[0] + (words[1] || "");
+	// First word position
+	let span = document.createElement("span");
+	span.innerHTML = newTxt;
+	el.appendChild(span);
+	// Iterate, put in <br> tags
+	let prevTop = span.offsetTop;
+	for (let i = 2; i<words.length-1; i+=2) {
+		// Add test span
+		let span = document.createElement("span");
+		let word = words[i] + words[i+1];
+		span.innerHTML = word;
+		el.appendChild(span);
+		// Add <br> if line breaks
+		if (span.offsetTop > prevTop) {
+			newTxt += "<br>";
+			prevTop = span.offsetTop;
+		}
+		// Add word
+		newTxt += word;
+	}
+	// Last word
+	if (words.length > 2) {
+		// Add test span
+		let span = document.createElement("span");
+		let word = words[words.length-1];
+		span.innerHTML = word;
+		el.appendChild(span);
+		// Add <br> if line breaks
+		if (span.offsetTop > prevTop) {
+			newTxt += "<br>";
+			prevTop = span.offsetTop;
+		}
+		// Add word
+		newTxt += word;
+	}
+	// Set content with <br>'s
+	el.innerHTML = newTxt;
 }
 
 
@@ -60,8 +89,10 @@ let tick_container = document.getElementsByClassName("tc-layer-ticks")[0];
 let timeline_container = document.getElementsByClassName("tc-timeline")[0];
 let cursor_cover = document.getElementsByClassName("tc-cursor-cover")[0];
 let scale_label = document.getElementsByClassName("tc-scale-label")[0];
-let event_container = document.getElementsByClassName("tc-upper")[0];
-
+let event_container = document.getElementsByClassName("tc-layer-events")[0];
+let events_upper = event_container.getElementsByClassName("tc-upper")[0];
+let events_lower = event_container.getElementsByClassName("tc-lower")[0];
+console.log(events_upper)
 
 /*######  View Parameters  ######*/
 // Global Bounds
@@ -215,6 +246,7 @@ let set_zoom_impl = function(year_in_px) {
 		}
 	}
 }
+// Set Bounds and Zoom
 var set_zoom = function(year_in_px) {
 	set_zoom_impl(year_in_px);
 	update_ticks();
@@ -332,19 +364,12 @@ var update_ticks = function() {
 	}
 	// Set starting tick date
 	let curDate = new Date(roundDownDate);
-	curDate.add_unit(tickUnit, unitSpan - (unitSpan % tickUnitNum));
-
-	// console.log("=======");											// TODO: remove
-	// console.log("Tick Unit: " + tickUnit);
-	// console.log("Tick Unit Num: " + tickUnitNum);
-	// console.log("View Start Date: " + view_start_date);
-	// console.log("Tick Start Date: " + curDate);
-	// console.log("Year PX: " + year_px);
+	add_unit(curDate, tickUnit, unitSpan - (unitSpan % tickUnitNum));
 
 	// Set ending tick date a bit past the viewEndDate to 
 	// hide ticks popping in/out of existence.
 	let maxTickDate = new Date(viewEndDate.valueOf());
-	maxTickDate.add_unit(tickUnit, tickUnitNum);
+	add_unit(maxTickDate, tickUnit, tickUnitNum);
 
 	// Get required info for the scale label
 	let legY, legM, legD, legH, legMin;
@@ -421,13 +446,13 @@ var update_ticks = function() {
 					break;
 			}
 			let nextUniformDate = new Date(curDate.valueOf())
-			nextUniformDate.add_unit(tickUnit, tickUnitNum);
+			add_unit(nextUniformDate, tickUnit, tickUnitNum);
 			if (roundUpDate.valueOf() < nextUniformDate.valueOf()) {
 				// Continue from higher-level tick instead, but before that:
 				// We use a different, closer threshold to determine if we should also draw
 				// the low-level tick (it looks better; no huge whitespace)
 				let drawThresholdDate = new Date(curDate.valueOf())
-				drawThresholdDate.add_unit(tickUnit, Math.ceil(tickUnitNum / 2));
+				add_unit(drawThresholdDate, tickUnit, Math.ceil(tickUnitNum / 2));
 				if (drawThresholdDate.valueOf() < roundUpDate.valueOf()) {
 					draw_tick(curDate);
 				}
@@ -439,7 +464,7 @@ var update_ticks = function() {
 		// Draw tick
 		draw_tick(curDate);
 		// Next tick
-		curDate.add_unit(tickUnit, tickUnitNum);
+		add_unit(curDate, tickUnit, tickUnitNum);
 	}
 	// Draw events when finished
 	update_events();
@@ -548,7 +573,6 @@ timeline_container.addEventListener('wheel', function(e) {
 			if (totZoom >= 1 && year_px >= year_px_max) {
 				// Redundant check for max zoom, otherwise it will pan the timeline
 			} else {
-				console.log(zoomOriginX)
 				zoom_in(zoomOriginX, year_px * totZoom);
 			}
 			totZoom = 1;
@@ -556,6 +580,8 @@ timeline_container.addEventListener('wheel', function(e) {
 		});
 		queueScroll = false;
 	}
+	// Prevent page zoom (whether ctrl held or not)
+	e.preventDefault();
 });
 // Click and drag
 let pan_start = function(e) {
@@ -617,7 +643,7 @@ var selected_event = null;
 let update_events = function() {
 	// This is to get something on the screen; it will be rewritten.
 	// Remove old events
-	event_container.innerHTML = "";
+	events_upper.innerHTML = "";
 	// Add events in the viewable range
 	for (let event of event_manager.ordered_events) {
 		// Skip events outside the viewable range
@@ -639,179 +665,41 @@ let update_events = function() {
 		let label = document.createElement("div");
 		label.className = "tc-event-label";
 		evt.appendChild(label);
+		let label_text = document.createElement("div");
+		label.appendChild(label_text);
+
 		/// Fill in the details
 		// Position
 		evt.style.left = (event.start_datetime.valueOf() - view_start_date.valueOf()) * year_px / MS_IN_Y + "px";
 		// Title
 		if (event.title) {
-			label.innerHTML = event.title;
+			label_text.innerHTML = event.title;
 		} else {
-			label.innerHTML = "&lt;Click to edit&gt;";
-			label.style.color = "#AAAAAA";
+			label_text.innerHTML = "&lt;Click to edit&gt;";
+			label_text.style.color = "#AAAAAA";
 		}
 		// Group Style
-		eventLine.style.backgroundColor = group_color;
-		label.style.borderColor = group_color;
+		evt.style.borderColor = group_color;
+		evt.style.backgroundColor = group_color;
 
 		// Save event ID
 		evt.eid = event.getId();
 		// On select, show details
 		if (EDITOR) {
-			evt.addEventListener("mousedown", function(e) {
-				select_event(evt.eid);
+			label.addEventListener("mousedown", function(e) {
+				selected_event = evt.eid;
+				show_details(evt.eid);
 				// Prevent dragging timeline when event clicked
 				e.stopPropagation();
 			});
 		}
 		// Attach to document
-		event_container.appendChild(evt);
+		events_upper.appendChild(evt);
+		// Cosmetic - remove space to right of wrapped text
+		shrink_to_text(label_text);
 	}
 }
 
-let select_event = function(eid) {
-	selected_event = eid;
-	// Show the details panel in full
-	details_placeholder.style.display = "none";
-	details_data.style.display = "block";
-	// Get event reference
-	let event = event_manager.get_event_by_id(eid);
-	// Initially populate details
-	field_short_title.value = event.title || "";
-	field_long_title.value = event["Long Title"] || "";
-	if (event.flag_start_date_init) {
-		field_date.valueAsDate = event.start_datetime || new Date((minDate.valueOf()+maxDate.valueOf())/2);
-	} else {
-		field_date.valueAsDate = null;
-	}
-	if (event.flag_start_time_init) {
-		field_time.valueAsDate = event.start_datetime || new Date((minDate.valueOf()+maxDate.valueOf())/2);
-	} else {
-		field_time.valueAsDate = null;
-	}
-	if (event.flag_end_date_init) {
-		field_end_date.valueAsDate = event.end_datetime || new Date((minDate.valueOf()+maxDate.valueOf())/2);
-	} else {
-		field_end_date.valueAsDate = null;
-	}
-	if (event.flag_end_time_init) {
-		field_end_time.valueAsDate = event.end_datetime || new Date((minDate.valueOf()+maxDate.valueOf())/2);
-	} else {
-		field_end_time.valueAsDate = null;
-	}
-	field_description.value = event["Description"] || "";
-	// richtext_content.innerHTML = event["Description"];
-	field_visual_priority.value = event["Visual Priority"] || "";
-	field_groups.value = event.get_group_name_list();
-	// field_visible_group.value = event.get_visible_group().get_name();
-	field_click_action.value = event["Click Action"] || "";
-	field_anchor_tag.value = event["Anchor Tag"] || "";
-
-	// Update event on any value change
-	field_short_title.onchange = function(){
-		event.title = field_short_title.value;
-		update_events();
-	}
-	field_long_title.onchange = function(){
-		event["Long Title"] = field_long_title.value
-		update_events();
-	}
-	field_date.onchange = function(){
-		if (field_date.valueAsDate == null) {
-			event.flag_start_date_init = false;
-		} else {
-			event.flag_start_date_init = true;
-			let newDate = new Date(field_date.valueAsDate.valueOf());
-			if (field_time.valueAsDate != null) {
-				newDate.setHours(field_time.valueAsDate.getHours());
-				newDate.setMinutes(field_time.valueAsDate.getMinutes());
-				newDate.setSeconds(field_time.valueAsDate.getSeconds());
-				newDate.setMilliseconds(field_time.valueAsDate.getMilliseconds());
-			}
-			event.start_datetime = newDate;
-		}
-		update_events();
-	}
-	field_time.onchange = function(){
-		if (field_time.valueAsDate == null) {
-			event.flag_start_time_init = false;
-		} else {
-			event.flag_start_time_init = true;
-			let newDate;
-			if (field_date.valueAsDate == null) {
-				newDate = new Date(); // Date not set, does not matter
-			} else {
-				newDate = new Date(field_date.valueAsDate.valueOf());
-			}
-			newDate.setHours(field_time.valueAsDate.getHours());
-			newDate.setMinutes(field_time.valueAsDate.getMinutes());
-			newDate.setSeconds(field_time.valueAsDate.getSeconds());
-			newDate.setMilliseconds(field_time.valueAsDate.getMilliseconds());
-			event.start_datetime = newDate;
-		}
-		update_events();
-	}
-	field_end_date.onchange = function(){
-		if (field_end_date.valueAsDate == null) {
-			event.flag_end_date_init = false;
-		} else {
-			event.flag_end_date_init = true;
-			let newDate = new Date(field_end_date.valueAsDate.valueOf());
-			if (field_end_time.valueAsDate != null) {
-				newDate.setHours(field_end_time.valueAsDate.getHours());
-				newDate.setMinutes(field_end_time.valueAsDate.getMinutes());
-				newDate.setSeconds(field_end_time.valueAsDate.getSeconds());
-				newDate.setMilliseconds(field_end_time.valueAsDate.getMilliseconds());
-			}
-			event.end_datetime = newDate;
-		}
-		update_events();
-	}
-	field_end_time.onchange = function(){
-		if (field_end_time.valueAsDate == null) {
-			event.flag_end_time_init = false;
-		} else {
-			event.flag_end_time_init = true;
-			let newDate;
-			if (field_end_date.valueAsDate == null) {
-				newDate = new Date(); // Date not set, does not matter
-			} else {
-				newDate = new Date(field_end_date.valueAsDate.valueOf());
-			}
-			newDate.setHours(field_end_time.valueAsDate.getHours());
-			newDate.setMinutes(field_end_time.valueAsDate.getMinutes());
-			newDate.setSeconds(field_end_time.valueAsDate.getSeconds());
-			newDate.setMilliseconds(field_end_time.valueAsDate.getMilliseconds());
-			event.end_datetime = newDate;
-		}
-		update_events();
-	}
-	field_description.onchange = function(){
-		event["Description"] = field_description.value;
-		// event["Description"] = richtext_content.innerHTML;
-		update_events();
-	}
-	field_visual_priority.onchange = function(){
-		event["Visual Priority"] = field_visual_priority.value;
-		update_events();
-	}
-	field_groups.onchange = function(){
-		// Temporary: single group
-		event.add_into_group(group_manager.get_group_by_name(field_groups.value));
-		update_events();
-	}
-	field_visible_group.onchange = function(){
-		event.set_visible_group_by_name(field_visible_group.value);
-		update_events();
-	}
-	field_click_action.onchange = function(){
-		event["Click Action"] = field_click_action.value;
-		update_events();
-	}
-	field_anchor_tag.onchange = function(){
-		event["Anchor Tag"] = field_anchor_tag.value;
-		update_events();
-	}
-}
 
 /*######  Initialize  ######*/
 set_bounds_years(-1000, 3000);

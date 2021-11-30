@@ -1,8 +1,3 @@
-let roundValue = function(evt){
-  evt.value = Math.max(1, Math.round(evt.value));
-}
-
-
 let updateTimelineSettingCheckBok = function(evt, className){
   if(evt.checked){
     $("."+className).show();
@@ -59,5 +54,8 @@ document.getElementsByClassName("tc-body")[0].addEventListener("mousedown", func
 		let deltaPx = e.clientX - rect.left;
 		let datetime = new Date(view_start_date.valueOf() + (deltaPx * MS_IN_Y / year_px));
 		event.update_start_datetime(datetime);
+		// Select placed event
+		selected_event = event.getId();
+		show_details(selected_event);
 	}
 });
