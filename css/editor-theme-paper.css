@@ -12,6 +12,12 @@
   background-color: #C8C6CE;
 }
 
+.resize:hover,
+.resize-drag {
+  background-color: #89C1FC !important;
+  outline: solid #BEDEFF 2px !important;
+}
+
 #details-placeholder {
   color: #ffffff6b;
   text-shadow: -1px -2px 0.3px #c5b7b1, -0.5px -0.5px 0px #fff9;
@@ -61,7 +67,7 @@
 }
 
 #info-message > div > i {
-  color: #2583E7;
+  color: #007CE9;
 }
 
 /*# sourceMappingURL=editor-theme-paper.css.map */
