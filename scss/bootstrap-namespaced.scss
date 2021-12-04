@@ -1,0 +1,5 @@
+@use "sass:meta";
+
+.bs {
+	@include meta.load-css("../thirdparty/bootstrap-3/bootstrap.css");
+}

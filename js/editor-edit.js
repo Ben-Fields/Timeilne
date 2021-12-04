@@ -52,10 +52,12 @@ document.getElementsByClassName("tc-body")[0].addEventListener("mousedown", func
 		// Calculate event time based on cursor position
 		let rect = e.currentTarget.getBoundingClientRect();
 		let deltaPx = e.clientX - rect.left;
-		let datetime = new Date(view_start_date.valueOf() + (deltaPx * MS_IN_Y / year_px));
+		let datetime = new Date(timeline.view_start_date.valueOf() + timeline.px_to_ms(deltaPx));
 		event.update_start_datetime(datetime);
 		// Select placed event
-		selected_event = event.getId();
-		show_details(selected_event);
+		timeline.selected_event = event.getId();
+		show_details(timeline.selected_event);
+		// Update timeline
+		timeline.update_events();
 	}
 });
