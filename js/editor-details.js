@@ -1,13 +1,13 @@
 /*######  Delete Event Button  ######*/
 delete_btn.addEventListener("click", function() {
 	// Delete from data
-	event_manager.delete_event_by_id(selected_event);
+	event_manager.delete_event_by_id(timeline.selected_event);
 	// Deselect
 	details_placeholder.style.display = "flex";
 	details_data.style.display = "none";
 	delete_btn.style.display = "none";
 	// Update view
-	update_events();
+	timeline.update_events();
 });
 
 
@@ -53,11 +53,11 @@ var show_details = function(eid) {
 	// Update event on any value change
 	field_short_title.onchange = function(){
 		event.title = field_short_title.value;
-		update_events();
+		timeline.update_events();
 	}
 	field_long_title.onchange = function(){
 		event["Long Title"] = field_long_title.value
-		update_events();
+		timeline.update_events();
 	}
 	field_date.onchange = function(){
 		if (field_date.valueAsDate == null) {
@@ -73,7 +73,7 @@ var show_details = function(eid) {
 			}
 			event.start_datetime = newDate;
 		}
-		update_events();
+		timeline.update_events();
 	}
 	field_time.onchange = function(){
 		if (field_time.valueAsDate == null) {
@@ -92,7 +92,7 @@ var show_details = function(eid) {
 			newDate.setMilliseconds(field_time.valueAsDate.getMilliseconds());
 			event.start_datetime = newDate;
 		}
-		update_events();
+		timeline.update_events();
 	}
 	field_end_date.onchange = function(){
 		if (field_end_date.valueAsDate == null) {
@@ -108,7 +108,7 @@ var show_details = function(eid) {
 			}
 			event.end_datetime = newDate;
 		}
-		update_events();
+		timeline.update_events();
 	}
 	field_end_time.onchange = function(){
 		if (field_end_time.valueAsDate == null) {
@@ -127,32 +127,32 @@ var show_details = function(eid) {
 			newDate.setMilliseconds(field_end_time.valueAsDate.getMilliseconds());
 			event.end_datetime = newDate;
 		}
-		update_events();
+		timeline.update_events();
 	}
 	field_description.onchange = function(){
 		event["Description"] = field_description.value;
 		// event["Description"] = richtext_content.innerHTML;
-		update_events();
+		timeline.update_events();
 	}
 	field_visual_priority.onchange = function(){
 		event["Visual Priority"] = field_visual_priority.value;
-		update_events();
+		timeline.update_events();
 	}
 	field_groups.onchange = function(){
 		// Temporary: single group
 		event.add_into_group(group_manager.get_group_by_name(field_groups.value));
-		update_events();
+		timeline.update_events();
 	}
 	field_visible_group.onchange = function(){
 		event.set_visible_group_by_name(field_visible_group.value);
-		update_events();
+		timeline.update_events();
 	}
 	field_click_action.onchange = function(){
 		event["Click Action"] = field_click_action.value;
-		update_events();
+		timeline.update_events();
 	}
 	field_anchor_tag.onchange = function(){
 		event["Anchor Tag"] = field_anchor_tag.value;
-		update_events();
+		timeline.update_events();
 	}
 }

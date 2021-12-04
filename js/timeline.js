@@ -20,6 +20,19 @@
  */
 
 
+{ // Scope the file
+
+
+/*######  Constants  ######*/
+// Approximate values in ms for picking sensible units
+const MS_IN_SEC = 1000;
+const MS_IN_MIN = 60 * MS_IN_SEC;
+const MS_IN_H = 60 * MS_IN_MIN;
+const MS_IN_D = 24 * MS_IN_H;
+const MS_IN_M = 30 * MS_IN_D;
+const MS_IN_Y = 12 * MS_IN_M;
+
+
 /*######  Utility  ######*/
 // Add specific time units to Date
 let add_unit = function(date, unit, num) {
@@ -84,162 +97,231 @@ let shrink_to_text = function(el) {
 }
 
 
-/*######  References  ######*/
-let tick_container = document.getElementsByClassName("tc-layer-ticks")[0];
-let timeline_container = document.getElementsByClassName("tc-timeline")[0];
-let cursor_cover = document.getElementsByClassName("tc-cursor-cover")[0];
-let scale_label = document.getElementsByClassName("tc-scale-label")[0];
-let event_container = document.getElementsByClassName("tc-layer-events")[0];
-let events_upper = event_container.getElementsByClassName("tc-upper")[0];
-let events_lower = event_container.getElementsByClassName("tc-lower")[0];
-console.log(events_upper)
+/*######  Class Declaration  ######*/
+var CRTimeline = class {
 
-/*######  View Parameters  ######*/
-// Global Bounds
-let minDate = new Date(0,0,0,0,0,0,0);
-let maxDate = new Date(0,0,0,0,0,0,0);
-// Viewable Area, calculated from view_start_date, year_px, and viewWidth
-let view_start_date = new Date(0,0,0,0,0,0,0);
-let viewEndDate = new Date(0,0,0,0,0,0,0);
-let viewWidth = tick_container.offsetWidth;
-// let viewRange = view_start_date.valueOf() - viewEndDate.valueOf();			TODO: remove
-let year_px = 100;
-// Unit used for ticks, based on zoom level
-let tickUnit = 'year';
-let tickUnitNum = 10;
-// Tick unit display info
-let	tickUnitMs;
-let pxPerMs;
-// Tick density
-let ticks_per_kpx = 10;
+	/*######  Initialization  ######*/
+	// Default init options
+	static DEFAULT_OPTIONS = {
+		// Whether to (re-)create the timeline markup
+		generate: true,
+		// View settings
+		min_date: (new Date(0,0,0,0,0,0,0)).setFullYear(-1000),
+		max_date: (new Date(0,0,0,0,0,0,0)).setFullYear(3000),
+		initial_date: new Date(),
+		min_zoom: 1,
+		max_zoom: 10_000_000_000_000,
+		initial_zoom: 100,
+		// Style
+		tick_density: 10,
+		minor_tick_density: 0,
+		line_color: "#111",
+		line_thickness: 2,
+		// Data
+		event_manager: undefined,
+		group_manager: undefined
+	};
+	// Constructor
+	options;
+	constructor(container_id, options = {}) {
+		// Set options using defualts for undefined values
+		this.options = Object.assign({}, CRTimeline.DEFAULT_OPTIONS, options);
+		// Generate HTML
+		if (this.options.generate) {
 
+		}
+		// References
+		// - Timeline Container
+		this.timeline_container = document.getElementById(container_id);
+		// - Components
+		this.tick_container = this.timeline_container.getElementsByClassName("tc-layer-ticks")[0];
+		this.cursor_cover = this.timeline_container.getElementsByClassName("tc-cursor-cover")[0];
+		this.scale_label = this.timeline_container.getElementsByClassName("tc-scale-label")[0];
+		let event_container = this.timeline_container.getElementsByClassName("tc-layer-events")[0];
+		this.events_upper = event_container.getElementsByClassName("tc-upper")[0];
+		this.events_lower = event_container.getElementsByClassName("tc-lower")[0];
+		// Calculated Parameters
+		this.viewWidth = this.tick_container.offsetWidth;
+		// Saved parameters
+		this.minDate = this.options.min_date;
+		this.maxDate = this.options.max_date;
+		this.year_px_min = this.options.min_zoom;
+		this.year_px_max = this.options.max_zoom;
+		this.ticks_per_kpx = this.options.tick_density;
+			// minor_tick_density
+			// line_color
+			// line_thickness
+		if (this.options.event_manager) {
+			this.event_manager = this.options.event_manager;
+		} else {
+			this.event_manager = new EventManager();
+		}
+		if (this.options.group_manager) {
+			this.group_manager = this.options.group_manager;
+		} else {
+			this.group_manager = new GroupManager();
+		}
+		// Set View
+		this.set_center_date(this.options.initial_date, this.options.initial_zoom);
+		// Attach events
+		// - Zoom
+		this.timeline_container.addEventListener('wheel', this.scroll_event.bind(this));
+		// - Pan
+		this.timeline_container.addEventListener("mousedown", this.pan_start.bind(this));
+		// - Resize
+		const resizeObserver = new ResizeObserver(this.resize_event.bind(this));
+		resizeObserver.observe(this.timeline_container);
+	}
 
-/*######  Interaction Parameters  ######*/
-// Zoom
-let zoomOriginX;
-let zoomOriginDate;
-let totZoom = 1;
-var zoom_multiplier = 1;
-let queueScroll = true;
-// Zoom min/max
-let year_px_min = 1; // max zoom out
-let year_px_max = 10_000_000_000_000; // max zoom in
-let year_px_min_from_bounds = null;
-// Pan
-let pan_initial_mx = null;
-let pan_initial_date = null;
+	/*######  References  ######*/
+	timeline_container;
+	tick_container;
+	cursor_cover;
+	scale_label;
+	event_container;
+	events_upper;
+	events_lower;
 
+	/*######  View Parameters  ######*/
+	// Global Bounds
+	minDate;
+	maxDate;
+	// Viewable Area, calculated from view_start_date, year_px, and viewWidth
+	view_start_date;
+	viewEndDate;
+	viewWidth;
+	year_px = 100;
+	// Unit used for ticks, based on zoom level
+	tickUnit = 'year';
+	tickUnitNum = 10;
+	// Tick unit display info
+	tickUnitMs;
+	pxPerMs;
+	// Tick density
+	ticks_per_kpx;
 
-/*######  Constants  ######*/
-// Approximate values in ms for picking sensible units
-const MS_IN_SEC = 1000;
-const MS_IN_MIN = 60 * MS_IN_SEC;
-const MS_IN_H = 60 * MS_IN_MIN;
-const MS_IN_D = 24 * MS_IN_H;
-const MS_IN_M = 30 * MS_IN_D;
-const MS_IN_Y = 12 * MS_IN_M;
+	/*######  View Interaction Parameters  ######*/
+	// Zoom
+	zoomOriginX;
+	zoomOriginDate;
+	totZoom = 1;
+	zoom_multiplier = 1;
+	queueScroll = true;
+	// Zoom min/max
+	year_px_min; // max zoom out
+	year_px_max; // max zoom in
+	year_px_min_from_bounds = null;
+	// Pan
+	pan_initial_mx = null;
+	pan_initial_date = null;
+
+	/*######  Data Interaction Parameters  ######*/
+	event_manager;
+	group_manager;
+	selected_event = null;
+}
 
 
 /*######  View Setup  ######*/
 // Global Bounds
-var set_bounds_years = function(min, max) {
-	minDate.setFullYear(min);
-	maxDate.setFullYear(max);
+CRTimeline.prototype.set_bounds_years = function(min, max) {
+	this.minDate.setFullYear(min);
+	this.maxDate.setFullYear(max);
 }
 // Viewable Area
-let set_zoom_impl = function(year_in_px) {
-	year_px = Math.min(
+CRTimeline.prototype.set_zoom_impl = function(year_in_px) {
+	this.year_px = Math.min(
 		Math.max(
 			year_in_px,
-			year_px_min
+			this.year_px_min
 		),
-		year_px_max
+		this.year_px_max
 	);
 	/*## Update tick units ##*/
 	// Apprixmate target distance
 	//   (based on target density and approx. unit size in ms)
 	//   (actual distance varies between ticks due to non-uniform calendar)
-	let target_tick_dist_px = 1000 / ticks_per_kpx;
-	let target_tick_dist_ms = target_tick_dist_px * MS_IN_Y / year_px;
+	let target_tick_dist_px = 1000 / this.ticks_per_kpx;
+	let target_tick_dist_ms = target_tick_dist_px * MS_IN_Y / this.year_px;
 	// Choose unit based on target time distance.
 	// Choose number of unit.
 	//   (to achieve tick density closest to target density)
 	const tt = target_tick_dist_ms;
 	if (tt >= MS_IN_Y) {
-		tickUnit = 'year';
-		tickUnitMs = MS_IN_Y;
-		tickUnitNum = Math.floor(tt / tickUnitMs);
-		if (tickUnitNum > 2000) {
+		this.tickUnit = 'year';
+		this.tickUnitMs = MS_IN_Y;
+		this.tickUnitNum = Math.floor(tt / this.tickUnitMs);
+		if (this.tickUnitNum > 2000) {
 			// Leave unrounded.
 			// Large years (era-scale timelines) not yet supported.
 		} else {
 			for (let space of [1000, 500, 250, 200, 100, 50, 25, 20, 10, 5, 2, 1]) {
-				if (tickUnitNum >= space) {
-					tickUnitNum = space;
+				if (this.tickUnitNum >= space) {
+					this.tickUnitNum = space;
 					break;
 				}
 			}
 		}
 	} else if (tt >= MS_IN_M) {
-		tickUnit = 'month';
-		tickUnitMs = MS_IN_M;
-		tickUnitNum = Math.floor(tt / tickUnitMs);
+		this.tickUnit = 'month';
+		this.tickUnitMs = MS_IN_M;
+		this.tickUnitNum = Math.floor(tt / this.tickUnitMs);
 		for (let space of [6, 2, 1]) {
-			if (tickUnitNum >= space) {
-				tickUnitNum = space;
+			if (this.tickUnitNum >= space) {
+				this.tickUnitNum = space;
 				break;
 			}
 		}
 	} else if (tt >= MS_IN_D) {
-		tickUnit = 'day';
-		tickUnitMs = MS_IN_D;
-		tickUnitNum = Math.floor(tt / tickUnitMs);
+		this.tickUnit = 'day';
+		this.tickUnitMs = MS_IN_D;
+		this.tickUnitNum = Math.floor(tt / this.tickUnitMs);
 		for (let space of [15, 10, 5, 2, 1]) {
-			if (tickUnitNum >= space) {
-				tickUnitNum = space;
+			if (this.tickUnitNum >= space) {
+				this.tickUnitNum = space;
 				break;
 			}
 		}
 	} else if (tt >= MS_IN_H) {
-		tickUnit = 'hour';
-		tickUnitMs = MS_IN_H;
-		tickUnitNum = Math.floor(tt / tickUnitMs);
+		this.tickUnit = 'hour';
+		this.tickUnitMs = MS_IN_H;
+		this.tickUnitNum = Math.floor(tt / this.tickUnitMs);
 		for (let space of [12, 6, 4, 2, 1]) {
-			if (tickUnitNum >= space) {
-				tickUnitNum = space;
+			if (this.tickUnitNum >= space) {
+				this.tickUnitNum = space;
 				break;
 			}
 		}
 	} else if (tt >= MS_IN_MIN) {
-		tickUnit = 'minute';
-		tickUnitMs = MS_IN_MIN;
-		tickUnitNum = Math.floor(tt / tickUnitMs);
+		this.tickUnit = 'minute';
+		this.tickUnitMs = MS_IN_MIN;
+		this.tickUnitNum = Math.floor(tt / this.tickUnitMs);
 		for (let space of [30, 15, 10, 5, 2, 1]) {
-			if (tickUnitNum >= space) {
-				tickUnitNum = space;
+			if (this.tickUnitNum >= space) {
+				this.tickUnitNum = space;
 				break;
 			}
 		}
 	} else if (tt >= MS_IN_SEC) {
-		tickUnit = 'second';
-		tickUnitMs = MS_IN_SEC;
-		tickUnitNum = Math.floor(tt / tickUnitMs);
+		this.tickUnit = 'second';
+		this.tickUnitMs = MS_IN_SEC;
+		this.tickUnitNum = Math.floor(tt / this.tickUnitMs);
 		for (let space of [30, 15, 10, 5, 2, 1]) {
-			if (tickUnitNum >= space) {
-				tickUnitNum = space;
+			if (this.tickUnitNum >= space) {
+				this.tickUnitNum = space;
 				break;
 			}
 		}
 	} else {
-		tickUnit = 'millisecond';
-		tickUnitMs = 1;
-		tickUnitNum = Math.floor(tt / tickUnitMs);
-		if (tickUnitNum == 0) {
-			tickUnitNum = 1;
+		this.tickUnit = 'millisecond';
+		this.tickUnitMs = 1;
+		this.tickUnitNum = Math.floor(tt / this.tickUnitMs);
+		if (this.tickUnitNum == 0) {
+			this.tickUnitNum = 1;
 		} else {
 			for (let space of [500, 250, 200, 100, 50, 25, 20, 10, 5, 2, 1]) {
-				if (tickUnitNum >= space) {
-					tickUnitNum = space;
+				if (this.tickUnitNum >= space) {
+					this.tickUnitNum = space;
 					break;
 				}
 			}
@@ -247,80 +329,84 @@ let set_zoom_impl = function(year_in_px) {
 	}
 }
 // Set Bounds and Zoom
-var set_zoom = function(year_in_px) {
-	set_zoom_impl(year_in_px);
-	update_ticks();
+CRTimeline.prototype.set_zoom = function(year_in_px) {
+	this.set_zoom_impl(year_in_px);
+	this.update_ticks();
 }
-let set_start_date_impl = function(date, year_in_px = null) {
+CRTimeline.prototype.set_start_date_impl = function(date, year_in_px = null) {
 	if (year_in_px != null) {
-		set_zoom_impl(year_in_px);
+		this.set_zoom_impl(year_in_px);
 	}
-	view_start_date = new Date(date.valueOf());
-	viewEndDate = new Date(view_start_date.valueOf());
-	let ms_to_end = viewWidth * MS_IN_Y / year_px;
-	viewEndDate.setMilliseconds(view_start_date.getMilliseconds() + ms_to_end);
+	this.view_start_date = new Date(date.valueOf());
+	this.viewEndDate = new Date(this.view_start_date.valueOf());
+	let ms_to_end = this.viewWidth * MS_IN_Y / this.year_px;
+	this.viewEndDate.setMilliseconds(this.view_start_date.getMilliseconds() + ms_to_end);
 }
-var set_start_date = function(date, year_in_px = null) {
-	set_start_date_impl(date, year_in_px);
-	update_ticks();
+CRTimeline.prototype.set_start_date = function(date, year_in_px = null) {
+	this.set_start_date_impl(date, year_in_px);
+	this.update_ticks();
 }
-let set_end_date_impl = function(date, year_in_px = null) {
+CRTimeline.prototype.set_end_date_impl = function(date, year_in_px = null) {
 	if (year_in_px != null) {
-		set_zoom_impl(year_in_px);
+		this.set_zoom_impl(year_in_px);
 	}
-	viewEndDate = new Date(date.valueOf());
-	view_start_date = new Date(viewEndDate.valueOf());
-	let ms_to_beg = viewWidth * MS_IN_Y / year_px;
-	view_start_date.setMilliseconds(viewEndDate.getMilliseconds() - ms_to_beg);
+	this.viewEndDate = new Date(date.valueOf());
+	this.view_start_date = new Date(this.viewEndDate.valueOf());
+	let ms_to_beg = this.viewWidth * MS_IN_Y / this.year_px;
+	this.view_start_date.setMilliseconds(this.viewEndDate.getMilliseconds() - ms_to_beg);
 }
-var set_end_date = function(date, year_in_px = null) {
-	set_end_date_impl(date, year_in_px);
-	update_ticks();
+CRTimeline.prototype.set_end_date = function(date, year_in_px = null) {
+	this.set_end_date_impl(date, year_in_px);
+	this.update_ticks();
 }
-var set_center_date = function(date, year_in_px = null) {
+CRTimeline.prototype.set_center_date = function(date, year_in_px = null) {
 	if (year_in_px != null) {
-		set_zoom_impl(year_in_px);
+		this.set_zoom_impl(year_in_px);
 	}
-	let ms_to_half = viewWidth * MS_IN_Y / year_px / 2;
-	view_start_date = new Date(date.valueOf());
-	viewEndDate = new Date(date.valueOf());
-	view_start_date.setMilliseconds(view_start_date.getMilliseconds() - ms_to_half);
-	viewEndDate.setMilliseconds(view_start_date.getMilliseconds() + ms_to_half);
-	update_ticks();
+	let ms_to_half = this.viewWidth * MS_IN_Y / this.year_px / 2;
+	this.view_start_date = new Date(date.valueOf());
+	this.viewEndDate = new Date(date.valueOf());
+	this.view_start_date.setMilliseconds(this.view_start_date.getMilliseconds() - ms_to_half);
+	this.viewEndDate.setMilliseconds(this.view_start_date.getMilliseconds() + ms_to_half);
+	this.update_ticks();
 }
-var zoom_in = function(origin_x, year_in_px) {
+CRTimeline.prototype.zoom_in = function(origin_x, year_in_px) {
 	// Date at the zoom focal position
-	let originDate = new Date(view_start_date.valueOf());
+	let originDate = new Date(this.view_start_date.valueOf());
 	originDate.setMilliseconds(
-		originDate.getMilliseconds() + origin_x * MS_IN_Y / year_px
+		originDate.getMilliseconds() + origin_x * MS_IN_Y / this.year_px
 	);
 	// Zoom, keeping the origin date origin_x pixels from the start
-	set_zoom_impl(year_in_px);
-	view_start_date = new Date(originDate.valueOf());
-	view_start_date.setMilliseconds(
-		originDate.getMilliseconds() - origin_x * MS_IN_Y / year_px
+	this.set_zoom_impl(year_in_px);
+	this.view_start_date = new Date(originDate.valueOf());
+	this.view_start_date.setMilliseconds(
+		originDate.getMilliseconds() - origin_x * MS_IN_Y / this.year_px
 	);
-	viewEndDate = new Date(originDate.valueOf());
-	viewEndDate.setMilliseconds(
-		originDate.getMilliseconds() + (viewWidth-origin_x) * MS_IN_Y / year_px
+	this.viewEndDate = new Date(originDate.valueOf());
+	this.viewEndDate.setMilliseconds(
+		originDate.getMilliseconds() + (this.viewWidth-origin_x) * MS_IN_Y / this.year_px
 	);
-	update_ticks();
+	this.update_ticks();
+}
+// External utility function
+CRTimeline.prototype.px_to_ms = function(px) {
+	return px * MS_IN_Y / this.year_px;
 }
 
 
 /*######  Draw Ticks  ######*/
 // Ticks
-var update_ticks = function() {
+CRTimeline.prototype.update_ticks = function() {
 	// Remove old ticks
-	tick_container.innerHTML = "";
+	this.tick_container.innerHTML = "";
 
 	/// Set the starting tick to a rounded date/time (past the start date)
 	///   ex. 2002 for a year scale, not 2001-02-03 4:56PM.789
 	///   For consistency, need to count from previous high-level tick.
 
 	// Get rounded down date, the minimum bound for the starting tick date
-	let roundDownDate = new Date(view_start_date.valueOf());
-	switch(tickUnitMs) {
+	let roundDownDate = new Date(this.view_start_date.valueOf());
+	switch(this.tickUnitMs) {
 		case MS_IN_Y:
 			roundDownDate.setFullYear(0);
 		case MS_IN_M:
@@ -339,45 +425,44 @@ var update_ticks = function() {
 
 	// Number of units from roundDownDate to view_start_date
 	let unitSpan = null;
-	switch(tickUnitMs) {
+	switch(this.tickUnitMs) {
 		case MS_IN_Y:
-			unitSpan = view_start_date.getFullYear(); // minus 0
+			unitSpan = this.view_start_date.getFullYear(); // minus 0
 			break;
 		case MS_IN_M:
-			unitSpan = view_start_date.getMonth();
+			unitSpan = this.view_start_date.getMonth();
 			break;
 		case MS_IN_D:
-			unitSpan = view_start_date.getDate();
+			unitSpan = this.view_start_date.getDate();
 			break;
 		case MS_IN_H:
-			unitSpan = view_start_date.getHours();
+			unitSpan = this.view_start_date.getHours();
 			break;
 		case MS_IN_MIN:
-			unitSpan = view_start_date.getMinutes();
+			unitSpan = this.view_start_date.getMinutes();
 			break;
 		case MS_IN_SEC:
-			unitSpan = view_start_date.getSeconds();
+			unitSpan = this.view_start_date.getSeconds();
 			break;
 		case 1:
-			unitSpan = view_start_date.getMilliseconds();
+			unitSpan = this.view_start_date.getMilliseconds();
 			break;
 	}
 	// Set starting tick date
 	let curDate = new Date(roundDownDate);
-	add_unit(curDate, tickUnit, unitSpan - (unitSpan % tickUnitNum));
+	add_unit(curDate, this.tickUnit, unitSpan - (unitSpan % this.tickUnitNum));
 
 	// Set ending tick date a bit past the viewEndDate to 
 	// hide ticks popping in/out of existence.
-	let maxTickDate = new Date(viewEndDate.valueOf());
-	add_unit(maxTickDate, tickUnit, tickUnitNum);
+	let maxTickDate = new Date(this.viewEndDate.valueOf());
+	add_unit(maxTickDate, this.tickUnit, this.tickUnitNum);
 
 	// Get required info for the scale label
 	let legY, legM, legD, legH, legMin;
-	switch(tickUnitMs) {
+	switch(this.tickUnitMs) {
 		// No scale label
 		case MS_IN_M:
 		case MS_IN_Y:
-			showScaleLabel = false;
 			break;
 		// Scale label
 		case 1:
@@ -397,7 +482,7 @@ var update_ticks = function() {
 		if (roundDownDate.getFullYear() < 0) {
 			legEra = "short";
 		}
-		scale_label.innerHTML = roundDownDate.toLocaleDateString(undefined, {
+		this.scale_label.innerHTML = roundDownDate.toLocaleDateString(undefined, {
 			year: legY,
 			month: legM,
 			day: legD,
@@ -406,7 +491,7 @@ var update_ticks = function() {
 			era: legEra
 		});
 	} else {
-		scale_label.innerHTML = "";
+		this.scale_label.innerHTML = "";
 	}
 
 	// Draw ticks from left to right
@@ -417,9 +502,9 @@ var update_ticks = function() {
 		// to maintin clean numbering.
 		//   (That is, the next tick is either a uniformly spaced tick, or the next higher-level 
 		//   tick if it's close enough, aka. <= the usual uniform spacing).
-		if (tickUnitMs != MS_IN_Y) {
+		if (this.tickUnitMs != MS_IN_Y) {
 			let roundUpDate = new Date(curDate.valueOf());
-			switch(tickUnitMs) {
+			switch(this.tickUnitMs) {
 				case MS_IN_M:
 					roundUpDate.setMonth(0)
 					roundUpDate.setFullYear(roundUpDate.getFullYear() + 1);
@@ -446,15 +531,15 @@ var update_ticks = function() {
 					break;
 			}
 			let nextUniformDate = new Date(curDate.valueOf())
-			add_unit(nextUniformDate, tickUnit, tickUnitNum);
+			add_unit(nextUniformDate, this.tickUnit, this.tickUnitNum);
 			if (roundUpDate.valueOf() < nextUniformDate.valueOf()) {
 				// Continue from higher-level tick instead, but before that:
 				// We use a different, closer threshold to determine if we should also draw
 				// the low-level tick (it looks better; no huge whitespace)
 				let drawThresholdDate = new Date(curDate.valueOf())
-				add_unit(drawThresholdDate, tickUnit, Math.ceil(tickUnitNum / 2));
+				add_unit(drawThresholdDate, this.tickUnit, Math.ceil(this.tickUnitNum / 2));
 				if (drawThresholdDate.valueOf() < roundUpDate.valueOf()) {
-					draw_tick(curDate);
+					this.draw_tick(curDate);
 				}
 				// Continue from higher-level tick instead
 				curDate = roundUpDate;
@@ -462,20 +547,20 @@ var update_ticks = function() {
 
 		}
 		// Draw tick
-		draw_tick(curDate);
+		this.draw_tick(curDate);
 		// Next tick
-		add_unit(curDate, tickUnit, tickUnitNum);
+		add_unit(curDate, this.tickUnit, this.tickUnitNum);
 	}
 	// Draw events when finished
-	update_events();
+	this.update_events();
 }
 
 // Single tick
-let draw_tick = function(curDate) {
+CRTimeline.prototype.draw_tick = function(curDate) {
 	// Create tick HTML element
 	let tick = document.createElement("div");
 	tick.className = "tc-tick";
-	tick.style.left = (curDate.valueOf() - view_start_date.valueOf()) * year_px / MS_IN_Y + "px";
+	tick.style.left = (curDate.valueOf() - this.view_start_date.valueOf()) * this.year_px / MS_IN_Y + "px";
 	let label = document.createElement("div");
 	label.className = "tc-tick-label";
 	// Choose which parts of the date/time to display.
@@ -548,107 +633,105 @@ let draw_tick = function(curDate) {
 	}
 	// Attach to document
 	tick.appendChild(label);
-	tick_container.appendChild(tick);
+	this.tick_container.appendChild(tick);
 }
 
 
 /*######  Interaction  ######*/
 // Scroll to zoom
-timeline_container.addEventListener('wheel', function(e) {
+CRTimeline.prototype.scroll_event = function(e) {
 	// Zoom based on mouse position
 	let rect = e.currentTarget.getBoundingClientRect();
-	zoomOriginX = e.clientX - rect.left;
+	this.zoomOriginX = e.clientX - rect.left;
 	// Calculate net scroll delta in between frames
 	let deltaZoom = 1;
 	if (e.deltaY <= 0) { // zoom in
-		deltaZoom = (1 - zoom_multiplier*e.deltaY/1000);
+		deltaZoom = (1 - this.zoom_multiplier*e.deltaY/1000);
 	} else { // > 0; zoom out
-		deltaZoom = 1 / (1 + zoom_multiplier*e.deltaY/1000);
+		deltaZoom = 1 / (1 + this.zoom_multiplier*e.deltaY/1000);
 	}
-	totZoom *= deltaZoom;
+	this.totZoom *= deltaZoom;
 	// Request accumulated scroll be handled on next frame, if not done so already (limits number of calls)
-	if (queueScroll) {
-		window.requestAnimationFrame(function() {
+	if (this.queueScroll) {
+		window.requestAnimationFrame((function() {
 			// When it is time for next frame, browser will call zoom function and reset variables
-			if (totZoom >= 1 && year_px >= year_px_max) {
+			if (this.totZoom >= 1 && this.year_px >= this.year_px_max) {
 				// Redundant check for max zoom, otherwise it will pan the timeline
 			} else {
-				zoom_in(zoomOriginX, year_px * totZoom);
+				this.zoom_in(this.zoomOriginX, this.year_px * this.totZoom);
 			}
-			totZoom = 1;
-			queueScroll = true;
-		});
-		queueScroll = false;
+			this.totZoom = 1;
+			this.queueScroll = true;
+		}).bind(this));
+		this.queueScroll = false;
 	}
 	// Prevent page zoom (whether ctrl held or not)
 	e.preventDefault();
-});
+};
 // Click and drag
-let pan_start = function(e) {
+CRTimeline.prototype.pan_start = function(e) {
 	// Change cursor - grabbing
-	cursor_cover.style.display = "block";
+	this.cursor_cover.style.display = "block";
 	// Initial cursor x pos
-	pan_initial_mx = e.clientX;
+	this.pan_initial_mx = e.clientX;
 	// Initial timeline date
-	pan_initial_date = new Date(view_start_date.valueOf());
+	this.pan_initial_date = new Date(this.view_start_date.valueOf());
 	// The remaining events are not localized (drag anywhere)
-	window.addEventListener("mousemove", pan_change);
-	window.addEventListener("mouseup", pan_end);
+	this.this_pan_change = this.pan_change.bind(this);
+	this.this_pan_end = this.pan_end.bind(this);
+	window.addEventListener("mousemove", this.this_pan_change);
+	window.addEventListener("mouseup", this.this_pan_end);
 }
-let pan_change = function(e) {
-	let dateDelta = (pan_initial_mx - e.clientX) * MS_IN_Y / year_px;
-	let newStart = pan_initial_date.valueOf() + dateDelta;
-	if (newStart < minDate.valueOf()) {
+CRTimeline.prototype.pan_change = function(e) {
+	let dateDelta = (this.pan_initial_mx - e.clientX) * MS_IN_Y / this.year_px;
+	let newStart = this.pan_initial_date.valueOf() + dateDelta;
+	if (newStart < this.minDate.valueOf()) {
 		// reset pan origin for increased responsiveness at bounds
-		pan_initial_mx = e.clientX;
-		pan_initial_date = new Date(view_start_date.valueOf());
+		this.pan_initial_mx = e.clientX;
+		this.pan_initial_date = new Date(this.view_start_date.valueOf());
 		// min bound reached
-		newStart = minDate.valueOf();
+		newStart = this.minDate.valueOf();
 	}
-	set_start_date_impl(new Date(newStart));
-	if (viewEndDate.valueOf() > maxDate.valueOf()) {
+	this.set_start_date_impl(new Date(newStart));
+	if (this.viewEndDate.valueOf() > this.maxDate.valueOf()) {
 		// max bound reached
-		set_end_date_impl(maxDate);
+		this.set_end_date_impl(this.maxDate);
 		// reset pan origin for increased responsiveness at bounds
-		pan_initial_mx = e.clientX;
-		pan_initial_date = new Date(view_start_date.valueOf());
+		this.pan_initial_mx = e.clientX;
+		this.pan_initial_date = new Date(this.view_start_date.valueOf());
 	}
-	update_ticks();
+	this.update_ticks();
 }
-let pan_end = function(e) {
+CRTimeline.prototype.pan_end = function(e) {
 	// Remvoe the global events, reset state
-	window.removeEventListener("mousemove", pan_change);
-	window.removeEventListener("mouseup", pan_end);
+	window.removeEventListener("mousemove", this.this_pan_change);
+	window.removeEventListener("mouseup", this.this_pan_end);
 	// Change cursor - not grabbing
-	cursor_cover.style.display = "none";
+	this.cursor_cover.style.display = "none";
 }
-timeline_container.addEventListener("mousedown", pan_start);
 
 
 /*######  Responsive Layout  ######*/
 // Redraw on resize
-const resizeObserver = new ResizeObserver(entries => {
-	viewWidth = tick_container.offsetWidth;
-	viewEndDate = new Date(view_start_date.valueOf());
-	let ms_to_end = viewWidth * MS_IN_Y / year_px;
-	viewEndDate.setMilliseconds(view_start_date.getMilliseconds() + ms_to_end);
-	update_ticks();
-});
-resizeObserver.observe(timeline_container);
+CRTimeline.prototype.resize_event = function(entries) {
+	this.viewWidth = this.tick_container.offsetWidth;
+	this.viewEndDate = new Date(this.view_start_date.valueOf());
+	let ms_to_end = this.viewWidth * MS_IN_Y / this.year_px;
+	this.viewEndDate.setMilliseconds(this.view_start_date.getMilliseconds() + ms_to_end);
+	this.update_ticks();
+};
 
 
 /*######  Draw Events  ######*/
-
-var selected_event = null;
-let update_events = function() {
+CRTimeline.prototype.update_events = function() {
 	// This is to get something on the screen; it will be rewritten.
 	// Remove old events
-	events_upper.innerHTML = "";
+	this.events_upper.innerHTML = "";
 	// Add events in the viewable range
-	for (let event of event_manager.ordered_events) {
+	for (let event of this.event_manager.ordered_events) {
 		// Skip events outside the viewable range
-		if (event.start_datetime.valueOf() < view_start_date.valueOf() ||
-			event.start_datetime.valueOf() > viewEndDate.valueOf()) {
+		if (event.start_datetime.valueOf() < this.view_start_date.valueOf() ||
+			event.start_datetime.valueOf() > this.viewEndDate.valueOf()) {
 			continue;
 		}
 
@@ -670,7 +753,7 @@ let update_events = function() {
 
 		/// Fill in the details
 		// Position
-		evt.style.left = (event.start_datetime.valueOf() - view_start_date.valueOf()) * year_px / MS_IN_Y + "px";
+		evt.style.left = (event.start_datetime.valueOf() - this.view_start_date.valueOf()) * this.year_px / MS_IN_Y + "px";
 		// Title
 		if (event.title) {
 			label_text.innerHTML = event.title;
@@ -686,24 +769,22 @@ let update_events = function() {
 		evt.eid = event.getId();
 		// On select, show details
 		if (EDITOR) {
-			label.addEventListener("mousedown", function(e) {
-				selected_event = evt.eid;
-				show_details(evt.eid);
+			label.addEventListener("mousedown", (function(e) {
+				this.selected_event = evt.eid;
+				show_details(evt.eid);            // TODO
 				// Prevent dragging timeline when event clicked
 				e.stopPropagation();
-			});
+			}).bind(this));
 		}
 		// Attach to document
-		events_upper.appendChild(evt);
+		this.events_upper.appendChild(evt);
 		// Cosmetic - remove space to right of wrapped text
 		shrink_to_text(label_text);
 	}
 }
 
 
-/*######  Initialize  ######*/
-set_bounds_years(-1000, 3000);
-set_center_date(new Date(), 100);
+} // Scope end
 
 
 /*######  Notes  ######*/
@@ -721,7 +802,7 @@ set_center_date(new Date(), 100);
  * <div class="tc-event">
  * 	<div class="tc-event-line"></div>
  * 	<div class="tc-event-label">
- * 		Event Title
+ * 		<div>Event Title</div>
  * 	</div>
  * </div>
  * ```

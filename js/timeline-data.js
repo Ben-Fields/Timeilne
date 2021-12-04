@@ -285,7 +285,7 @@ class TimelineEvent {
         this.flag_start_date_init = true;
         if (resort) {
             this.#em.sort_events();
-            update_events();
+            // update_events();
         }
     }
 
@@ -294,7 +294,7 @@ class TimelineEvent {
         this.flag_start_time_init = true;
         if (resort) {
             this.#em.sort_events();
-            update_events();
+            // update_events();
         }
     }
 
@@ -302,7 +302,7 @@ class TimelineEvent {
         this.title = title;
         if (resort) {
             this.#em.sort_events();
-            update_events();
+            // update_events();
         }
     }
 
@@ -347,7 +347,7 @@ class TimelineEvent {
     set_visible_group(groupElement, refresh = true) {
         this.visible_group = groupElement;
         if (refresh) {
-            update_events();
+            // update_events();
         }
     }
 
@@ -415,7 +415,7 @@ class EventManager {
         cur_event.clear_event_data();
         this.ordered_events = this.ordered_events.filter(e => e.getId() !== eid);
         this.event_map.delete(eid);
-        update_events()
+        // update_events()
         return true;
     }
 
@@ -485,7 +485,7 @@ class EventManager {
 
         alert("Loading finish! total: " + total + " rows, valid records: " + valid_count);
         this.sort_events();
-        update_events();
+        // update_events();
         return valid_count;
     }
 }
