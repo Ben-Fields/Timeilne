@@ -1,9 +1,14 @@
 /*######  Editor Parameters  ######*/
-// Editor features
+// Enable editor features
 var EDITOR = true;
-// Constants
+// Constants (global, not timeline-specific)
 var MIN_ZOOM = 0.0001;
 var MAX_ZOOM = 10_000_000_000_000;
+
+
+/*######  Timeline Parameters  ######*/
+// Options object to store settings
+var options = Object.assign({}, CRTimeline.DEFAULT_OPTIONS);
 
 
 /*######  Details References  ######*/
@@ -40,8 +45,10 @@ var field_max_date        = document.getElementById("field-max-date");
 var field_max_time        = document.getElementById("field-max-time");
 var field_init_date       = document.getElementById("field-init-date");
 var field_init_time       = document.getElementById("field-init-time");
+var field_min_zoom       = document.getElementById("field-min-zoom");
+var field_max_zoom       = document.getElementById("field-max-zoom");
 var field_init_zoom       = document.getElementById("field-init-zoom");
 var field_tick_density    = document.getElementById("field-tick-density");
 var field_minor_ticks     = document.getElementById("field-minor-ticks");
 var field_line_color      = document.getElementById("field-line-color");
-var field_line_width      = document.getElementById("field-line-width");
+var field_line_thickness  = document.getElementById("field-line-thickness");

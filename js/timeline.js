@@ -1,4 +1,5 @@
 /*######  Description  ######*/
+
 /* View parameters:
  *  - view_start_date   : the leftmost date of the timeline
  *  - year_px           : the physical width of a year in CSS pixels
@@ -24,6 +25,7 @@
 
 
 /*######  Constants  ######*/
+
 // Approximate values in ms for picking sensible units
 const MS_IN_SEC = 1000;
 const MS_IN_MIN = 60 * MS_IN_SEC;
@@ -34,6 +36,7 @@ const MS_IN_Y = 12 * MS_IN_M;
 
 
 /*######  Utility  ######*/
+
 // Add specific time units to Date
 let add_unit = function(date, unit, num) {
 	const func = {
@@ -45,8 +48,8 @@ let add_unit = function(date, unit, num) {
 		['second']: 'Seconds',
 		['millisecond']: 'Milliseconds'
 	}[unit];
-	const getFunc = 'get' + func;
-	const setFunc = 'set' + func;
+	const getFunc = 'getUTC' + func;
+	const setFunc = 'setUTC' + func;
 	date[setFunc](date[getFunc]() + num);
 }
 // Cosmetic fix to remove whitespace to right of text
@@ -95,9 +98,22 @@ let shrink_to_text = function(el) {
 	// Set content with <br>'s
 	el.innerHTML = newTxt;
 }
-
+// Returns today's date (defult initial date)
+let today = function() {
+	let t = new Date();
+	let tUTC = new Date();
+	tUTC.setUTCFullYear(t.getFullYear());
+	tUTC.setUTCMonth(t.getMonth());
+	tUTC.setUTCDate(t.getDate());
+	tUTC.setUTCHours(0);
+	tUTC.setUTCMinutes(0);
+	tUTC.setUTCSeconds(0);
+	tUTC.setUTCMilliseconds(0);
+	return tUTC;
+}
 
 /*######  Class Declaration  ######*/
+
 var CRTimeline = class {
 
 	/*######  Initialization  ######*/
@@ -106,9 +122,9 @@ var CRTimeline = class {
 		// Whether to (re-)create the timeline markup
 		generate: true,
 		// View settings
-		min_date: (new Date(0,0,0,0,0,0,0)).setFullYear(-1000),
-		max_date: (new Date(0,0,0,0,0,0,0)).setFullYear(3000),
-		initial_date: new Date(),
+		min_date: new Date(Date.UTC(-1000,0,1,0,0,0,0)),
+		max_date: new Date(Date.UTC(3000,0,1,0,0,0,0)),
+		initial_date: today(),
 		min_zoom: 1,
 		max_zoom: 10_000_000_000_000,
 		initial_zoom: 100,
@@ -140,6 +156,11 @@ var CRTimeline = class {
 		let event_container = this.timeline_container.getElementsByClassName("tc-layer-events")[0];
 		this.events_upper = event_container.getElementsByClassName("tc-upper")[0];
 		this.events_lower = event_container.getElementsByClassName("tc-lower")[0];
+		// - Style components
+		this.line = this.timeline_container.getElementsByClassName("tc-line")[0];
+		this.line2 = this.timeline_container.getElementsByClassName("tc-line")[1];
+		this.left_arrow = this.timeline_container.getElementsByTagName("svg")[0];
+		this.right_arrow = this.timeline_container.getElementsByTagName("svg")[1];
 		// Calculated Parameters
 		this.viewWidth = this.tick_container.offsetWidth;
 		// Saved parameters
@@ -148,9 +169,9 @@ var CRTimeline = class {
 		this.year_px_min = this.options.min_zoom;
 		this.year_px_max = this.options.max_zoom;
 		this.ticks_per_kpx = this.options.tick_density;
-			// minor_tick_density
-			// line_color
-			// line_thickness
+			// TODO: minor_tick_density
+		this.set_line_color(this.options.line_color);
+		this.set_line_thickness(this.options.line_thickness);
 		if (this.options.event_manager) {
 			this.event_manager = this.options.event_manager;
 		} else {
@@ -181,6 +202,12 @@ var CRTimeline = class {
 	event_container;
 	events_upper;
 	events_lower;
+
+	/*######  Style References  ######*/
+	line;
+	line2;
+	left_arrow;
+	right_arrow;
 
 	/*######  View Parameters  ######*/
 	// Global Bounds
@@ -219,14 +246,53 @@ var CRTimeline = class {
 	event_manager;
 	group_manager;
 	selected_event = null;
+
+	/*######  Date / Time Formatting  ######*/
+	tickFormatYEra = new Intl.DateTimeFormat(undefined, {
+		timeZone: "UTC",
+		year: "numeric",
+		era: "short"
+	});
+	tickFormatY = new Intl.DateTimeFormat(undefined, {
+		timeZone: "UTC",
+		year: "numeric"
+	});
+	tickFormatM = new Intl.DateTimeFormat(undefined, {
+		timeZone: "UTC",
+		month: "short"
+	});
+	tickFormatD = new Intl.DateTimeFormat(undefined, {
+		timeZone: "UTC",
+		day: "numeric"
+	});
+	tickFormatH = new Intl.DateTimeFormat(undefined, {
+		timeZone: "UTC",
+		hour: "numeric",
+		minute: "2-digit"
+	});
+	tickFormatMin = new Intl.DateTimeFormat(undefined, {
+		timeZone: "UTC",
+		hour: "numeric",
+		minute: "2-digit"
+	});
+	tickFormatSec = new Intl.DateTimeFormat(undefined, {
+		timeZone: "UTC",
+		second: "2-digit"
+	});
+	tickFormatMs = new Intl.DateTimeFormat(undefined, {
+		timeZone: "UTC",
+		second: "2-digit",
+		fractionalSecondDigits: 3
+	});
 }
 
 
 /*######  View Setup  ######*/
+
 // Global Bounds
 CRTimeline.prototype.set_bounds_years = function(min, max) {
-	this.minDate.setFullYear(min);
-	this.maxDate.setFullYear(max);
+	this.minDate.setUTCFullYear(min);
+	this.maxDate.setUTCFullYear(max);
 }
 // Viewable Area
 CRTimeline.prototype.set_zoom_impl = function(year_in_px) {
@@ -394,7 +460,23 @@ CRTimeline.prototype.px_to_ms = function(px) {
 }
 
 
+/*######  Styling  ######*/
+
+CRTimeline.prototype.set_line_color = function(color) {
+	this.line.style.borderColor = color;
+	this.line2.style.borderColor = color;
+	// SVG attributes not standard HTML, so must use function.
+	this.left_arrow.setAttribute("fill", color);
+	this.right_arrow.setAttribute("fill", color);
+}
+CRTimeline.prototype.set_line_thickness = function(thickness) {
+	this.line.style.borderWidth = thickness + "px";
+	this.line2.style.borderWidth = thickness + "px";
+}
+
+
 /*######  Draw Ticks  ######*/
+
 // Ticks
 CRTimeline.prototype.update_ticks = function() {
 	// Remove old ticks
@@ -408,44 +490,44 @@ CRTimeline.prototype.update_ticks = function() {
 	let roundDownDate = new Date(this.view_start_date.valueOf());
 	switch(this.tickUnitMs) {
 		case MS_IN_Y:
-			roundDownDate.setFullYear(0);
+			roundDownDate.setUTCFullYear(0);
 		case MS_IN_M:
-			roundDownDate.setMonth(0);
+			roundDownDate.setUTCMonth(0);
 		case MS_IN_D:
-			roundDownDate.setDate(1); // 1-31; the only one-based API
+			roundDownDate.setUTCDate(1); // 1-31; the only one-based API
 		case MS_IN_H:
-			roundDownDate.setHours(0);
+			roundDownDate.setUTCHours(0);
 		case MS_IN_MIN:
-			roundDownDate.setMinutes(0);
+			roundDownDate.setUTCMinutes(0);
 		case MS_IN_SEC:
-			roundDownDate.setSeconds(0);
+			roundDownDate.setUTCSeconds(0);
 		case 1:
-			roundDownDate.setMilliseconds(0);
+			roundDownDate.setUTCMilliseconds(0);
 	}
 
 	// Number of units from roundDownDate to view_start_date
 	let unitSpan = null;
 	switch(this.tickUnitMs) {
 		case MS_IN_Y:
-			unitSpan = this.view_start_date.getFullYear(); // minus 0
+			unitSpan = this.view_start_date.getUTCFullYear(); // minus 0
 			break;
 		case MS_IN_M:
-			unitSpan = this.view_start_date.getMonth();
+			unitSpan = this.view_start_date.getUTCMonth();
 			break;
 		case MS_IN_D:
-			unitSpan = this.view_start_date.getDate();
+			unitSpan = this.view_start_date.getUTCDate();
 			break;
 		case MS_IN_H:
-			unitSpan = this.view_start_date.getHours();
+			unitSpan = this.view_start_date.getUTCHours();
 			break;
 		case MS_IN_MIN:
-			unitSpan = this.view_start_date.getMinutes();
+			unitSpan = this.view_start_date.getUTCMinutes();
 			break;
 		case MS_IN_SEC:
-			unitSpan = this.view_start_date.getSeconds();
+			unitSpan = this.view_start_date.getUTCSeconds();
 			break;
 		case 1:
-			unitSpan = this.view_start_date.getMilliseconds();
+			unitSpan = this.view_start_date.getUTCMilliseconds();
 			break;
 	}
 	// Set starting tick date
@@ -479,10 +561,11 @@ CRTimeline.prototype.update_ticks = function() {
 	// Update scale label in the legend
 	if (legY != undefined) {
 		let legEra;
-		if (roundDownDate.getFullYear() < 0) {
+		if (roundDownDate.getUTCFullYear() < 0) {
 			legEra = "short";
 		}
 		this.scale_label.innerHTML = roundDownDate.toLocaleDateString(undefined, {
+			timeZone: "UTC",
 			year: legY,
 			month: legM,
 			day: legD,
@@ -506,28 +589,28 @@ CRTimeline.prototype.update_ticks = function() {
 			let roundUpDate = new Date(curDate.valueOf());
 			switch(this.tickUnitMs) {
 				case MS_IN_M:
-					roundUpDate.setMonth(0)
-					roundUpDate.setFullYear(roundUpDate.getFullYear() + 1);
+					roundUpDate.setUTCMonth(0)
+					roundUpDate.setUTCFullYear(roundUpDate.getUTCFullYear() + 1);
 					break;
 				case MS_IN_D:
-					roundUpDate.setDate(1);
-					roundUpDate.setMonth(roundUpDate.getMonth() + 1);
+					roundUpDate.setUTCDate(1);
+					roundUpDate.setUTCMonth(roundUpDate.getUTCMonth() + 1);
 					break;
 				case MS_IN_H:
-					roundUpDate.setHours(0);
-					roundUpDate.setDate(roundUpDate.getDate() + 1);
+					roundUpDate.setUTCHours(0);
+					roundUpDate.setUTCDate(roundUpDate.getUTCDate() + 1);
 					break;
 				case MS_IN_MIN:
-					roundUpDate.setMinutes(0);
-					roundUpDate.setHours(roundUpDate.getHours() + 1);
+					roundUpDate.setUTCMinutes(0);
+					roundUpDate.setUTCHours(roundUpDate.getUTCHours() + 1);
 					break;
 				case MS_IN_SEC:
-					roundUpDate.setSeconds(0);
-					roundUpDate.setMinutes(roundUpDate.getMinutes() + 1);
+					roundUpDate.setUTCSeconds(0);
+					roundUpDate.setUTCMinutes(roundUpDate.getUTCMinutes() + 1);
 					break;
 				case 1:
-					roundUpDate.setMilliseconds(0);
-					roundUpDate.setSeconds(roundUpDate.getSeconds() + 1);
+					roundUpDate.setUTCMilliseconds(0);
+					roundUpDate.setUTCSeconds(roundUpDate.getUTCSeconds() + 1);
 					break;
 			}
 			let nextUniformDate = new Date(curDate.valueOf())
@@ -571,64 +654,46 @@ CRTimeline.prototype.draw_tick = function(curDate) {
 		// Thus, we do not need to check if the display tick unit requires such accuracy.
 		//   We only need to check if the current tick has data for the unit.
 		//   (otherwise would need ex. if (tickUnit <= days && curDate.getDays() != 0) )
-		if (curDate.getMilliseconds() != 0) { break LEVEL_UP; }
+		if (curDate.getUTCMilliseconds() != 0) { break LEVEL_UP; }
 		level++;
-		if (curDate.getSeconds() != 0) { break LEVEL_UP; }
+		if (curDate.getUTCSeconds() != 0) { break LEVEL_UP; }
 		level++;
-		if (curDate.getMinutes() != 0) { break LEVEL_UP; }
+		if (curDate.getUTCMinutes() != 0) { break LEVEL_UP; }
 		level++;
-		if (curDate.getHours() != 0) { break LEVEL_UP; }
+		if (curDate.getUTCHours() != 0) { break LEVEL_UP; }
 		level++;
-		if (curDate.getDate() != 1) { break LEVEL_UP; }
+		if (curDate.getUTCDate() != 1) { break LEVEL_UP; }
 		level++;
-		if (curDate.getMonth() != 0) { break LEVEL_UP; }
+		if (curDate.getUTCMonth() != 0) { break LEVEL_UP; }
 		level++;
 	}
 	// Format date/time appropriately
 	switch(level) {
 		case 1: // millisecond
-			label.innerHTML = curDate.toLocaleTimeString(undefined, {
-				second: "2-digit",
-				fractionalSecondDigits: 3
-			});
+			label.innerHTML = this.tickFormatMs.format(curDate);
 			break;
 		case 2: // second
-			label.innerHTML = curDate.toLocaleTimeString(undefined, {
-				second: "2-digit"
-			});
+			label.innerHTML = this.tickFormatSec.format(curDate);
 			break;
 		case 3: // minute
-			label.innerHTML = curDate.toLocaleTimeString(undefined, {
-				hour: "numeric",
-				minute: "2-digit"
-			});
+			label.innerHTML = this.tickFormatMin.format(curDate);
 			break;
 		case 4: // hour
-			label.innerHTML = curDate.toLocaleTimeString(undefined, {
-				hour: "numeric",
-				minute: "2-digit"
-			});
+			label.innerHTML = this.tickFormatH.format(curDate);
 			break;
 		case 5: // day
-			label.innerHTML = curDate.toLocaleDateString(undefined, {
-				day: "numeric"
-			});
+			label.innerHTML = this.tickFormatD.format(curDate);
 			break;
 		case 6: // month
-			label.innerHTML = curDate.toLocaleDateString(undefined, {
-				month: "short"
-			});
+			label.innerHTML = this.tickFormatM.format(curDate);
 			break;
 		case 7: // year
-			let showEra;
 			if (curDate.getFullYear() < 0) {
-				showEra = "short";
 				label.style.whiteSpace = "nowrap";
+				label.innerHTML = this.tickFormatYEra.format(curDate);
+			} else {
+				label.innerHTML = this.tickFormatY.format(curDate);
 			}
-			label.innerHTML = curDate.toLocaleDateString(undefined, {
-				year: "numeric",
-				era: showEra
-			});
 			break;
 	}
 	// Attach to document
@@ -638,6 +703,7 @@ CRTimeline.prototype.draw_tick = function(curDate) {
 
 
 /*######  Interaction  ######*/
+
 // Scroll to zoom
 CRTimeline.prototype.scroll_event = function(e) {
 	// Zoom based on mouse position
@@ -712,6 +778,7 @@ CRTimeline.prototype.pan_end = function(e) {
 
 
 /*######  Responsive Layout  ######*/
+
 // Redraw on resize
 CRTimeline.prototype.resize_event = function(entries) {
 	this.viewWidth = this.tick_container.offsetWidth;
@@ -723,6 +790,7 @@ CRTimeline.prototype.resize_event = function(entries) {
 
 
 /*######  Draw Events  ######*/
+
 CRTimeline.prototype.update_events = function() {
 	// This is to get something on the screen; it will be rewritten.
 	// Remove old events
@@ -788,6 +856,7 @@ CRTimeline.prototype.update_events = function() {
 
 
 /*######  Notes  ######*/
+
 /* Tick markup:
  * ```
  * <div class="tc-tick">

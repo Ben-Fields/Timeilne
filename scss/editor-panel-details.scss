@@ -1,0 +1,50 @@
+/*######  Color Variables  ######*/
+$delete-btn: #E46868;
+
+
+/*######  Details Inputs  ######*/
+#field-description {
+	cursor: pointer;
+}
+#details-delete {
+	position: sticky;
+	top: 5px;
+	background: $delete-btn;
+	margin-right: 10px;
+	margin-top: 5px;
+	font-size: 1.05em;
+	border: solid 1px desaturate(darken($delete-btn,10%), 10%);
+	border-radius: 5px;
+	cursor: pointer;
+	padding: 2px 7px 3px 7px;
+	color: white;
+	text-shadow: -1px -1px 1px darken($delete-btn,20%), 0 1px 1px lighten($delete-btn,10%);
+	box-shadow: 0 0 8px 0 #00000044;
+	border-right-width: 3px;
+	border-bottom-width: 3px;
+	border-right-color: desaturate(darken($delete-btn,15%), 20%);
+	border-bottom-color: desaturate(darken($delete-btn,15%), 20%);
+	opacity: 0.6;
+}
+#details-delete:hover {
+	opacity: 1;
+}
+
+
+/*######  Placeholder Panel  ######*/
+#details-placeholder {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	color: #DDDDDD;
+	font-size: 2em;
+	font-family: sans-serif;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 0;
+	text-align: center;
+	overflow: hidden;
+}

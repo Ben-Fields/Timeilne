@@ -76,6 +76,7 @@ for (let picker_input of picker_inputs) {
 		instance.applyColor();
 		// Update color of input field (input type=color)
 		instance._root.button.value = instance.getColor().toHEXA();
+		instance._root.button.dispatchEvent(new Event("change"));
 	}).on('changestop', (source, instance) => {
 		// Make interaction with palette change focus
 		// (By default, can tab to focus but not click, unlike other elements)
@@ -85,9 +86,11 @@ for (let picker_input of picker_inputs) {
 		}
 		// Update color of input field (input type=color)
 		instance._root.button.value = instance.getColor().toHEXA();
+		instance._root.button.dispatchEvent(new Event("change"));
 	}).on('cancel', instance => {
 		// Update color of input field (input type=color)
 		instance._root.button.value = instance.getColor().toHEXA();
+		instance._root.button.dispatchEvent(new Event("change"));
 	}).on('show', (color, instance) => {
 		// On open, take color from input field (input type=color) in 
 		// case of programmatic changes

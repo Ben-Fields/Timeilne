@@ -7,7 +7,6 @@ $input-bg-focus: #DDE5F9;
 $input-underline-incomplete: #F8DE52;
 $required-asterisk: #2D2D2D;
 
-$delete-btn: #E46868;
 
 /*######  Input Fields  ######*/
 /* Input positioning */
@@ -84,50 +83,62 @@ $delete-btn: #E46868;
 }
 
 
-/*######  "Details" Input Fields  ######*/
-#field-description {
-	cursor: pointer;
-}
-#details-delete {
-	position: sticky;
-	top: 5px;
-	float: right;
-	background-color: $delete-btn;
-	margin-right: 10px;
-	margin-top: 5px;
-	font-size: 1.05em;
-	border: solid 1px desaturate(darken($delete-btn,10%), 10%);
-	border-radius: 5px;
-	cursor: pointer;
-	padding: 2px 5px;
-	color: white;
-	text-shadow: -1px -1px 1px darken($delete-btn,20%), 0 1px 1px lighten($delete-btn,10%);
-	box-shadow: 0 0 8px 0 #00000044;
-	border-right-width: 3px;
-	border-bottom-width: 3px;
-	border-right-color: desaturate(darken($delete-btn,15%), 20%);
-	border-bottom-color: desaturate(darken($delete-btn,15%), 20%);
-	opacity: 0.6;
-}
-#details-delete:hover {
-	opacity: 1;
-}
-
-
-/*######  Special Panels  ######*/
-#details-placeholder {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	color: #DDDDDD;
-	font-size: 2em;
-	font-family: sans-serif;
+/*######  Buttons  ######*/
+.button-container {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	z-index: 0;
+	margin: 0 auto;
+	width: 100%;
+	max-width: max-content;
+	padding: 0 10px;
+}
+.button-row {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+.button-row > button:not(:last-child) {
+	margin-right: 8px;
+}
+.button-container > button,
+.button-container > .button-row {
+	margin-bottom: 7px;
+}
+.button-container hr {
+	width: 100%;
+	border: none;
+	border-top: solid #ece7e4 1px;
+	border-radius: 99px;
+	margin: 2px;
+	margin-bottom: 9px;
+}
+.button-container button {
+	cursor: pointer;
 	text-align: center;
+	white-space: nowrap;
+	padding: 0 10px;
+	font-size: 1em;
+	//
+	display: flex;
+	flex-wrap: wrap;
 	overflow: hidden;
+	justify-content: center;
+	min-width: 1.1em;
+	//
+	line-height: 1.6em;
+	box-sizing: content-box;
+	height: 1.6em;
+	//
+	gap: 0.4em;
+}
+.button-container button > i {
+	line-height: 1.6em;
+}
+.button-contianer button > *:not(:first-child) {
+	margin-left: 0.4em;
+}
+.button-row button:only-child {
+	min-width: calc(2.2em + 30px);
 }

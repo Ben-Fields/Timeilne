@@ -89,10 +89,7 @@ body {
 	flex: 1 1 200px;
 }
 /* Scrolling / Overflow */
-#file, #info {
-	overflow: hidden;
-}
-#edit, #groups, #unused, #details {
+.content {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -103,6 +100,44 @@ body {
 	// Allows the top section to collapse
 	// (flex sets default to auto, which fits content)
 	min-height: 0;
+}
+/* Tab content */
+// Expand content
+.content {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+.content > * {
+	flex-shrink: 0;
+}
+.input-container,
+.tabcontent,
+#group-section {
+	width: 100%;
+}
+// Sticky titles
+.tab-wrapper,
+:not(.tab-wrapper) > .panel-title,
+.leftright-tab-wrapper {
+	position: sticky;
+	top: 0;
+}
+// Leftright capability
+.leftright-tab-wrapper {
+	width: 100%;
+}
+.leftright-tab-wrapper > *:last-child {
+	float: right;
+}
+// Fix sticky wrappers blocking mouse
+.tab-wrapper,
+.leftright-tab-wrapper {
+	pointer-events: none;
+}
+.tab-wrapper > *,
+.leftright-tab-wrapper > * {
+	pointer-events: initial;
 }
 
 
@@ -193,10 +228,6 @@ html {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-}
-.tab-wrapper, :not(.tab-wrapper) > .panel-title {
-	position: sticky;
-	top: 0;
 }
 /* Tabbed Panel Titles */
 .tab-wrapper > .panel-title:not(:last-child) {

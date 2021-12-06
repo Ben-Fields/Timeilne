@@ -19,10 +19,11 @@
 	<link rel="stylesheet" type="text/css" href="thirdparty/quill-js/quill.snow.css"/>
 	<link rel="stylesheet" type="text/css" href="thirdparty/pickr/monolith.min.css"/>
 	<!-- Style -->
-	<link rel="stylesheet" type="text/css" href="css/main.css"/>
-	<link rel="stylesheet" type="text/css" href="css/inputs.css"/>
-	<link rel="stylesheet" type="text/css" href="css/info.css"/>
-	<link rel="stylesheet" type="text/css" href="css/richtext.css"/>
+	<link rel="stylesheet" type="text/css" href="css/editor-main.css"/>
+	<link rel="stylesheet" type="text/css" href="css/editor-inputs.css"/>
+	<link rel="stylesheet" type="text/css" href="css/editor-panel-info.css"/>
+	<link rel="stylesheet" type="text/css" href="css/editor-panel-details.css"/>
+	<link rel="stylesheet" type="text/css" href="css/editor-richtext.css"/>
 	<link rel="stylesheet" type="text/css" href="css/timeline.css"/>
 	<link rel="stylesheet" type="text/css" href="css/temp.css"/>
 	<link rel="stylesheet" type="text/css" href="css/main_yy.css"/>
@@ -37,13 +38,31 @@
 				<!-- File -->
 				<div id="file" class="content">
 					<div class="panel-title">File</div>
-					<div class="bs" style="padding: 10px 20px;">
-						<button class="btn btn-primary" onclick="document.getElementById('file-input').click();"><i class="fa-solid fa-folder-open"></i> Open</button>
-						<input id="file-input" type="file" name="name" style="display: none;" multiple="true"/>
-						<button class="btn btn-primary" onclick = "export_timeline();"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-						<button class="btn btn-primary" type="button" onclick="exportFormat();"><i class="fa-solid fa-align-justify"></i> Format</button>
+					<div class="button-container">
+						<div class="button-row">
+							<button onclick="document.getElementById('file-input').click();">
+								<i class="fa-solid fa-folder-open"></i> Open
+							</button>
+							<input id="file-input" type="file" name="name" style="display: none;" multiple="true"/>
+							<button onclick = "export_timeline();">
+								<i class="fa-solid fa-floppy-disk"></i> Save
+							</button>
+						</div>
+						<div class="button-row">
+							<button type="button" onclick="exportFormat();">
+								<i class="fa-solid fa-file-arrow-down"></i> Data Template
+							</button>
+						</div>
+						<hr/>
+						<div class="button-row">
+							<button type="button" onclick="">
+								<i class="fa-solid fa-eye"></i> Preview
+							</button>
+							<button type="button" onclick="">
+								<i class="fa-solid fa-share-nodes"></i> Publish
+							</button>
+						</div>
 					</div>
-					<div class="color-picker"></div>
 				</div>
 				<div class="resize resize-x"></div>
 			</div>
@@ -105,8 +124,8 @@
 								onchange="roundValue(this)"/>
 							<label for="field-line-color">Line Style:</label>
 							<input class="half" id="field-line-color" type="color" name="line-color"/>
-							<input class="half" id="field-line-width" type="number" name="line-width" 
-								value="3"  min="1" max="10" step="0.1" 
+							<input class="half" id="field-line-thickness" type="number" name="line-width" 
+								value="2"  min="1" max="10" step="0.1" 
 								onchange="roundValue(this, 10)"/>
 						</div>
 					</div>
@@ -227,7 +246,6 @@
 								<!-- Generated -->
 							</div>
 							<div class="tc-layer-line">
-								<!-- Duplicate layer to prevent line fading out -->
 								<div class="tc-upper"></div>
 								<div class="tc-line"></div>
 								<div class="tc-lower"></div>
@@ -257,8 +275,10 @@
 				<div class="resize resize-y"></div>
 				<!-- Details -->
 				<div id="details" class="content">
-					<div class="panel-title">Details</div>
-					<button id="details-delete" style="display:none;">Delete</button>
+					<div class="leftright-tab-wrapper">
+						<div class="panel-title">Details</div>
+						<button id="details-delete" style="display:none;">Delete</button>
+					</div>
 					<div id="details-placeholder">Select an element to view/edit its details.</div>
 					<div id="details-data" class="input-container" style="display:none;">
 						<label for="field-short-title" class="required">Title:</label>
@@ -324,16 +344,18 @@
 	<script src="thirdparty/quill-js/quill.js"></script>
 	<script src="thirdparty/pickr/pickr.min.js"></script>
 	<!-- Scripts - General -->
-	<script src="js/editor.js"></script>
-	<script src="js/editor-panels.js"></script>
-	<script src="js/editor-file.js"></script>
-	<script src="js/editor-edit.js"></script>
-	<script src="js/editor-details.js"></script>
-	<script src="js/editor-richtext.js"></script>
-	<script src="js/editor-inputs.js"></script>
-	<script src="js/editor-groups.js"></script>
 	<script src="js/timeline-data.js"></script>
 	<script src="js/timeline.js"></script>
+	<script src="js/editor.js"></script>
+	<script src="js/editor-utility.js"></script>
+	<script src="js/editor-panels.js"></script>
+	<script src="js/editor-panel-file.js"></script>
+	<script src="js/editor-panel-edit.js"></script>
+	<script src="js/editor-panel-details.js"></script>
+	<script src="js/editor-panel-groups.js"></script>
+	<script src="js/editor-panel-info.js"></script>
+	<script src="js/editor-richtext.js"></script>
+	<script src="js/editor-inputs.js"></script>
 	<script src="js/editor-timeline-init.js"></script>
 	<!-- Scripts - Unit Test -->
 	<!-- <script src="test/test_timeline_data.js"></script> -->
