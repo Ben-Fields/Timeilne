@@ -10,10 +10,12 @@
 /*######  Tab Switching  ######*/
 
 let selectEditTab = function (evt, tabID) {
-	tablinks = evt.target.parentNode.getElementsByClassName("panel-title");
+	// e.currentTarget always gives the intended target element (on which the listener is attached).
+	// e.target gives the exact child element that is clicked.
+	tablinks = evt.currentTarget.parentNode.getElementsByClassName("panel-title");
 	for (i = 0; i < tablinks.length; i++) {
 	  tablinks[i].className = "panel-title panel-title-inactive";
-	  evt.currentTarget.className 
+	  evt.currentTarget.className;
 	}
 
 	tabcontents = document.getElementsByClassName("tabcontent");

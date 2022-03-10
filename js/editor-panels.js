@@ -37,7 +37,8 @@ let resize_x_change = function(bar_side, e) {
 	active_resize_bar.parentNode.style.flexBasis = Math.min(
 		Math.max(
 			initial_basis + (e.clientX - bar_initial_pos) * bar_side, 
-			active_resize_bar.offsetWidth
+			// The min. is minus 1, since DPI scaling may leave a gap
+			active_resize_bar.offsetWidth - 1
 		),
 		max_basis
 	) + "px";
@@ -69,7 +70,8 @@ let resize_y_change = function(bar_side, e) {
 	active_resize_bar.parentNode.style.flexBasis = Math.min(
 		Math.max(
 			initial_basis + (e.clientY - bar_initial_pos) * bar_side, 
-			active_resize_bar.offsetHeight
+			// The min. is minus 1, since DPI scaling may leave a gap
+			active_resize_bar.offsetHeight - 1
 		),
 		max_basis
 	) + "px";

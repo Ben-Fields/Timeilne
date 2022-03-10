@@ -1,0 +1,41 @@
+Changelog (2021 - present)
+
+
+0.1 Changelog (November 10, 2021):
+
+ - Timeline rendering - human-like, dynmic drawing.
+ - Event placement through both the visual editor and spreadsheet import.
+ - Event grouping with unique visual properties.
+ - Configurable editor - resizable distinct panels.
+ - Import / export full timelines to / from the editor.
+ - Pan and zoom the timeline.
+ - Edit existing events by clicking on them.
+
+
+0.2 Changelog (December 6, 2021):
+
+ - When panning to the far right bound, set end date as opposed to start date.
+ - On view resize, update the tracked view width and timeline contents.
+ - Add min zoom level, max zoom level.
+ - Pan - reset panning initial position on reaching a bound.
+     Provides accuracy benefit of absolute positioning from initial click 
+     pos, while maintianing responsiveness at bounds.
+ - Add a macro label to give a frame of reference when zoomed.
+     (ex. "2020 February" when viewing intervals smaller than a day)
+ - Fix panels unable to close all the way due to DPI scaling.
+ - Fix multiple tabs remaining active when clicking to switch tabs.
+ - Select elements and update the details pane immediately upon placing them.
+ - Fix: Remove an event's details from the details panel when deleted.
+ - Fix: Hide delete button if no element selected.
+ - Change event placeholder title from "..." for a larger click zone, and display 
+      it distinctly from a normal title.
+ - Fix newly placed events being offset from the cursor / intended placement position.
+ - Create class API to intialize and configure the timeline.
+ - Prevent the display of "undefined" values in the details panel.
+ - Fix events wrapping/reflowing their title text when near the right edge of the timeline.
+ - Gradually fade out events as they approach the edges of the timeline.
+ - Add visual controls for the timeline's appearance.
+ - Unify the time format across the stored event details and rendering to prevent discrepancies.
+ - Redesign layout to display events below the timeline as those above.
+ - New editor and timeline appearance.
+ 
