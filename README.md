@@ -1,5 +1,7 @@
 <div align="center">
-<img alt="Chronorule" src="/images/logo_light-dark-dynamic.svg" width="100%" height="8em"></img>
+<a href="https://chronorule.app">
+	<img alt="Chronorule" src="/images/logo_light-dark-dynamic.svg" width="100%" height="60px"></img>
+</a>
 <h3>
 	<a href="https://chronorule.app">Editor</a>
 	<span> · </span>
