@@ -1,0 +1,16 @@
+editor-definitions.js
+editor-utility.js
+
+editor-panels.js
+editor-panel-file.js
+editor-panel-edit.js
+editor-tab-settings.js
+editor-tab-add-element.js
+editor-panel-details.js
+editor-panel-groups.js
+editor-panel-info.js
+
+editor-richtext.js
+editor-inputs.js
+
+editor-timeline-init.js

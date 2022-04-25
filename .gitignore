@@ -1,2 +1,3 @@
-# SCSS intermediate files
-*.css.map
+# Source map files.
+# These map bundled css and js files (created with "Dart Sass" and "esbuild") for debugging.
+*.map

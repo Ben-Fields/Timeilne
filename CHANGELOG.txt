@@ -38,4 +38,13 @@ Changelog (2021 - present)
  - Unify the time format across the stored event details and rendering to prevent discrepancies.
  - Redesign layout to display events below the timeline as those above.
  - New editor and timeline appearance.
- 
+
+
+0.3 Changelog (???, 2022):
+
+ - Show the macro label sooner and with greater accuracy, so you know where you are.
+ - Update the style across the editor for consistency and better resizability.
+ - Remove "Click Action" (to be replaced later by custom interceptable JS events).
+ - Remove "Visible Group" (the order of groups will become important to determine the visible group).
+ - Add sections to the details panel to organize the inputs.
+ - Complete conversion of editor styling to the new custom theme.

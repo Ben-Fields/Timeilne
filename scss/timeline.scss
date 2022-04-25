@@ -3,7 +3,7 @@
 
 /*######  Color Variables  ######*/
 $line: #111111;
-$event: #161679;
+$event: #111111;
 $scale-label: #FFFFFF88;
 $font-color: #222222;
 
@@ -147,10 +147,10 @@ $tick-label-y: 2px;
 	left: -($dot-radius + math.div($event-line-thickness, 2));
 	display: block;
 	content: "";
-	width: 6px;
-	height: 6px;
+	width: $dot-radius * 2;
+	height: $dot-radius * 2;
 	background-color: inherit;
-	border-radius: 3px;
+	border-radius: $dot-radius;
 }
 // Font
 .tc-event {

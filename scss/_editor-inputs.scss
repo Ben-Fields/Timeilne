@@ -1,0 +1,271 @@
+@use "sass:math";
+
+/*######  Color Variables  ######*/
+
+$input-underline: #74A1F2;
+$input-bg: #F1F1F1;
+$input-underline-focus: #5376F1;
+$input-bg-focus: #DDE5F9;
+
+$input-underline-incomplete: #F8DE52;
+$required-asterisk: #2D2D2D;
+
+
+/*######  Layout Variables  ######*/
+
+$input-col-width: 30rem;
+$input-spacing: 6px;
+$input-label-width: 9rem;
+
+
+/*######  Dividers  ######*/
+
+hr {
+	width: calc(100% - 20px);
+	border: none;
+	border-top: solid black 1px;
+	border-radius: 99px;
+	margin: 0 10px 8px 10px;
+}
+
+
+/*######  Input Fields  ######*/
+
+/* Input positioning */
+// Columns
+.input-container {
+	columns: 2 $input-col-width;
+	column-gap: 0;
+	padding-bottom: 5px;
+}
+.input-container {
+	& > div {
+		width: 100%;
+		// fix clipping bug in Chrome
+		break-inside: avoid;
+	}
+	// Left justify
+	* {
+		float: left;
+	}
+	& > div,
+	label {
+		clear: left;
+	}
+	// Auto position label left (wide) / top (compact)
+	& > div {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	& > div > * {
+		flex-grow: 1;
+		// Set the layout switch to occur at a width a bit smaller than 
+		// the minimum dual column width ()
+		$switch: calc($input-col-width - $input-spacing - 1px - 100%);
+		flex-basis: calc($switch * 9999);
+	}
+	// Right-align label text when left
+	label {
+		display: flex;
+		max-width: $input-col-width;
+		flex-basis: calc(($input-col-width - 1rem - 100%) * 9999);
+		flex-shrink: 0;
+	}
+	label::before {
+		display: block;
+		content: "";
+		flex-grow: 1;
+		max-width: calc(($input-label-width + 0.1rem - 100%) * 9999);
+		min-width: fit-content;
+		padding-left: $input-spacing;
+	}
+	// Spacing
+	label,
+	input,
+	select {
+		margin-bottom: 4px;
+	}
+	& > div {
+		padding-right: $input-spacing;
+	}
+	// Divider
+	& > hr {
+		width: calc(100% - 2rem - 10px);
+		margin: 5px 10px 8px 2rem;
+	}
+	// Inputs
+	label {
+		min-width: $input-label-width;
+		text-align: right;
+		height: 1.1rem;
+		padding-top: 0.15rem;
+	}
+	input,
+	select,
+	.input {
+		margin-left: 6px;
+		font-family: "hack", monospace;
+		font-size: 1.1rem;
+		min-width: calc(100% - $input-label-width - $input-spacing);
+		height: 1.5rem;
+		// TEST
+		flex-basis: calc(100% - $input-label-width - $input-spacing);
+		min-width: 2rem;
+		flex-grow: 1;
+	}
+	input[type=date],
+	input[type=time],
+	.half {
+		min-width: calc(50% - math.div($input-label-width, 2) - $input-spacing);
+		// TEST
+		flex-basis: calc(50% - math.div($input-label-width, 2) - $input-spacing);
+		min-width: calc(2rem - 6px);
+	}
+	/* Input styling */
+	input,
+	select,
+	.input {
+		border: none;
+		border-bottom: solid $input-underline 2px;
+		background-color: $input-bg;
+		transition: background-color 0.1s;
+		border-radius: 2px;
+		padding: 2px 0px 2px 4px;
+	}
+	// Hover/focus
+	input:hover,
+	select:hover,
+	.input:hover {
+		background-color: darken($input-bg, 3%);
+	}
+	input:focus,
+	select:focus {
+		outline: none;
+		background-color: $input-bg-focus;
+		border-bottom: solid $input-underline-focus 2px;
+	}
+	// Required
+	label.required::before {
+		content: "* ";
+		color: $required-asterisk;
+	}
+	input:required:invalid {
+		border-bottom: solid $input-underline-incomplete;
+	}
+	// Clickables
+	select,
+	input[type=color] {
+		cursor: pointer;
+	}
+	input[type=color],
+	input[type=color]::-webkit-color-swatch-wrapper {
+		padding: 0;
+	}
+	// Date/time
+	input[type=date],
+	input[type=time] {
+		text-align: center;
+	}
+}
+
+
+/*######  Buttons  ######*/
+
+.button-stack,
+.button-tiles {
+	button {
+		text-align: center;
+		white-space: nowrap;
+		padding: 0 10px;
+		font-size: 1rem;
+		//
+		display: flex;
+		flex-wrap: wrap;
+		overflow: hidden;
+		justify-content: center;
+		min-width: 1.1rem;
+		//
+		line-height: 1.6rem;
+		box-sizing: content-box;
+		height: 1.6rem;
+		//
+		gap: 0.4rem;
+	}
+	button:not(:disabled) {
+		cursor: pointer;
+	}
+}
+
+
+/*######  Button Container - Stacked  ######*/
+
+.button-stack {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 0 auto;
+	width: 100%;
+	max-width: max-content;
+	padding: 0 10px;
+}
+.button-stack {
+	.button-row {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+	}
+	.button-row > button:not(:last-child) {
+		margin-right: 8px;
+	}
+	& > button:not(:last-child),
+	.button-row:not(:last-child),
+	hr,
+	&:not(:last-child) {
+		margin-bottom: 8px;
+	}
+	.button-row button:only-child {
+		min-width: calc(2.2rem + 30px);
+	}
+	// Icons left of text
+	button > i {
+		line-height: 1.6rem;
+	}
+	button > *:not(:first-child) {
+		margin-left: 0.4rem;
+	}
+}
+
+
+/*######  Button Container - Tiles ######*/
+
+.button-tiles {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding: 0 10px;
+	gap: 10px;
+}
+.button-tiles {
+	& > button {
+		height: 58px;
+		width: 60px;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	// Icons above text
+	& > button > i {
+		line-height: 1rem;
+		font-size: 1.3rem;
+	}
+	& > button {
+		flex-direction: column;
+		flex-wrap: nowrap;
+		line-height: 0.8rem;
+		gap: 3px;
+		font-size: 0.95rem;
+	}
+}

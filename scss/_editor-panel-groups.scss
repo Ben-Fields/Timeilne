@@ -1,0 +1,64 @@
+/*######  Layout  ######*/
+
+#group-properties {
+	position: sticky;
+	bottom: 0;
+	background-color: $panel-bg;
+}
+#group-section > ul {
+	margin-bottom: 7px;
+}
+// Use subsection scrollbar instead of whole-panel scrollbar
+#group-section {
+	height: 0;
+	flex-grow: 1;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+#group-section > hr:first-of-type {
+	position: sticky;
+	top: 0;
+}
+
+
+/*######  Group List  ######*/
+
+#group-list {
+	li {
+		padding: 0 12px;
+		white-space: nowrap;
+		display: flex;
+		align-items: center;
+		height: 1.8rem;
+	}
+	li span {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		min-width: 1.8rem;
+	}
+	li:nth-child(2n) {
+		background-color: #644b3705;
+	}
+	li i {
+		padding-right: 10px;
+		color: #b8afa7;
+		height: 100%;
+		display: flex;
+		align-items: center;
+	}
+	li:hover {
+		background-color: #644c370d;
+	}
+	li:focus {
+		background-color: #67b1f247;
+	}
+}
+
+.item-grip {
+	cursor: grab;
+}
+
+.item-toggle {
+	cursor: pointer;
+}
