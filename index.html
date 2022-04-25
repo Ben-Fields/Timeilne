@@ -9,26 +9,19 @@
 
 <head>
 	<meta charset="utf-8"/>
-	<title>Timeline Creator</title>
+	<title>Chronorule | Timeline Editor</title>
 	<!-- Fonts -->
 	<link rel="stylesheet" type="text/css" href="thirdparty/inter-font/inter.css"/>
 	<link rel="stylesheet" type="text/css" href="thirdparty/hack-font/hack-subset.css"/>
 	<!-- Libraries -->
 	<link rel="stylesheet" type="text/css" href="thirdparty/fontawesome-6/css/all.min.css"/>
-	<link rel="stylesheet" type="text/css" href="css/bootstrap-namespaced.css"/>
+	<link rel="stylesheet" type="text/css" href="dist/bootstrap-namespaced.css"/>
 	<link rel="stylesheet" type="text/css" href="thirdparty/quill-js/quill.snow.css"/>
 	<link rel="stylesheet" type="text/css" href="thirdparty/pickr/monolith.min.css"/>
-	<!-- Style -->
-	<link rel="stylesheet" type="text/css" href="css/editor-main.css"/>
-	<link rel="stylesheet" type="text/css" href="css/editor-inputs.css"/>
-	<link rel="stylesheet" type="text/css" href="css/editor-panel-info.css"/>
-	<link rel="stylesheet" type="text/css" href="css/editor-panel-details.css"/>
-	<link rel="stylesheet" type="text/css" href="css/editor-richtext.css"/>
-	<link rel="stylesheet" type="text/css" href="css/timeline.css"/>
-	<link rel="stylesheet" type="text/css" href="css/temp.css"/>
-	<link rel="stylesheet" type="text/css" href="css/main_yy.css"/>
-	<!-- Theme -->
-	<link id="theme" rel="stylesheet" type="text/css" href="css/editor-theme-paper.css"/>
+	<!-- Editor Style -->
+	<link rel="stylesheet" type="text/css" href="dist/editor.css"/>
+	<!-- Editor Theme -->
+	<link id="theme" rel="stylesheet" type="text/css" href="dist/editor-theme-paper.css"/>
 </head>
 
 <body onload="changeInfo();">
@@ -38,29 +31,31 @@
 				<!-- File -->
 				<div id="file" class="content">
 					<div class="panel-title">File</div>
-					<div class="button-container">
-						<div class="button-row">
-							<button onclick="document.getElementById('file-input').click();">
-								<i class="fa-solid fa-folder-open"></i> Open
-							</button>
-							<input id="file-input" type="file" name="name" style="display: none;" multiple="true"/>
-							<button onclick = "export_timeline();">
-								<i class="fa-solid fa-floppy-disk"></i> Save
-							</button>
-						</div>
-						<div class="button-row">
-							<button type="button" onclick="exportFormat();">
-								<i class="fa-solid fa-file-arrow-down"></i> Data Template
-							</button>
-						</div>
-						<hr/>
-						<div class="button-row">
-							<button type="button" onclick="">
-								<i class="fa-solid fa-eye"></i> Preview
-							</button>
-							<button type="button" onclick="">
-								<i class="fa-solid fa-share-nodes"></i> Publish
-							</button>
+					<div class="full-panel">
+						<div class="button-stack">
+							<div class="button-row">
+								<button type="button" onclick="document.getElementById('file-input').click();">
+									<i class="fa-solid fa-folder-open"></i> Open
+								</button>
+								<input id="file-input" type="file" name="name" style="display: none;" multiple="true"/>
+								<button type="button" onclick = "export_timeline();">
+									<i class="fa-solid fa-floppy-disk"></i> Save
+								</button>
+							</div>
+							<div class="button-row">
+								<button type="button" onclick="exportFormat();">
+									<i class="fa-solid fa-file-arrow-down"></i> Data Template
+								</button>
+							</div>
+							<hr/>
+							<div class="button-row">
+								<button type="button" onclick="">
+									<i class="fa-solid fa-eye"></i> Preview
+								</button>
+								<button type="button" onclick="">
+									<i class="fa-solid fa-share-nodes"></i> Publish
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -78,55 +73,74 @@
 						</div>
 					</div>
 					<div id="AddElementTab" class="tabcontent">
-						<div class="edit_ele_wrapper">
-							<div class="edit_element">
-								<i class="fa-solid fa-font-awesome fa-2x edit_icon"
-									onmousedown="clickEditElement(event, 'float_icon_flag')"></i>
-								<span>Event</span>
-							</div>
-							<div class="edit_element">
-								<i class="fa-solid fa-image fa-2x edit_icon"
-									onmousedown="alert('Sorry, adding image is not implemented yet.')"></i>
-								<span>Image</span>
-							</div>
+						<div class="button-tiles">
+							<button id="add-event" type="button" onclick="addElementEventClick(event);">
+								<div class="tc-event">
+									<div class="tc-event-line"></div>
+									<div class="tc-event-label">
+										<div>Event</div>
+									</div>
+								</div>
+							</button>
+							<button type="button" onclick="" disabled>
+								<i class="fa-solid fa-image"></i> Image
+							</button>
 						</div>
 					</div>
 					<div id="TimelineSettingTab" class="tabcontent" style="display:block">
 						<div class="input-container">
-							<label for="field-min-date">Minimum Date:</label>
-							<input id="field-min-date" type="date" name="min-date"/>
-							<input id="field-min-time" type="time" name="min-time"/>
-							<label for="field-max-date">Maximum Date:</label>
-							<input id="field-max-date" type="date" name="max-date"/>
-							<input id="field-max-time" type="time" name="max-time"/>
-							<label for="field-init-date">Initial Date:</label>
-							<input id="field-init-date" type="date" name="initial-date"/>
-							<input id="field-init-time" type="time" name="initial-time"/>
-							<label for="field-min-zoom" class="">Minimum Zoom:</label>
-							<input id="field-min-zoom" type="number" name="minimum-zoom" 
-								value="1" min="0" max="10000000000000" step="any" 
-								onchange="validateZoom(this)"/>
-							<label for="field-max-zoom" class="">Maximum Zoom:</label>
-							<input id="field-max-zoom" type="number" name="maximum-zoom" 
-								value="10000000000000" min="0" max="10000000000000" step="any" 
-								onchange="validateZoom(this)"/>
-							<label for="field-init-zoom" class="">Initial Zoom:</label>
-							<input id="field-init-zoom" type="number" name="initial-zoom" 
-								value="100" min="0" max="10000000000000" step="any" 
-								onchange="validateZoom(this)"/>
-							<label for="field-tick-density">Tick Density:</label>
-							<input id="field-tick-density" type="number" name="tick-density" 
-								value="10" min="0" max="100" step="any" 
-								onchange="roundValue(this)"/>
-							<label for="field-minor-ticks">Tick Subdivisions:</label>
-							<input id="field-minor-ticks" type="number" name="minor-ticks" 
-								value="0" min="0" max="100" step="1" 
-								onchange="roundValue(this)"/>
-							<label for="field-line-color">Line Style:</label>
-							<input class="half" id="field-line-color" type="color" name="line-color"/>
-							<input class="half" id="field-line-thickness" type="number" name="line-width" 
-								value="2"  min="1" max="10" step="0.1" 
-								onchange="roundValue(this, 10)"/>
+							<div>
+								<label for="field-min-date">Minimum Date:</label>
+								<input id="field-min-date" type="date" name="min-date"/>
+								<input id="field-min-time" type="time" name="min-time"/>
+							</div>
+							<div>
+								<label for="field-max-date">Maximum Date:</label>
+								<input id="field-max-date" type="date" name="max-date"/>
+								<input id="field-max-time" type="time" name="max-time"/>
+							</div>
+							<div>
+								<label for="field-init-date">Initial Date:</label>
+								<input id="field-init-date" type="date" name="initial-date"/>
+								<input id="field-init-time" type="time" name="initial-time"/>
+							</div>
+							<div>
+								<label for="field-min-zoom" class="">Minimum Zoom:</label>
+								<input id="field-min-zoom" type="number" name="minimum-zoom" 
+									value="1" min="0" max="10000000000000" step="any" 
+									onchange="validateZoom(this)"/>
+							</div>
+							<div>
+								<label for="field-max-zoom" class="">Maximum Zoom:</label>
+								<input id="field-max-zoom" type="number" name="maximum-zoom" 
+									value="10000000000000" min="0" max="10000000000000" step="any" 
+									onchange="validateZoom(this)"/>
+							</div>
+							<div>
+								<label for="field-init-zoom" class="">Initial Zoom:</label>
+								<input id="field-init-zoom" type="number" name="initial-zoom" 
+									value="100" min="0" max="10000000000000" step="any" 
+									onchange="validateZoom(this)"/>
+							</div>
+							<div>
+								<label for="field-tick-density">Tick Density:</label>
+								<input id="field-tick-density" type="number" name="tick-density" 
+									value="10" min="0" max="100" step="any" 
+									onchange="roundValue(this)"/>
+							</div>
+							<div>
+								<label for="field-minor-ticks">Sub-tick Density:</label>
+								<input id="field-minor-ticks" type="number" name="minor-ticks" 
+									value="0" min="0" max="100" step="1" 
+									onchange="roundValue(this)"/>
+							</div>
+							<div>
+								<label for="field-line-color">Line Style:</label>
+								<input class="half" id="field-line-color" type="color" name="line-color"/>
+								<input class="half" id="field-line-thickness" type="number" name="line-width" 
+									value="2"  min="1" max="10" step="0.1" 
+									onchange="roundValue(this, 10)"/>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -136,7 +150,7 @@
 				<!-- Info -->
 				<div id="info" class="content">
 					<div class="panel-title">Info</div>
-					<div id="info-message">
+					<div id="info-message" class="full-panel">
 						<div id="info-unfinished-elem">
 							<i class="fa-solid fa-info-circle"></i>
 							<span id="info_messages">Sample format can be downloaded using the Format button in the Files Tab.</span>
@@ -164,60 +178,80 @@
 			<!-- Groups -->
 			<div id="groups" class="content">
 				<div class="panel-title">Groups</div>
-				<div class="bs" id="group-section">
-					<ul class="nav nav-pills nav-stacked">
-						<!-- <li class="active" onclick="dynamicChanges(this);"><a data-toggle="pill">All</a></li>
-						<hr/> -->
-						<!-- Generated -->
-					</ul>
-					<div class="button_holder text-center" style="padding-top: 10px;">
-						<button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-square-plus"></i> Add</button>
-						<button class="btn btn-primary" onclick="edit_group()"><i class="fa-solid fa-pencil"></i> Edit</button>
-						<button class="btn btn-primary" id="grp_del" onclick="delete_group()"><i class="fa-solid fa-trash"></i> Delete</button>
+				<div class="button-stack">
+					<div class="button-row">
+						<button type="button" onclick=""
+						data-toggle="modal" data-target="#exampleModal">
+							<i class="fa-solid fa-square-plus"></i> Add
+						</button>
+						<button type="button" onclick="edit_group()" disabled>
+							<i class="fa-solid fa-pencil"></i> Edit
+						</button>
+						<button type="button" onclick="delete_group()" disabled>
+							<i class="fa-solid fa-trash"></i> Delete
+						</button>
 					</div>
-
-					<!-- Modal -->
-					<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-					  <div class="modal-dialog" role="document">
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <h5 class="modal-title" id="exampleModalLabel" >Add Group</h5>
-					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					          <span aria-hidden="true">&times;</span>
-					        </button>
-					      </div>
-					      <div class="modal-body">
-					        <div class="md-form mb-4">
-					          <label data-error="wrong" data-success="right" for="form2">Group Name</label>
-					          <input type="email" class="form-control validate" id= "group-name"/>
-					        </div>
-					      </div>
-					      <div class="modal-footer">
-					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					        <button type="button" class="btn btn-primary" onclick = "add_group(event, document.getElementById('group-name').value)" data-dismiss="modal">Add Group</button>
-					      </div>
-					    </div>
-					  </div>
-					</div>
+				</div>
+				<div id="group-section">
 					<hr/>
-					<div id="group_properties">
-						<h4 style="margin-bottom: 20px;">Group Properties</h4>
-						<form action="#">
-							<div class="form-group" id="grp_name">
-								<label for="color">Name:</label>
-								<input type="text" class="form-control" id="grp_name_input"/>
+					<ul id="group-list">
+						<!-- Generated -->
+						<template>
+							<li tabindex="0">
+								<i class="item-grip fa-solid fa-grip-vertical"></i>
+								<i class="item-toggle fa-solid fa-eye"></i>
+								<span></span>
+							</li>
+						</template>
+						<li tabindex="0">
+							<i class="item-grip fa-solid fa-grip-vertical"></i>
+							<i class="item-toggle fa-solid fa-eye"></i>
+							<span>Some Group Name</span>
+						</li>
+						<li tabindex="0">
+							<i class="item-grip fa-solid fa-grip-vertical"></i>
+							<i class="item-toggle fa-solid fa-eye"></i>
+							<span>Other Category</span>
+						</li>
+					</ul>
+					<div id="group-properties">
+						<hr/>
+						<h4>Properties</h4>
+						<div class="input-container">
+							<div>
+								<label for="field-group-name">Name:</label>
+								<input type="text" id="field-group-name" name="group-name"/>
 							</div>
-							<div class="form-group">
-								<label for="color">Color:</label>
-								<input type="color" class="form-control" id="grp_color" name="grp_color" value="#000000"
-									disabled="true"/>
+							<div>
+								<label for="field-group-color">Color:</label>
+								<input type="color" id="field-group-color" name="group-color"/>
 							</div>
-							<div class="form-group">
-								<label for="font-size">Font Size (px):</label>
-								<input type="number" class="form-control" id="font_size" value="14" disabled="true"/>
-							</div>
-							<button type="button" class="btn btn-primary" id="save_button" onclick="save_group_changes();">Save</button>
-						</form>
+						</div>
+					</div>
+					<!-- Modal -->
+					<div class="bs">
+						<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						  <div class="modal-dialog" role="document">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						      	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+						        <h5 class="modal-title" id="exampleModalLabel" >Add Group</h5>
+						      </div>
+						      <div class="modal-body">
+						        <div class="md-form mb-4">
+						          <label data-error="wrong" data-success="right" for="form2">Group Name:</label>
+						          <input type="email" class="form-control validate" id= "group-name"/>
+						        </div>
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						        <button type="submit" class="btn btn-primary" onclick = "add_group(event, document.getElementById('group-name').value)" data-dismiss="modal">Add Group</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -275,44 +309,57 @@
 				<div class="resize resize-y"></div>
 				<!-- Details -->
 				<div id="details" class="content">
-					<div class="leftright-tab-wrapper">
-						<div class="panel-title">Details</div>
-						<button id="details-delete" style="display:none;">Delete</button>
-					</div>
+					<div class="panel-title">Details</div>
+					<button id="details-delete" style="display:none;">Delete</button>
 					<div id="details-placeholder">Select an element to view/edit its details.</div>
 					<div id="details-data" class="input-container" style="display:none;">
-						<label for="field-short-title" class="required">Title:</label>
-						<input id="field-short-title" type="text" name="short-title" required="true"/>
-						<label for="field-long-title">Long Title:</label>
-						<input id="field-long-title" type="text" name="long-title"/>
-						<label for="field-date" class="required">Date:</label>
-						<input id="field-date" type="date" name="date" required="true"/>
-						<input id="field-time" type="time" name="time"/>
-						<label for="field-end-date">End Date:</label>
-						<input id="field-end-date" type="date" name="end-date"/>
-						<input id="field-end-time" type="time" name="end-time"/>
-						<label for="field-description">Description:</label>
-						<!-- <div id="field-description" class="input"></div> -->
-						<input id="field-description" type="text" name="description"/>
-						<label for="field-visual-priority">Visual Priority:</label>
-						<input id="field-visual-priority" type="number" name="visual-priority" value="1" min="1" max="9999"/>
-						<label for="field-groups">Group(s):</label>
-						<select id="field-groups" type="text" name="groups">
-						</select>
-						<label for="field-visible-group">Visible Group:</label>
-						<select id="field-visible-group" type="text" name="visible-group">
-						</select>
-						<!-- Only shows up if there are multiple groups -->
-						<label for="field-click-action">Click Action:</label>
-						<select id="field-click-action" name="click-action">
-							<option value="highlight-group">Highlight Group</option>
-							<option value="show-description">Show Description</option>
-							<option value="hyperlink">Go to Hyperlink</option>
-						</select>
-						<!-- # Advanced # -->
-						<label for="field-anchor-tag">Anchor Tag:</label>
-						<input id="field-anchor-tag" type="text" name="anchor-tag"/>
-						<!-- Also called a fragment identifier or HTML ID, it allows you to link to this event with a URL. Ex. https://example.com/timeline#my-event. -->
+						<!-- <div class="input-container"> -->
+							<!-- <div>Basic Info</div> -->
+						<div>
+							<label for="field-short-title" class="required">Title:</label>
+							<input id="field-short-title" type="text" name="short-title" required="true"/>
+						</div>
+						<div>
+							<label for="field-date" class="required">Date:</label>
+							<input id="field-date" type="date" name="date" required="true"/>
+							<input id="field-time" type="time" name="time"/>
+						</div>
+						<div>
+							<label for="field-end-date">End Date:</label>
+							<input id="field-end-date" type="date" name="end-date"/>
+							<input id="field-end-time" type="time" name="end-time"/>
+						</div>
+						<!-- </div> -->
+						<!-- <div class="input-container"> -->
+							<!-- <div>Detailed Info</div> -->
+						<hr/>
+						<div>
+							<label for="field-description">Description:</label>
+							<!-- <div id="field-description" class="input"></div> -->
+							<input id="field-description" type="text" name="description"/>
+						</div>
+						<div>
+							<label for="field-groups">Group(s):</label>
+							<select id="field-groups" type="text" name="groups"></select>
+						</div>
+						<div>
+							<label for="field-long-title">Long Title:</label>
+							<input id="field-long-title" type="text" name="long-title"/>
+						</div>
+						<!-- </div> -->
+						<!-- <div class="input-container"> -->
+							<!-- <div>Advanced</div> -->
+						<hr/>
+						<div>
+							<label for="field-visual-priority">Visual Priority:</label>
+							<input id="field-visual-priority" type="number" name="visual-priority" value="1" min="1" max="9999"/>
+							<!-- Also called a fragment identifier or HTML ID, it allows you to link to this event with a URL. Ex. https://example.com/timeline#my-event. -->
+						</div>
+						<div>
+							<label for="field-anchor-tag">Anchor Tag:</label>
+							<input id="field-anchor-tag" type="text" name="anchor-tag"/>
+						</div>
+						<!-- </div> -->
 					</div>
 				</div>
 			</div>
@@ -322,6 +369,14 @@
 			<!-- Reserved -->
 			<div id="unused" class="content">
 				Reserved
+			</div>
+		</div>
+	</div>
+	<div id="mouse-float-event" class="mouse-float" style="display:none;">
+		<div class="tc-event">
+			<div class="tc-event-line"></div>
+			<div class="tc-event-label">
+				<div>Event</div>
 			</div>
 		</div>
 	</div>
@@ -344,19 +399,8 @@
 	<script src="thirdparty/quill-js/quill.js"></script>
 	<script src="thirdparty/pickr/pickr.min.js"></script>
 	<!-- Scripts - General -->
-	<script src="js/timeline-data.js"></script>
-	<script src="js/timeline.js"></script>
-	<script src="js/editor.js"></script>
-	<script src="js/editor-utility.js"></script>
-	<script src="js/editor-panels.js"></script>
-	<script src="js/editor-panel-file.js"></script>
-	<script src="js/editor-panel-edit.js"></script>
-	<script src="js/editor-panel-details.js"></script>
-	<script src="js/editor-panel-groups.js"></script>
-	<script src="js/editor-panel-info.js"></script>
-	<script src="js/editor-richtext.js"></script>
-	<script src="js/editor-inputs.js"></script>
-	<script src="js/editor-timeline-init.js"></script>
+	<script src="dist/timeline.js"></script>
+	<script src="dist/editor.js"></script>
 	<!-- Scripts - Unit Test -->
 	<!-- <script src="test/test_timeline_data.js"></script> -->
 	<!-- Scripts - Attribution -->

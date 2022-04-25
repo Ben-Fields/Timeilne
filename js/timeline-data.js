@@ -173,7 +173,7 @@ class GroupManager {
         g = new GroupElement(this, this.#id_incremental, name);
         this.groups.set(this.#id_incremental, g);
         this.#id_incremental += 1;
-        create_group_to_dropdown(g);
+        // create_group_to_dropdown(g);
 
         return g;
     }

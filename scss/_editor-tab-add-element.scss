@@ -1,0 +1,30 @@
+/*######  Add Element Buttons ######*/
+
+#add-event > .tc-event {
+	position: relative;
+	margin-top: 5px;
+	margin-left: -11px;
+	pointer-events: none;
+	background-color: black;
+	border-color: black;
+	& > .tc-event-line {
+		height: 10px;
+	}
+	// Override button font style
+	font-size: 0.8rem;
+	color: $font-color;
+	text-shadow: none;
+}
+
+
+/*######  Mouse Floating Icons ######*/
+
+.mouse-float {
+	position: absolute;
+	pointer-events: none;
+	z-index: 4;
+}
+#mouse-float-event {
+	background-color: $event;
+	border-color: $event;
+}

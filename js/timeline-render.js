@@ -54,7 +54,7 @@ let add_unit = function(date, unit, num) {
 }
 // Cosmetic fix to remove whitespace to right of text
 let shrink_to_text = function(el) {
-	// Save words
+	// Save words (includes the word separators)
 	let words = el.innerHTML.split(/( |-)/);
 	// Clear content
 	el.innerHTML = "";
@@ -131,7 +131,7 @@ var CRTimeline = class {
 		// Style
 		tick_density: 10,
 		minor_tick_density: 0,
-		line_color: "#111",
+		line_color: "#111111",
 		line_thickness: 2,
 		// Data
 		event_manager: undefined,
@@ -539,26 +539,49 @@ CRTimeline.prototype.update_ticks = function() {
 	let maxTickDate = new Date(this.viewEndDate.valueOf());
 	add_unit(maxTickDate, this.tickUnit, this.tickUnitNum);
 
-	// Get required info for the scale label
-	let legY, legM, legD, legH, legMin;
-	switch(this.tickUnitMs) {
-		// No scale label
-		case MS_IN_M:
-		case MS_IN_Y:
-			break;
-		// Scale label
-		case 1:
-			legMin = "2-digit";
-		case MS_IN_SEC:
-			legH = "numeric";
-		case MS_IN_MIN:
-			legD = "numeric";
-		case MS_IN_H:
-			legM = "short";
-		case MS_IN_D:
-			legY = "numeric";
+	// Get the biggest time unit used in the scale label
+	let viewLengthMs = this.viewWidth * MS_IN_Y / this.year_px;
+	let scaleLabelMSU = -1;
+	// Threshold multiplier that determines the visiblity of the scale label
+	// - Higher means scale label appears sooner
+	// - 1.5 means the unit is included in the scale label if less than 1.5 
+	//   of the length of that unit is on the screen. 
+	let THRESH_MULT = 1.5
+	if (viewLengthMs < 2) {
+		scaleLabelMSU = 1;
+	} else if (viewLengthMs < THRESH_MULT * MS_IN_SEC) {
+		scaleLabelMSU = MS_IN_SEC;
+	} else if (viewLengthMs < THRESH_MULT * MS_IN_MIN) {
+		scaleLabelMSU = MS_IN_MIN;
+	} else if (viewLengthMs < THRESH_MULT * MS_IN_H) {
+		scaleLabelMSU = MS_IN_H;
+	} else if (viewLengthMs < THRESH_MULT * MS_IN_D) {
+		scaleLabelMSU = MS_IN_D
+	} else if (viewLengthMs < THRESH_MULT * MS_IN_M) {
+		scaleLabelMSU = MS_IN_M
+	} else if (viewLengthMs < THRESH_MULT * MS_IN_Y) {
+		scaleLabelMSU = MS_IN_Y
 	}
-	// Update scale label in the legend
+
+	// Add date/time parts to display in scale label
+	let legY, legM, legD, legH, legMin;
+	switch(scaleLabelMSU) {
+		case 1:
+		case MS_IN_SEC:
+		case MS_IN_MIN:
+			legMin = "2-digit";
+		case MS_IN_H:
+			legH = "numeric";
+		case MS_IN_D:
+			legD = "numeric";
+		case MS_IN_M:
+			legM = "short";
+		case MS_IN_Y:
+			legY = "numeric";
+			break;
+	}
+
+	// Update the scale label in the legend
 	if (legY != undefined) {
 		let legEra;
 		if (roundDownDate.getUTCFullYear() < 0) {

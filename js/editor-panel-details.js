@@ -46,8 +46,6 @@ var show_details = function(eid) {
 	// richtext_content.innerHTML = event["Description"];
 	field_visual_priority.value = event["Visual Priority"] || "";
 	field_groups.value = event.get_group_name_list();
-	// field_visible_group.value = event.get_visible_group().get_name();
-	field_click_action.value = event["Click Action"] || "";
 	field_anchor_tag.value = event["Anchor Tag"] || "";
 
 	// Update event on any value change
@@ -141,14 +139,6 @@ var show_details = function(eid) {
 	field_groups.onchange = function(){
 		// Temporary: single group
 		event.add_into_group(group_manager.get_group_by_name(field_groups.value));
-		timeline.update_events();
-	}
-	field_visible_group.onchange = function(){
-		event.set_visible_group_by_name(field_visible_group.value);
-		timeline.update_events();
-	}
-	field_click_action.onchange = function(){
-		event["Click Action"] = field_click_action.value;
 		timeline.update_events();
 	}
 	field_anchor_tag.onchange = function(){
