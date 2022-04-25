@@ -1,3 +1,4 @@
+<br/>
 <div align="center">
 <a href="https://chronorule.app">
 	<img alt="Chronorule" src="/images/logo_light-dark-dynamic.svg" width="100%" height="60px"></img>
@@ -32,14 +33,14 @@ The project is setup to be as low-friction as possible for anyone to contribute 
  - Markup is contained within `index.html`.
  - Stylesheets are organized across multiple files in `scss/`.
    - Download "[Dart Sass](https://github.com/sass/dart-sass/releases/latest)" to compile and bundle SCSS.
-   - [Add the program to your "path"](#a1) for easy access from the command line.
+   - [Add the program to your "path"](#qa) for easy access from the command line.
    - When editing stylesheets; open a command line, navigate to the project's main folder, and run the following command:<br>
      `sass --watch --style=compressed scss:dist`
  - Scripts are organized across multiple files in `js/`.
    - When editing scripts; open a command line, navigate to the project's main folder, and run the following command:<br>
      `./dev/Watch-Concat-File-Lists -InFolder js -OutFolder dist`
    - Download "[esbuild](https://esbuild.github.io/getting-started/#download-a-build)" to minify JS.
-   - [Add the program to your "path"](#a1) for easy access from the command line.
+   - [Add the program to your "path"](#qa) for easy access from the command line.
    - When editing scripts (or when finished, omitting the `--watch` flag); open a command line, navigate to the project's main folder, and run the following command:<br>
      `esbuild dist/editor.js --outfile=dist/editor.js --watch --minify --allow-overwrite`
   - Assuming you have the necessary programs in your "path", you can simply run `develop.ps1` to perform
@@ -48,9 +49,8 @@ The project is setup to be as low-friction as possible for anyone to contribute 
 #### Q/A
 
 <details>
-<summary>Q1: How do I add a program to my "path"?</summary>
+<summary>How do I add a program to my "path"?</summary>
 	<p><blockquote>
-	<h4>A1:</h4>
 	The "path" is a historical concept present in many modern operating systems. It refers to a particular <i>environment variable</i>, which is a system-wide variable that is accessible in the command-line interface. The "path" variable in particular stores a list of file paths to executable command-line programs. When present in the "path", these programs are accessible from the command-line interface using the program name rather than the program's full file path. To add a program to your "path", follow the operating-system-specific instructions below.
 	<p>
 	<details>
@@ -94,9 +94,8 @@ The project is setup to be as low-friction as possible for anyone to contribute 
 </details>
 
 <details>
-<summary>Q2: What is "SCSS"?</summary>
+<summary>What is "SCSS"?</summary>
 	<p><blockquote>
-	<h4>A2:</h4>
 	<p>SCSS is a superset of CSS, the stylesheet language used in web documents. That is, all valid CSS is valid SCSS. SCSS, as implemented in the "Dart Sass" compiler, provides a simple set of organizational and reusability tools on top of CSS, such as nesting, mixins, and file bundling. "Sass" is essentially SCSS without brackets, and online resources may refer to both the SCSS and Sass languages collectively as "Sass".</p>
 	<a href="https://sass-lang.com/documentation">More information</a>
 	</blockquote></p>
